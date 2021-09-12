@@ -39,9 +39,6 @@ export class UserProfile {
   })
   gender: Gender;
 
-  @Column()
-  isProfilePrivate: boolean;
-
   @Column({ length: 255 })
   @MaxLength(8)
   job: string;
