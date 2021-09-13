@@ -1,11 +1,13 @@
+import { Reservation } from './../../reservation/entities/reservation.entity';
+import { Place } from './../../place/entities/place.entity';
 import { UserProfile } from './user-profile.entity';
 import { CoreEntity } from './../../common/entities/core.entity';
 import {
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   Entity,
   Index,
+  ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -24,12 +26,9 @@ export class User extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Index()
-  @Column({ length: 255 })
+  @Index({ unique: true })
+  @Column({ unique: true, length: 255 })
   email: string;
-
-  @Column({ length: 255 })
-  username: string;
 
   @IsString()
   @Length(5, 20)
@@ -43,20 +42,14 @@ export class User extends CoreEntity {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @OneToOne((type) => UserProfile, (profile) => profile.user)
+  @OneToOne((type) => UserProfile, { cascade: true, eager: true })
   profile: UserProfile;
 
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword(): Promise<void> {
-    try {
-      const salt = await bcrypt.genSalt();
-      console.log(salt);
-      this.password = await bcrypt.hash(this.password, salt);
-    } catch {
-      throw new InternalServerErrorException();
-    }
-  }
+  @ManyToMany((type) => Place, (place) => place.participants)
+  places: Place[];
+
+  @OneToMany((type) => Reservation, (reservation) => reservation.participant)
+  reservations: Reservation[];
 
   async checkPassword(password: string): Promise<boolean> {
     try {
