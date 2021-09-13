@@ -1,3 +1,4 @@
+import { validate } from 'class-validator';
 import { UserProfile } from '../user/entities/user-profile.entity';
 import {
   SocialRedirectInput,
@@ -42,6 +43,7 @@ export class AuthService {
           error: '이미 존재하는 계정입니다.',
         };
       }
+
       await this.userRepository.save(
         this.userRepository.create({
           email,
@@ -118,7 +120,7 @@ export class SocialAuthService {
     provider: string,
   ): Promise<SocialRegisterOutput> {
     const {
-      uid,
+      socialId,
       email,
       phoneNumber,
       gender,
@@ -137,9 +139,18 @@ export class SocialAuthService {
       // Upload to S3
       const profileImg_s3_url = await this.s3Service.uploadToS3(
         profileImageFile,
-        uid,
+        socialId,
       );
 
+      const exists = this.userRepository.findOne({
+        email,
+      });
+      if (exists) {
+        return {
+          ok: false,
+          error: '이미 존재하는 이메일입니다.',
+        };
+      }
       // Create user
       const user = this.userRepository.create({
         email,
@@ -168,7 +179,7 @@ export class SocialAuthService {
 
       // Create social account
       const socialAccount = this.socialAccountRepository.create({
-        socialId: uid,
+        socialId,
         provider,
         user,
       });
