@@ -1,3 +1,4 @@
+import { S3Service } from 'src/aws/s3/s3.service';
 import { PlaceDetail } from './entities/place-detail.entity';
 import { User } from './../user/entities/user.entity';
 import { Place } from './entities/place.entity';
@@ -8,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Place, PlaceDetail])],
-  providers: [PlaceService],
+  providers: [PlaceService, S3Service],
   controllers: [PlaceController],
 })
 export class PlaceModule {}
