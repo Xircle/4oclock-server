@@ -4,6 +4,7 @@ import { CoreEntity } from './../../common/entities/core.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
@@ -22,18 +23,28 @@ export class Place extends CoreEntity {
   @Column({ length: 255 })
   coverImage: string;
 
+  @Index()
+  @Column({ length: 255 })
+  location: string;
+
   @Column('text', { array: true })
   tags: string[];
 
-  @Column({ nullable: true })
-  minAge: number;
+  @Column({ length: 255 })
+  recommendations: string;
 
-  @Column({ nullable: true })
-  maxAge: number;
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  startAt: Date;
 
   @ManyToMany((type) => User, (user) => user.places)
   @JoinTable()
   participants: User[];
+
+  @Column({ default: 0 })
+  participantsCount: number;
 
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place)
   @JoinColumn()

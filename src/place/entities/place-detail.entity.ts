@@ -1,11 +1,5 @@
 import { Place } from './place.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'place_detail' })
 export class PlaceDetail {
@@ -20,9 +14,6 @@ export class PlaceDetail {
 
   @Column('text', { array: true })
   categories: string[];
-
-  @Column({ length: 255 })
-  address: string;
 
   @Column('text', { array: true })
   photos: string[];
