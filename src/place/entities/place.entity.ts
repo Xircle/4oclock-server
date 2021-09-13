@@ -1,3 +1,4 @@
+import { Reservation } from './../../reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
 import { User } from './../../user/entities/user.entity';
 import { CoreEntity } from './../../common/entities/core.entity';
@@ -8,6 +9,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -31,13 +33,14 @@ export class Place extends CoreEntity {
   tags: string[];
 
   @Column({ length: 255 })
-  recommendations: string;
+  recommendation: string;
 
+  @Index()
   @Column({
     type: 'timestamptz',
     nullable: true,
   })
-  startAt: Date;
+  startDateAt: Date;
 
   @ManyToMany((type) => User, (user) => user.places)
   @JoinTable()
@@ -46,9 +49,12 @@ export class Place extends CoreEntity {
   @Column({ default: 0 })
   participantsCount: number;
 
-  @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place)
+  @OneToOne((type) => PlaceDetail, { cascade: true })
   @JoinColumn()
   placeDetail: PlaceDetail;
+
+  @OneToMany((type) => Reservation, (reservation) => reservation.place)
+  reservations: Reservation[];
 
   @Column({ default: false })
   isClosed: boolean;
