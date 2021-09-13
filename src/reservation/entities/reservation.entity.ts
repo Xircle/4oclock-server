@@ -7,7 +7,6 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -16,22 +15,26 @@ export enum StartTime {
   Seven = 'Seven',
 }
 
-@Index([''])
+@Index(['userId', 'placeId'], { unique: true })
 @Entity({ name: 'reservations' })
 export class Reservation extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne((type) => User, (user) => user.reservations)
-  participant: User;
-
-  @Column({ type: 'enum', enum: true })
+  @Column({ type: 'enum', enum: StartTime })
   startTime: StartTime;
 
-  @OneToOne((type) => Place)
-  @JoinColumn({ name: 'fkPlaceId' })
-  place: Place;
+  @Column('uuid')
+  userId: string;
 
   @Column('uuid')
-  fkPlaceId: string;
+  placeId: string;
+
+  @ManyToOne((type) => User, { cascade: true, eager: true })
+  @JoinColumn({ name: 'userId' })
+  participant: User;
+
+  @ManyToOne((type) => Place, { cascade: true, eager: true })
+  @JoinColumn({ name: 'placeId' })
+  place: Place;
 }
