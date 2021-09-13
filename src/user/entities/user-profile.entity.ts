@@ -48,13 +48,13 @@ export class UserProfile {
   shortBio: string;
 
   @Column({ length: 255, nullable: true })
-  location: string | null;
+  location?: string;
 
   @Column({ length: 255, nullable: true, type: 'varchar' })
-  profileImageUrl: string | null;
+  profileImageUrl?: string;
 
   @Column('text', { array: true, nullable: true })
-  interests: string[] | null;
+  interests?: string[];
 
   @Column()
   isMarketingAgree: boolean;

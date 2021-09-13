@@ -12,7 +12,6 @@ export class SocialRegisterInput {
   university: string;
   isGraduate: boolean;
   age: number;
-  isProfilePrivate: boolean;
   gender: Gender;
   job: string;
   shortBio: string;

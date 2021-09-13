@@ -126,7 +126,6 @@ export class SocialAuthService {
       university,
       isGraduate,
       age,
-      isProfilePrivate,
       job,
       shortBio,
       location,
@@ -144,7 +143,6 @@ export class SocialAuthService {
       // Create user
       const user = this.userRepository.create({
         email,
-        username,
         isVerified: false,
         role: UserRole.Client,
       });
@@ -158,7 +156,6 @@ export class SocialAuthService {
         isGraduate,
         age,
         gender,
-        isProfilePrivate,
         job,
         shortBio,
         location,
@@ -202,13 +199,13 @@ export class SocialAuthService {
         email,
       });
       if (exists) {
-        // Get user data 
+        // Get user data
         const user = await this.userRepository.findOne(
           {
             email,
           },
           {
-            select: ['id', 'username', 'email'],
+            select: ['id', 'email'],
             relations: ['profile'],
           },
         );
