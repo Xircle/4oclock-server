@@ -1,4 +1,10 @@
-import { IsDate, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsDate,
+  IsDateString,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
 export class CreatePlaceInput {
   @IsString()
@@ -20,7 +26,7 @@ export class CreatePlaceInput {
   @IsNotEmpty()
   recommendation: string;
 
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   startDateAt: Date;
 
@@ -37,9 +43,13 @@ export class CreatePlaceInput {
   })
   @IsNotEmpty()
   categories: string[];
+
+  @IsString()
+  @IsNotEmpty()
+  detailAddress: string;
 }
 export class PlacePhotoInput {
-  coverImage: Express.Multer.File;
+  coverImage: Express.Multer.File[];
   reviewImages: Express.Multer.File[];
 }
 

@@ -1,6 +1,26 @@
-import { Place } from '../entities/place.entity';
+import { Gender } from 'src/user/entities/user-profile.entity';
 import { CoreOutput } from 'src/common/common.interface';
 
+export class MainFeedPlaceParticipantsProfile {
+  userId: string;
+  profileImgUrl: string;
+  gender: Gender;
+  age: number;
+}
+export class MainFeedPlace {
+  id: string;
+  name: string;
+  coverImage: string;
+  tags: string[];
+  recommendation: string;
+  deadline?: string | undefined;
+  startDateFromNow: string;
+  participants: MainFeedPlaceParticipantsProfile[];
+  isParticipating: boolean;
+  participantsCount: number;
+  isClosed: boolean;
+}
+
 export class GetPlacesByLocationOutput extends CoreOutput {
-  places?: Place[];
+  places?: MainFeedPlace[];
 }
