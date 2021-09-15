@@ -15,26 +15,26 @@ export enum StartTime {
   Seven = 'Seven',
 }
 
-@Index(['userId', 'placeId'], { unique: true })
+@Index(['place_id', 'user_id'], { unique: true })
 @Entity({ name: 'reservations' })
 export class Reservation extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'enum', enum: StartTime })
+  @Column({ name: 'start_time', type: 'enum', enum: StartTime })
   startTime: StartTime;
 
   @Column('uuid')
-  userId: string;
+  user_id: string;
 
   @Column('uuid')
-  placeId: string;
+  place_id: string;
 
   @ManyToOne((type) => User, { cascade: true, eager: true })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   participant: User;
 
   @ManyToOne((type) => Place, { cascade: true, eager: true })
-  @JoinColumn({ name: 'placeId' })
+  @JoinColumn({ name: 'place_id' })
   place: Place;
 }
