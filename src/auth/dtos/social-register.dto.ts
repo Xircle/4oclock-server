@@ -3,16 +3,12 @@ import { SocialProfile } from './../../common/common.interface';
 import { CoreOutput } from 'src/common/common.interface';
 import { Gender } from 'src/user/entities/user-profile.entity';
 import {
-  IsArray,
-  IsBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsPhoneNumber,
   IsString,
-  IsUUID,
 } from 'class-validator';
 
 export class SocialRegisterInput {
@@ -25,7 +21,7 @@ export class SocialRegisterInput {
   email: string;
 
   // From this, profile data comes
-  @IsPhoneNumber()
+  @IsPhoneNumber('KR')
   phoneNumber: string;
 
   @IsString()
@@ -36,11 +32,9 @@ export class SocialRegisterInput {
   @IsNotEmpty()
   university: string;
 
-  @IsBoolean()
   @IsNotEmpty()
   isGraduate: boolean;
 
-  @IsNumber()
   @IsNotEmpty()
   age: number;
 
@@ -66,14 +60,21 @@ export class SocialRegisterInput {
   @IsOptional()
   interests?: string[] | null;
 
-  @IsBoolean()
   @IsNotEmpty()
   isMarketingAgree: boolean;
 }
 export class SocialRegisterOutput extends CoreOutput {}
 
-export class SocialRedirectInput extends SocialProfile {}
 export class SocialRedirectOutput extends CoreOutput {
   code?: number;
-  user?: User;
+  data?: {
+    uid: string;
+    username: string;
+    email: string;
+    token: string;
+    profile: {
+      id: string;
+      thumbnail: string;
+    };
+  };
 }
