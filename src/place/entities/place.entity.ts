@@ -1,14 +1,11 @@
 import { Reservation } from './../../reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
-import { User } from './../../user/entities/user.entity';
 import { CoreEntity } from './../../common/entities/core.entity';
 import {
   Column,
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -22,14 +19,14 @@ export class Place extends CoreEntity {
   @Column({ length: 255 })
   name: string;
 
-  @Column({ length: 255 })
+  @Column({ name: 'cover_image', length: 255 })
   coverImage: string;
 
   @Index()
   @Column({ length: 255 })
   location: string;
 
-  @Column('text', { array: true })
+  @Column({ type: 'json' })
   tags: string[];
 
   @Column({ length: 255 })
@@ -37,25 +34,26 @@ export class Place extends CoreEntity {
 
   @Index()
   @Column({
-    type: 'timestamptz',
+    name: 'start_date_at',
+    type: 'date',
     nullable: true,
   })
   startDateAt: Date;
 
-  @ManyToMany((type) => User, (user) => user.places)
-  @JoinTable()
-  participants: User[];
+  @Column({ name: 'is_closed', default: false })
+  isClosed: boolean;
 
-  @Column({ default: 0 })
+  @Column({ name: 'participant_count', default: 0 })
   participantsCount: number;
 
-  @OneToOne((type) => PlaceDetail, { cascade: true })
-  @JoinColumn()
+  @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
+    cascade: true,
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'place_detail_id' })
   placeDetail: PlaceDetail;
 
   @OneToMany((type) => Reservation, (reservation) => reservation.place)
   reservations: Reservation[];
-
-  @Column({ default: false })
-  isClosed: boolean;
 }
