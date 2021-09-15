@@ -9,24 +9,24 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-@Index(['provider', 'socialId'])
+@Index(['socialId', 'provider'], { unique: true })
 @Entity('social_accounts', {
-  synchronize: false,
+  synchronize: true,
 })
 export default class SocialAccount extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ length: 255 })
+  @Column({ name: 'social_id', length: 255 })
   socialId!: string;
 
   @Column({ length: 255 })
   provider!: string;
 
-  @OneToOne((type) => User, { cascade: true })
-  @JoinColumn({ name: 'fkUserId' })
+  @OneToOne((type) => User, { cascade: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'fk_user_id' })
   user!: User;
 
   @Column('uuid')
-  fkUserId!: string;
+  fk_user_id!: string;
 }

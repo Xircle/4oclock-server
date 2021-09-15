@@ -1,12 +1,10 @@
 import { Reservation } from './../../reservation/entities/reservation.entity';
-import { Place } from './../../place/entities/place.entity';
 import { UserProfile } from './user-profile.entity';
 import { CoreEntity } from './../../common/entities/core.entity';
 import {
   Column,
   Entity,
   Index,
-  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -35,18 +33,19 @@ export class User extends CoreEntity {
   @Column({ nullable: true })
   password?: string;
 
-  @Column({ default: false })
+  @Column({ name: 'is_verified', default: false })
   isVerified: boolean;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.Client })
   @IsEnum(UserRole)
   role: UserRole;
 
-  @OneToOne((type) => UserProfile, { cascade: true, eager: true })
+  @OneToOne((type) => UserProfile, (profile) => profile.user, {
+    cascade: true,
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   profile: UserProfile;
-
-  @ManyToMany((type) => Place, (place) => place.participants)
-  places: Place[];
 
   @OneToMany((type) => Reservation, (reservation) => reservation.participant)
   reservations: Reservation[];

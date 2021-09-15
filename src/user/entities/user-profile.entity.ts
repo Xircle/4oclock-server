@@ -9,8 +9,8 @@ import {
 import { MaxLength, MinLength } from 'class-validator';
 
 export enum Gender {
-  female = 'female',
-  male = 'male',
+  Female = 'Female',
+  Male = 'Male',
 }
 
 @Entity('user_profiles')
@@ -21,13 +21,13 @@ export class UserProfile {
   @Column({ length: 255 })
   username: string;
 
-  @Column({ length: 255 })
+  @Column({ name: 'phone_number', length: 255 })
   phoneNumber: string;
 
   @Column({ length: 255 })
   university: string;
 
-  @Column()
+  @Column({ name: 'is_graduate' })
   isGraduate: boolean;
 
   @Column()
@@ -43,26 +43,31 @@ export class UserProfile {
   @MaxLength(8)
   job: string;
 
-  @Column({ length: 255 })
+  @Column({ name: 'short_bio', length: 255 })
   @MinLength(1)
   shortBio: string;
 
   @Column({ length: 255, nullable: true })
   location?: string;
 
-  @Column({ length: 255, nullable: true, type: 'varchar' })
-  profileImageUrl?: string;
-
-  @Column('text', { array: true, nullable: true })
+  @Column({ type: 'json', nullable: true })
   interests?: string[];
+
+  @Column({
+    name: 'profile_image_url',
+    length: 255,
+    nullable: true,
+    type: 'varchar',
+  })
+  profileImageUrl?: string;
 
   @Column()
   isMarketingAgree: boolean;
 
-  @OneToOne((type) => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'fkUserId' })
+  @OneToOne((type) => User, (user) => user.profile, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'fk_user_id' })
   user: User;
 
   @Column('uuid')
-  fkUserId: string;
+  fk_user_id: string;
 }
