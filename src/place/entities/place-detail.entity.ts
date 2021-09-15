@@ -1,8 +1,15 @@
+import { CoreEntity } from './../../common/entities/core.entity';
 import { Place } from './place.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'place_detail' })
-export class PlaceDetail {
+export class PlaceDetail extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -10,14 +17,23 @@ export class PlaceDetail {
   title: string;
 
   @Column({ length: 255 })
-  description: string;
+  description!: string;
 
-  @Column('text', { array: true })
+  @Column({ type: 'json' })
   categories: string[];
 
-  @Column('text', { array: true })
+  @Column({ type: 'json' })
   photos: string[];
 
-  @OneToOne((type) => Place, (place) => place.placeDetail)
+  @Column({ length: 255 })
+  detailAddress: string;
+
+  @OneToOne((type) => Place, (place) => place.placeDetail, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'place_id' })
   place: Place;
+
+  @Column({ type: 'uuid' })
+  place_id: string;
 }
