@@ -1,3 +1,6 @@
+import { Reservation } from './reservation/entities/reservation.entity';
+import { PlaceDetail } from './place/entities/place-detail.entity';
+import { Place } from './place/entities/place.entity';
 import { S3Module } from './aws/s3/S3.module';
 import { User } from './user/entities/user.entity';
 import { UserProfile } from './user/entities/user-profile.entity';
@@ -6,9 +9,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { SocialUtilModule } from './utils/social/social-util.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PlaceModule } from './place/place.module';
+import { ReservationModule } from './reservation/reservation.module';
 import SocialAccount from './user/entities/social-account.entity';
 import * as Joi from 'joi';
 
@@ -37,16 +41,22 @@ import * as Joi from 'joi';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, UserProfile, SocialAccount],
+      entities: [
+        User,
+        UserProfile,
+        SocialAccount,
+        Place,
+        PlaceDetail,
+        Reservation,
+      ],
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-    }),
-    SocialUtilModule.forRoot({
-      kakaoId: process.env.KAKAO_ID,
     }),
     UserModule,
     AuthModule,
     S3Module,
+    PlaceModule,
+    ReservationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

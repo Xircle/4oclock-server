@@ -9,7 +9,7 @@ export class PlaceUtilService {
    * @param eventDate
    * @returns
    */
-  static isClosed(eventDate: Date): boolean {
+  isClosed(eventDate: Date): boolean {
     const current_date = moment();
     const event_date = moment(eventDate);
     if (event_date.diff(current_date, 'hours') < -1) return true;
@@ -21,7 +21,7 @@ export class PlaceUtilService {
    * @param eventDate
    * @returns
    */
-  static getDeadlineCaption(eventDate: Date): string {
+  getDeadlineCaption(eventDate: Date): string {
     const current_date = moment();
     const event_date = moment(eventDate);
     if (event_date.diff(current_date, 'hours') < -1) {
@@ -30,6 +30,8 @@ export class PlaceUtilService {
       return '오늘 마감';
     } else if (event_date.diff(current_date, 'hours') < 47) {
       return 'D-1';
+    } else {
+      return undefined;
     }
   }
 
@@ -38,9 +40,9 @@ export class PlaceUtilService {
    * @param eventDate
    * @example "오늘", "내일", "이번주 목요일"
    */
-  static getEventDateCaption(eventDate: Date): string {
+  getEventDateCaption(eventDate: Date): string {
     let event_date_caption: string[] = [];
-    
+
     if (moment(eventDate).isSame(moment(), 'day')) {
       event_date_caption.push('오늘');
     } else {

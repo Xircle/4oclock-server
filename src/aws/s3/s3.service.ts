@@ -1,14 +1,5 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Req,
-  Res,
-} from '@nestjs/common';
-import * as multer from 'multer';
-import * as multerS3 from 'multer-s3';
+import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
