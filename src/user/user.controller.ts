@@ -1,20 +1,24 @@
+import { GetMyPlaceOutput } from './dtos/getPlaceHistory.dto';
+import { MeOutput } from './dtos/me.dto';
+import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { AuthUser } from 'src/auth/auth-user.decorator';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-  ) {}
+  constructor(private userService: UserService) {}
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  async me(@Req() req: Request) {
-    console.log(req.user);
+  async me(@AuthUser() authUser: User) {
+    return this.userService.me(authUser);
+  }
+
+  @Get('history')
+  @UseGuards(AuthGuard('jwt'))
+  async getMyPlace(@AuthUser() authUser: User): Promise<GetMyPlaceOutput> {
+    return this.userService.getMyPlace(authUser);
   }
 }
