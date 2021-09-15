@@ -27,7 +27,7 @@ config();
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: {
-        expiresIn: 60 * 60, // Token expires in 1 hour
+        expiresIn: 60 * 60 * 3, // Token expires in 1 hour
       },
     }),
   ],
