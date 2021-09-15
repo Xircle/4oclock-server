@@ -1,20 +1,22 @@
-import { RolesGuard } from '../auth/guard/roles.guard';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
+import { DeletePlaceOutput } from './dtos/delete-place.dto';
+import { User } from './../user/entities/user.entity';
+import { AuthUser } from './../auth/auth-user.decorator';
+import { RolesGuard } from './../auth/guard/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Query,
-  UploadedFile,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -27,11 +29,13 @@ export class PlaceController {
   constructor(private placeService: PlaceService) {}
 
   @Get()
-  async getPlacesByAround(
+  @UseGuards(AuthGuard())
+  async getPlacesByLocation(
+    @AuthUser() authUser: User,
     @Query('location') location: string,
     @Query('page', ParseIntPipe) page: number,
   ): Promise<GetPlacesByLocationOutput> {
-    return this.placeService.getPlacesByLocation(location, page);
+    return this.placeService.getPlacesByLocation(authUser, location, page);
   }
 
   @Get(':placeId')
@@ -39,8 +43,8 @@ export class PlaceController {
     return this.placeService.getPlaceById(placeId);
   }
 
-  @Post('')
-  @UseGuards(RolesGuard)
+  @Post()
+  @UseGuards(AuthGuard(), RolesGuard)
   @Roles(['Admin', 'Owner'])
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -56,12 +60,22 @@ export class PlaceController {
   )
   async createPlace(
     @Body() createPlaceInput: CreatePlaceInput,
+    @AuthUser() authUser: User,
     @UploadedFiles()
     files: {
-      coverImage: Express.Multer.File;
+      coverImage: Express.Multer.File[];
       reviewImages: Express.Multer.File[];
     },
   ): Promise<CreatePlaceOutput> {
-    return this.placeService.createPlace(createPlaceInput, files);
+    return this.placeService.createPlace(authUser, createPlaceInput, files);
+  }
+
+  @Delete('/:placeId')
+  @UseGuards(RolesGuard)
+  @Roles(['Admin'])
+  async deletePlace(
+    @Param('placeId') placeId: string,
+  ): Promise<DeletePlaceOutput> {
+    return this.placeService.deletePlace(placeId);
   }
 }
