@@ -1,8 +1,7 @@
-import { ParsePipe } from '../common/pipe/parse-pipe';
+import { ParsePipe } from './../common/pipe/parse.pipe';
 import {
-  SocialRegisterInput,
-  SocialRedirectInput,
   SocialRedirectOutput,
+  SocialRegisterInput,
   SocialRegisterOutput,
 } from './dtos/social-register.dto';
 import {
@@ -15,15 +14,14 @@ import { AuthService, SocialAuthService } from './auth.service';
 import {
   Body,
   Controller,
-  Get,
   Param,
-  Res,
   Post,
   UseInterceptors,
   UploadedFile,
+  Query,
+  Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JsonWebTokenError } from 'jsonwebtoken';
 
 @Controller('auth')
 export class AuthController {
@@ -43,18 +41,17 @@ export class AuthController {
     return this.authService.loginUser(loginUserInput);
   }
 }
-
 @Controller('auth/social')
 export class SocialAuthController {
   constructor(private socialAuthService: SocialAuthService) {}
 
   @Post('register/:provider')
-  @UseInterceptors(FileInterceptor('profile_image_file'))
+  @UseInterceptors(FileInterceptor('profileImageFile'))
   async socialRegister(
-    @Body('profile_data', new ParsePipe())
-    socialRegisterInput: SocialRegisterInput,
     @UploadedFile() file: Express.Multer.File,
     @Param('provider') provider: string,
+    @Body(new ParsePipe())
+    socialRegisterInput: SocialRegisterInput,
   ): Promise<SocialRegisterOutput> {
     return this.socialAuthService.socialRegister(
       socialRegisterInput,
@@ -63,11 +60,11 @@ export class SocialAuthController {
     );
   }
 
-  @Post('redirect/:provider')
+  @Get('redirect/')
   async socialRedirect(
-    @Body() socialRedirectInput: SocialRedirectInput,
+    @Query('email') email: string,
     @Param('provider') provider: string,
   ): Promise<SocialRedirectOutput> {
-    return this.socialAuthService.socialRedirect(socialRedirectInput, provider);
+    return this.socialAuthService.socialRedirect(email, provider);
   }
 }

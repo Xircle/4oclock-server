@@ -1,7 +1,6 @@
 import { validate } from 'class-validator';
 import { UserProfile } from '../user/entities/user-profile.entity';
 import {
-  SocialRedirectInput,
   SocialRedirectOutput,
   SocialRegisterInput,
   SocialRegisterOutput,
@@ -112,6 +111,7 @@ export class SocialAuthService {
     @InjectRepository(SocialAccount)
     private readonly socialAccountRepository: Repository<SocialAccount>,
     private readonly s3Service: S3Service,
+    private readonly jwtService: JwtService,
   ) {}
 
   async socialRegister(
@@ -142,8 +142,10 @@ export class SocialAuthService {
         socialId,
       );
 
-      const exists = this.userRepository.findOne({
-        email,
+      const exists = await this.userRepository.findOne({
+        where: {
+          email,
+        },
       });
       if (exists) {
         return {
@@ -173,7 +175,7 @@ export class SocialAuthService {
         profileImageUrl: profileImg_s3_url,
         interests,
         isMarketingAgree,
-        fkUserId: user.id,
+        fk_user_id: user.id,
       });
       await this.userProfileRepository.save(profile);
 
@@ -182,6 +184,7 @@ export class SocialAuthService {
         socialId,
         provider,
         user,
+        fk_user_id: user.id,
       });
       await this.socialAccountRepository.save(socialAccount);
 
@@ -195,35 +198,39 @@ export class SocialAuthService {
   }
 
   async socialRedirect(
-    socialRedirectInput: SocialRedirectInput,
+    email: string,
     provider: string,
   ): Promise<SocialRedirectOutput> {
-    const { email } = socialRedirectInput;
-    if (!email) {
-      return {
-        ok: false,
-        error: '가입을 위해 이메일이 필요합니다. 이메일 동의를 해주세요!',
-      };
-    }
     try {
-      const exists = await this.userRepository.findOne({
-        email,
-      });
+      const exists = await this.userRepository.findOne(
+        {
+          email,
+        },
+        {
+          select: ['id'],
+        },
+      );
       if (exists) {
         // Get user data
-        const user = await this.userRepository.findOne(
-          {
+        const user = await this.userRepository.findOne({
+          where: {
             email,
           },
-          {
-            select: ['id', 'email'],
-            relations: ['profile'],
-          },
-        );
+        });
+        const token = this.jwtService.sign({ id: user.id });
         return {
           ok: true,
           code: 201,
-          user,
+          data: {
+            token,
+            uid: user.id,
+            username: user.profile.username,
+            email: user.email,
+            profile: {
+              id: user.profile.id,
+              thumbnail: user.profile.profileImageUrl,
+            },
+          },
         };
       } else {
         return {
@@ -233,10 +240,7 @@ export class SocialAuthService {
       }
     } catch (e) {
       console.log(e);
-      return {
-        ok: false,
-        error: 'Internal server error',
-      };
+      throw new InternalServerErrorException();
     }
   }
 }
