@@ -26,8 +26,8 @@ export class ReservationService {
   async isParticipating(userId: string, placeId: string): Promise<boolean> {
     const exists = await this.reservationRepository.findOne({
       where: {
-        userId,
-        placeId,
+        user_id: userId,
+        place_id: placeId,
       },
     });
     console.log('exists : ', exists);
@@ -40,7 +40,7 @@ export class ReservationService {
   ): Promise<MainFeedPlaceParticipantsProfile[]> {
     const participants = await this.reservationRepository.find({
       where: {
-        placeId,
+        place_id: placeId,
       },
       relations: ['participant'],
     });
