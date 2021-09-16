@@ -1,3 +1,4 @@
+import { UserRepository } from './repositories/user.repository';
 import { PlaceUtilService } from './../utils/place/place-util.service';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { User } from './entities/user.entity';
@@ -7,7 +8,7 @@ import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Reservation])],
+  imports: [TypeOrmModule.forFeature([UserRepository, Reservation])],
   providers: [UserService, PlaceUtilService],
   controllers: [UserController],
 })

@@ -1,21 +1,21 @@
+import { UserRepository } from './repositories/user.repository';
 import { PlaceUtilService } from './../utils/place/place-util.service';
-import { MainFeedPlace } from './../place/dtos/get-place-by-location.dto';
 import { GetMyPlaceOutput, MyXircle } from './dtos/getPlaceHistory.dto';
 import { Reservation } from './../reservation/entities/reservation.entity';
 import { MeOutput } from './dtos/me.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
     private placeUtilRepository: PlaceUtilService,
+    private users: UserRepository,
   ) {}
 
   async me(authUser: User): Promise<MeOutput> {
@@ -34,6 +34,38 @@ export class UserService {
           university,
           age,
           reservation_count: reservations.length,
+        },
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async seeRandomProfile(authUser: User): Promise<SeeRandomProfileOutput> {
+    try {
+      const randomUser = await this.users.findRandomUser(authUser.id);
+
+      const {
+        profileImageUrl,
+        location,
+        username,
+        job,
+        university,
+        age,
+        shortBio,
+      } = randomUser.profile;
+      return {
+        ok: true,
+        randomProfile: {
+          id: randomUser.id,
+          profileImageUrl,
+          location,
+          username,
+          job,
+          university,
+          age,
+          shortBio,
         },
       };
     } catch (err) {
@@ -75,5 +107,3 @@ export class UserService {
     }
   }
 }
-
-// user.reservation GET /user/me 200 68.609 ms - -
