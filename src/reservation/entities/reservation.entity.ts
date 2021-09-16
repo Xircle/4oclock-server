@@ -30,11 +30,11 @@ export class Reservation extends CoreEntity {
   @Column('uuid')
   place_id: string;
 
-  @ManyToOne((type) => User, { cascade: true, eager: true })
+  @ManyToOne((type) => User, { cascade: true})
   @JoinColumn({ name: 'user_id' })
   participant: User;
 
-  @ManyToOne((type) => Place, { cascade: true, eager: true })
+  @ManyToOne((type) => Place, { cascade: true})
   @JoinColumn({ name: 'place_id' })
   place: Place;
 }
