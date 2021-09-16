@@ -6,7 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MaxLength, MinLength } from 'class-validator';
+import { Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export enum Gender {
   Female = 'Female',
@@ -19,6 +19,8 @@ export class UserProfile {
   id: string;
 
   @Column({ length: 255 })
+  @Min(1)
+  @Max(20)
   username: string;
 
   @Column({ name: 'phone_number', length: 255 })
