@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUser } from 'src/auth/auth-user.decorator';
+import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 
 @Controller('user')
 export class UserController {
@@ -14,6 +15,14 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   async me(@AuthUser() authUser: User) {
     return this.userService.me(authUser);
+  }
+
+  @Get('friend')
+  @UseGuards(AuthGuard('jwt'))
+  async seeRandomProfile(
+    @AuthUser() authUser: User,
+  ): Promise<SeeRandomProfileOutput> {
+    return this.userService.seeRandomProfile(authUser);
   }
 
   @Get('history')
