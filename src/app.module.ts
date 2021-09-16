@@ -41,6 +41,9 @@ import * as Joi from 'joi';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      cache: {
+        duration: 6000,
+      },
       entities: [
         User,
         UserProfile,
