@@ -12,7 +12,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Reservation } from './entities/reservation.entity';
-import { Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 
 @Injectable()
 export class ReservationService {
@@ -61,17 +61,18 @@ export class ReservationService {
     makeReservation: MakeReservationDto,
   ): Promise<MakeReservationOutput> {
     const { placeId, startTime } = makeReservation;
-    console.log(placeId, startTime);
     try {
-      const place = await this.placeRepository.findOne({
+      const targetPlace = await this.placeRepository.findOne({
         where: {
           id: placeId,
         },
       });
-      if (!place) {
-        throw new BadRequestException();
+      if (!targetPlace) {
+        return {
+          ok: false,
+          error: '존재하지 않는 써클입니다.',
+        };
       }
-
       const exists = await this.reservationRepository.findOne({
         where: {
           place_id: placeId,
@@ -85,12 +86,18 @@ export class ReservationService {
           error: '이미 신청하셨습니다.',
         };
       }
-      const reservation = this.reservationRepository.create({
-        place_id: placeId,
-        user_id: authUser.id,
-        startTime,
+
+      await getManager().transaction(async (transactionEntityManager) => {
+        const reservation = this.reservationRepository.create({
+          place_id: placeId,
+          user_id: authUser.id,
+          startTime,
+        });
+        await transactionEntityManager.save(reservation);
+        targetPlace.participantsCount++;
+        await transactionEntityManager.save(targetPlace);
       });
-      await this.reservationRepository.save(reservation);
+
       return {
         ok: true,
       };

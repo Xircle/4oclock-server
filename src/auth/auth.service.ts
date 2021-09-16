@@ -14,7 +14,7 @@ import {
 import { User, UserRole } from './../user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { S3Service } from 'src/aws/s3/s3.service';
 import SocialAccount from 'src/user/entities/social-account.entity';
@@ -153,40 +153,44 @@ export class SocialAuthService {
           error: '이미 존재하는 이메일입니다.',
         };
       }
-      // Create user
-      const user = this.userRepository.create({
-        email,
-        isVerified: false,
-        role: UserRole.Client,
-      });
-      await this.userRepository.save(user);
 
-      // Create profile
-      const profile = this.userProfileRepository.create({
-        username,
-        phoneNumber,
-        university,
-        isGraduate,
-        age,
-        gender,
-        job,
-        shortBio,
-        location,
-        profileImageUrl: profileImg_s3_url,
-        interests,
-        isMarketingAgree,
-        fk_user_id: user.id,
-      });
-      await this.userProfileRepository.save(profile);
+      // Transaction Start
+      await getManager().transaction(async (transactionalEntityManager) => {
+        // Create user
+        const user = this.userRepository.create({
+          email,
+          isVerified: false,
+          role: UserRole.Client,
+        });
+        await transactionalEntityManager.save(user);
 
-      // Create social account
-      const socialAccount = this.socialAccountRepository.create({
-        socialId,
-        provider,
-        user,
-        fk_user_id: user.id,
+        // Create profile
+        const profile = this.userProfileRepository.create({
+          username,
+          phoneNumber,
+          university,
+          isGraduate,
+          age,
+          gender,
+          job,
+          shortBio,
+          location,
+          profileImageUrl: profileImg_s3_url,
+          interests,
+          isMarketingAgree,
+          fk_user_id: user.id,
+        });
+        await transactionalEntityManager.save(profile);
+
+        // Create social account
+        const socialAccount = this.socialAccountRepository.create({
+          socialId,
+          provider,
+          user,
+          fk_user_id: user.id,
+        });
+        await transactionalEntityManager.save(socialAccount);
       });
-      await this.socialAccountRepository.save(socialAccount);
 
       return {
         ok: true,

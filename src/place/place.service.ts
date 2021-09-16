@@ -17,7 +17,7 @@ import { GetPlacesByLocationOutput } from './dtos/get-place-by-Location.dto';
 import { Place } from './entities/place.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import {
   GetPlaceByIdOutput,
   PlaceDetailData,
@@ -186,25 +186,30 @@ export class PlaceService {
         photoImagesUrl.push(s3_url);
       }
 
-      const place = this.placeRepository.create({
-        name,
-        coverImage: coverImageS3Url,
-        location,
-        tags,
-        recommendation,
-        startDateAt,
-      });
-      await this.placeRepository.save(place);
+    //   Transction start
+      await getManager().transaction(async (transactionalEntityManager) => {
+        //   Create place
+        const place = this.placeRepository.create({
+          name,
+          coverImage: coverImageS3Url,
+          location,
+          tags,
+          recommendation,
+          startDateAt,
+        });
+        await transactionalEntityManager.save(place);
 
-      const placeDetail = this.placeDetailRepository.create({
-        title,
-        description,
-        categories,
-        photos: photoImagesUrl,
-        place,
-        detailAddress: detailAddress,
+        //   Create place detail
+        const placeDetail = this.placeDetailRepository.create({
+          title,
+          description,
+          categories,
+          photos: photoImagesUrl,
+          place,
+          detailAddress: detailAddress,
+        });
+        await transactionalEntityManager.save(placeDetail);
       });
-      await this.placeDetailRepository.save(placeDetail);
 
       return {
         ok: true,
