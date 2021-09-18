@@ -1,15 +1,31 @@
-import { PlaceDetail } from './../entities/place-detail.entity';
+import { MainFeedPlaceParticipantsProfile } from './get-place-by-location.dto';
 import { CoreOutput } from 'src/common/common.interface';
 
-export class PlaceDetailData extends PlaceDetail {
-  participants: {
+export class PlaceDataParticipantsProfile extends MainFeedPlaceParticipantsProfile {}
+
+export class PlaceData {
+  name: string;
+  startDateFromNow: string;
+  recommendation: string;
+  coverImage: string;
+  isClosed: boolean;
+  isParticipating: boolean;
+  participantsCount: number;
+  participants: PlaceDataParticipantsProfile[];
+  participantsInfo: {
     total_count: number;
     male_count: number;
     average_age: number;
   };
-  isParticipating: boolean;
+  placeDetail: {
+    title: string;
+    description: string;
+    categories: string[];
+    detailAddress: string;
+    photos: string[];
+  };
 }
 
 export class GetPlaceByIdOutput extends CoreOutput {
-  placeDetailData?: PlaceDetailData;
+  placeData?: PlaceData;
 }

@@ -21,6 +21,15 @@ export class MainFeedPlace {
   isClosed: boolean;
 }
 
+export class GetPlaceByLocationInput {
+  location?: string;
+  page: number;
+}
 export class GetPlacesByLocationOutput extends CoreOutput {
   places?: MainFeedPlace[];
+}
+
+export class GetPlaceByLocationWhereOptions {
+  location?: string;
+  isClosed: boolean;
 }
