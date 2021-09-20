@@ -1,5 +1,3 @@
-import { User } from './../../user/entities/user.entity';
-import { SocialProfile } from './../../common/common.interface';
 import { CoreOutput } from 'src/common/common.interface';
 import { Gender } from 'src/user/entities/user-profile.entity';
 import {
@@ -63,18 +61,23 @@ export class SocialRegisterInput {
   @IsNotEmpty()
   isMarketingAgree: boolean;
 }
-export class SocialRegisterOutput extends CoreOutput {}
+
+export class AuthDataToFront {
+  uid: string;
+  username: string;
+  email: string;
+  token: string;
+  profile: {
+    id: string;
+    thumbnail: string;
+  };
+}
+
+export class SocialRegisterOutput extends CoreOutput {
+  data?: AuthDataToFront;
+}
 
 export class SocialRedirectOutput extends CoreOutput {
   code?: number;
-  data?: {
-    uid: string;
-    username: string;
-    email: string;
-    token: string;
-    profile: {
-      id: string;
-      thumbnail: string;
-    };
-  };
+  data?: AuthDataToFront;
 }
