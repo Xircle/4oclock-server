@@ -14,7 +14,7 @@ import {
   CreatePlaceOutput,
   PlacePhotoInput,
 } from './dtos/create-place.dto';
-import { GetPlacesByLocationOutput } from './dtos/get-place-by-Location.dto';
+import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
 import { Place } from './entities/place.entity';
 import {
   Injectable,
