@@ -31,5 +31,4 @@ export class GetPlacesByLocationOutput extends CoreOutput {
 
 export class GetPlaceByLocationWhereOptions {
   location?: string;
-  isClosed: boolean;
 }

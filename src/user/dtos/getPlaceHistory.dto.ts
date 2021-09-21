@@ -7,6 +7,7 @@ export class MyXircle {
   tags: string[];
   recommendation: string;
   startDateFromNow: string;
+  isClosed: boolean;
 }
 
 export class GetMyPlaceOutput extends CoreOutput {

@@ -1,5 +1,6 @@
-import { ReservationService } from './../reservation/reservation.service';
+import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
+  GetPlaceByLocationWhereOptions,
   MainFeedPlace,
   MainFeedPlaceParticipantsProfile,
 } from './dtos/get-place-by-location.dto';
@@ -15,36 +16,46 @@ import {
 } from './dtos/create-place.dto';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-Location.dto';
 import { Place } from './entities/place.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Scope,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import {
   GetPlaceByIdOutput,
-  PlaceDetailData,
+  PlaceData,
+  PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
   constructor(
     @InjectRepository(Place)
     private placeRepository: Repository<Place>,
     @InjectRepository(PlaceDetail)
     private placeDetailRepository: Repository<PlaceDetail>,
-    private s3Service: S3Service,
     private placeUtilService: PlaceUtilService,
-    private reservationService: ReservationService,
+    private s3Service: S3Service,
+    private reservationUtilService: ReservationUtilService,
   ) {}
 
   async getPlacesByLocation(
-    authUser: User,
+    anyUser: User | undefined,
     location: string,
     page: number,
   ): Promise<GetPlacesByLocationOutput> {
+    let whereOptions: GetPlaceByLocationWhereOptions = {};
+    if (location !== '전체') {
+      whereOptions = {
+        location,
+      };
+    }
     try {
       const places = await this.placeRepository.find({
         where: {
-          location: location,
-          isClosed: false,
+          ...whereOptions,
         },
         order: {
           startDateAt: 'ASC',
@@ -67,19 +78,26 @@ export class PlaceService {
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
       for (const place of places) {
-        const isParticipating = await this.reservationService.isParticipating(
-          authUser.id,
-          place.id,
-        );
+        let isParticipating = false;
+        if (anyUser) {
+          // AuthUser 일 때만
+          isParticipating = await this.reservationUtilService.isParticipating(
+            anyUser.id,
+            place.id,
+          );
+        }
         const participants: MainFeedPlaceParticipantsProfile[] =
-          await this.reservationService.getParticipantsProfile(place.id);
+          await this.reservationUtilService.getParticipantsProfile(place.id);
         const deadline = this.placeUtilService.getDeadlineCaption(
           place.startDateAt,
         );
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
         );
-        console.log(deadline);
+        if (deadline === '마감') {
+          place.isClosed = true;
+          await this.placeRepository.save(place);
+        }
         mainFeedPlaces.push({
           ...place,
           deadline,
@@ -100,52 +118,76 @@ export class PlaceService {
     }
   }
 
-  async getPlaceById(placeId: string): Promise<GetPlaceByIdOutput> {
+  async getPlaceById(
+    anyUser: User | undefined,
+    placeId: string,
+  ): Promise<GetPlaceByIdOutput> {
     try {
-      const placeDetail = await this.placeDetailRepository.findOne({
+      const place = await this.placeRepository.findOne({
         where: {
-          place_id: placeId,
+          id: placeId,
         },
         select: [
-          'categories',
-          'title',
-          'description',
-          'photos',
-          'detailAddress',
+          'id',
+          'name',
+          'coverImage',
+          'recommendation',
+          'startDateAt',
+          'isClosed',
+          'participantsCount',
         ],
       });
-      if (!placeDetail) {
+
+      if (!place) {
         return {
           ok: false,
-          error: '모임의 세부 정보가 존재하지 않습니다.',
+          error: '모임이 존재하지 않습니다.',
         };
       }
-      //   참여자 성비, 평균 나이 추가
-      const partiProfile = await this.reservationService.getParticipantsProfile(
-        placeId,
+
+      // 이벤트 시작 시간
+      const startDateFromNow = this.placeUtilService.getEventDateCaption(
+        place.startDateAt,
       );
 
-      let total_count = partiProfile.length;
+      // 참여 여부
+      let isParticipating = false;
+      if (anyUser) {
+        console.log(anyUser);
+        isParticipating = await this.reservationUtilService.isParticipating(
+          anyUser.id,
+          placeId,
+        );
+      }
+
+      // 참여자 성비, 평균 나이 추가
+      const participants: PlaceDataParticipantsProfile[] =
+        await this.reservationUtilService.getParticipantsProfile(placeId);
+
+      let total_count = participants.length;
       let male_count = 0;
       let sum_age = 0;
-      partiProfile.map((parti) => {
-        if (parti.gender === 'Male') male_count++;
-        sum_age += parti.age;
+      participants.map((participant) => {
+        if (participant.gender === 'Male') male_count++;
+        sum_age += participant.age;
       });
 
-      const placeDetailData: PlaceDetailData = {
-        ...placeDetail,
-        participants: {
-          total_count,
-          male_count,
-          average_age: sum_age / total_count || 0,
-        },
-        isParticipating: false,
+      const participantsInfo = {
+        total_count,
+        male_count,
+        average_age: Math.floor(sum_age / total_count) || 0,
       };
-      console.log(placeDetailData);
+
+      const placeData: PlaceData = {
+        ...place,
+        isParticipating,
+        startDateFromNow,
+        participants,
+        participantsInfo,
+      };
       return {
         ok: true,
-        placeDetailData,
+        placeData,
       };
     } catch (err) {
       console.log(err);
@@ -186,7 +228,7 @@ export class PlaceService {
         photoImagesUrl.push(s3_url);
       }
 
-    //   Transction start
+      //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
         const place = this.placeRepository.create({
