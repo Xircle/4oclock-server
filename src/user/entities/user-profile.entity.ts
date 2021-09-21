@@ -57,7 +57,7 @@ export class UserProfile {
 
   @Column({
     name: 'profile_image_url',
-    length: 255,
+    length: 512,
     nullable: true,
     type: 'varchar',
   })

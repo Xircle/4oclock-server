@@ -41,7 +41,6 @@ export class User extends CoreEntity {
   role: UserRole;
 
   @OneToOne((type) => UserProfile, (profile) => profile.user, {
-    cascade: true,
     eager: true,
     onDelete: 'CASCADE',
   })
