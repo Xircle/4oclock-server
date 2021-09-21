@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { UserProfile } from '../user/entities/user-profile.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { User } from './../user/entities/user.entity';
