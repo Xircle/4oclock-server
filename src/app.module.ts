@@ -17,7 +17,6 @@ import { PlaceModule } from './place/place.module';
 import { ReservationModule } from './reservation/reservation.module';
 import SocialAccount from './user/entities/social-account.entity';
 
-console.log(process.env.DATABASE_URL);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +26,9 @@ console.log(process.env.DATABASE_URL);
     TypeOrmModule.forRoot({
       url: process.env.DATABASE_URL,
       type: 'postgres',
-      ssl: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
       cache: {
         duration: 6000,
       },
