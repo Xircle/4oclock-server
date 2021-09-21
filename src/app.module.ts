@@ -1,7 +1,7 @@
 import { Reservation } from './reservation/entities/reservation.entity';
 import { PlaceDetail } from './place/entities/place-detail.entity';
 import { Place } from './place/entities/place.entity';
-import { S3Module } from './aws/s3/S3.module';
+import { S3Module } from './aws/s3/s3.module';
 import { User } from './user/entities/user.entity';
 import { UserProfile } from './user/entities/user-profile.entity';
 import { Module } from '@nestjs/common';
