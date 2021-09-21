@@ -30,11 +30,11 @@ export class Reservation extends CoreEntity {
   @Column('uuid')
   place_id: string;
 
-  @ManyToOne((type) => User, { cascade: true})
+  @ManyToOne((type) => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   participant: User;
 
-  @ManyToOne((type) => Place, { cascade: true})
+  @ManyToOne((type) => Place, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'place_id' })
   place: Place;
 }

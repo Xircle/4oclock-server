@@ -55,7 +55,7 @@ export class PlaceUtilService {
         ) {
           event_date_caption.push(
             '이번주',
-            moment(eventDate).format('dddd').replace('요일', ''),
+            moment(eventDate).format('dddd')
           );
         } else {
           // 다음주 이상
@@ -71,7 +71,7 @@ export class PlaceUtilService {
           ) {
             event_date_caption.push(
               '다음주',
-              moment(eventDate).format('dddd').replace('요일', ''),
+              moment(eventDate).format('dddd')
             );
           } else {
             event_date_caption.push(moment(eventDate).format('M월DD일'));

@@ -1,17 +1,13 @@
+import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
 import { User } from './../user/entities/user.entity';
 import { Place } from './../place/entities/place.entity';
 import {
   MakeReservationDto,
   MakeReservationOutput,
 } from './dtos/make-reservation.dto';
-import { MainFeedPlaceParticipantsProfile } from './../place/dtos/get-place-by-location.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { Reservation } from './entities/reservation.entity';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Reservation, StartTime } from './entities/reservation.entity';
 import { getManager, Repository } from 'typeorm';
 
 @Injectable()
@@ -22,39 +18,6 @@ export class ReservationService {
     @InjectRepository(Place)
     private placeRepository: Repository<Place>,
   ) {}
-
-  async isParticipating(userId: string, placeId: string): Promise<boolean> {
-    const exists = await this.reservationRepository.findOne({
-      where: {
-        user_id: userId,
-        place_id: placeId,
-      },
-    });
-    console.log('exists : ', exists);
-    if (exists) return true;
-    else return false;
-  }
-
-  async getParticipantsProfile(
-    placeId: string,
-  ): Promise<MainFeedPlaceParticipantsProfile[]> {
-    const participants = await this.reservationRepository.find({
-      where: {
-        place_id: placeId,
-      },
-      relations: ['participant'],
-    });
-    const mainFeedPlacePartiProfile: MainFeedPlaceParticipantsProfile[] = [];
-    participants.map((parti) => {
-      mainFeedPlacePartiProfile.push({
-        userId: parti.participant.id,
-        profileImgUrl: parti.participant.profile.profileImageUrl,
-        gender: parti.participant.profile.gender,
-        age: parti.participant.profile.age,
-      });
-    });
-    return mainFeedPlacePartiProfile;
-  }
 
   async makeReservation(
     authUser: User,
@@ -73,11 +36,16 @@ export class ReservationService {
           error: '존재하지 않는 써클입니다.',
         };
       }
+      if (targetPlace.isClosed) {
+        return {
+          ok: false,
+          error: '이미 마감된 써클입니다.',
+        };
+      }
       const exists = await this.reservationRepository.findOne({
         where: {
           place_id: placeId,
           user_id: authUser.id,
-          startTime,
         },
       });
       if (exists) {
@@ -86,6 +54,8 @@ export class ReservationService {
           error: '이미 신청하셨습니다.',
         };
       }
+
+      console.log('exists : ', exists);
 
       await getManager().transaction(async (transactionEntityManager) => {
         const reservation = this.reservationRepository.create({
@@ -100,6 +70,56 @@ export class ReservationService {
 
       return {
         ok: true,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getReservationParticipantNumber(
+    placeId: string,
+  ): Promise<GetReservationParticipantNumberOutput> {
+    try {
+      const place = await this.placeRepository.find({
+        where: {
+          id: placeId,
+        },
+      });
+      console.log('place : ', place);
+      if (!place) {
+        return {
+          ok: false,
+          error: '존재하지 않는 써클입니다.',
+        };
+      }
+      const count_reservation_at_four = await this.reservationRepository.count({
+        where: {
+          place_id: placeId,
+          startTime: StartTime.Four,
+        },
+      });
+      const count_reservation_at_seven = await this.reservationRepository.count(
+        {
+          where: {
+            place_id: placeId,
+            startTime: StartTime.Seven,
+          },
+        },
+      );
+
+      return {
+        ok: true,
+        info: [
+          {
+            startTime: StartTime.Four,
+            participantNumber: count_reservation_at_four,
+          },
+          {
+            startTime: StartTime.Seven,
+            participantNumber: count_reservation_at_seven,
+          },
+        ],
       };
     } catch (err) {
       console.log(err);
