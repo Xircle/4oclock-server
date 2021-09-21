@@ -11,6 +11,10 @@ import {
 
 export class SocialRegisterInput {
   @IsString()
+  @IsOptional()
+  profileImageUrl: string;
+
+  @IsString()
   @IsNotEmpty()
   socialId: string;
 

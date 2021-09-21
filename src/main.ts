@@ -1,9 +1,9 @@
+import { config } from 'dotenv';
+config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as logger from 'morgan';
 import { ValidationPipe } from '@nestjs/common';
-import * as moment from 'moment';
-import 'moment/locale/ko';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

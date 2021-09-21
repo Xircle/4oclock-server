@@ -5,7 +5,6 @@ import {
   Column,
   Entity,
   Index,
-  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -49,9 +48,7 @@ export class Place extends CoreEntity {
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
     cascade: true,
     eager: true,
-    onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'place_detail_id' })
   placeDetail: PlaceDetail;
 
   @OneToMany((type) => Reservation, (reservation) => reservation.place)
