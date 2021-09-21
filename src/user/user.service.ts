@@ -1,3 +1,4 @@
+import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { UserRepository } from './repositories/user.repository';
 import { PlaceUtilService } from './../utils/place/place-util.service';
 import { GetMyPlaceOutput, MyXircle } from './dtos/getPlaceHistory.dto';
@@ -5,7 +6,7 @@ import { Reservation } from './../reservation/entities/reservation.entity';
 import { MeOutput } from './dtos/me.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 
@@ -74,6 +75,49 @@ export class UserService {
     }
   }
 
+  async seeUserById(userId: string): Promise<SeeUserByIdOutput> {
+    try {
+      const user = await this.users.findOne({
+        where: {
+          id: userId,
+        },
+      });
+
+      const {
+        profileImageUrl,
+        location,
+        username,
+        job,
+        university,
+        age,
+        shortBio,
+      } = user.profile;
+
+      if (!user) {
+        return {
+          ok: false,
+          error: '존재하지 않는 유저입니다.',
+        };
+      }
+      return {
+        ok: true,
+        user: {
+          id: user.id,
+          profileImageUrl,
+          location,
+          username,
+          job,
+          university,
+          age,
+          shortBio,
+        },
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
   async getMyPlace(authUser: User): Promise<GetMyPlaceOutput> {
     try {
       const reservations = await this.reservationRepository.find({
@@ -94,6 +138,7 @@ export class UserService {
           name: res.place.name,
           tags: res.place.tags,
           recommendation: res.place.recommendation,
+          isClosed: res.place.isClosed,
           startDateFromNow,
         });
       });
