@@ -10,6 +10,8 @@ import { PassportModule } from '@nestjs/passport';
 import SocialAccount from 'src/user/entities/social-account.entity';
 import { S3Service } from 'src/aws/s3/s3.service';
 
+console.log('!!!!!!!!!!!!!!!!!!!!!', process.env.JWT_SECRET_KEY);
+
 @Module({
   imports: [
     PassportModule.register({
