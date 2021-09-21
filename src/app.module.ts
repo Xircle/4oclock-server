@@ -27,6 +27,7 @@ console.log(process.env.DATABASE_URL);
     TypeOrmModule.forRoot({
       url: process.env.DATABASE_URL,
       type: 'postgres',
+      ssl: true,
       cache: {
         duration: 6000,
       },
