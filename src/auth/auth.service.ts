@@ -1,6 +1,7 @@
 import { validate } from 'class-validator';
 import { UserProfile } from '../user/entities/user-profile.entity';
 import {
+  AuthDataToFront,
   SocialRedirectOutput,
   SocialRegisterInput,
   SocialRegisterOutput,
@@ -86,7 +87,7 @@ export class AuthService {
         };
 
       // create token
-      const accessToken = this.jwtService.sign({ email });
+      const accessToken = this.jwtService.sign({ id: user.id });
       return {
         ok: true,
         accessToken,
@@ -120,6 +121,7 @@ export class SocialAuthService {
     provider: string,
   ): Promise<SocialRegisterOutput> {
     const {
+      profileImageUrl,
       socialId,
       email,
       phoneNumber,
@@ -136,12 +138,16 @@ export class SocialAuthService {
     } = socialRegisterInput;
 
     try {
-      // Upload to S3
-      const profileImg_s3_url = await this.s3Service.uploadToS3(
-        profileImageFile,
-        socialId,
-      );
-
+      let final_profile_image: string;
+      if (profileImageUrl) {
+        final_profile_image = profileImageUrl;
+      } else {
+        // Upload to S3
+        final_profile_image = await this.s3Service.uploadToS3(
+          profileImageFile,
+          socialId,
+        );
+      }
       const exists = await this.userRepository.findOne({
         where: {
           email,
@@ -154,6 +160,7 @@ export class SocialAuthService {
         };
       }
 
+      let data: AuthDataToFront;
       // Transaction Start
       await getManager().transaction(async (transactionalEntityManager) => {
         // Create user
@@ -175,7 +182,7 @@ export class SocialAuthService {
           job,
           shortBio,
           location,
-          profileImageUrl: profileImg_s3_url,
+          profileImageUrl: final_profile_image,
           interests,
           isMarketingAgree,
           fk_user_id: user.id,
@@ -190,10 +197,21 @@ export class SocialAuthService {
           fk_user_id: user.id,
         });
         await transactionalEntityManager.save(socialAccount);
+        data = {
+          token: this.jwtService.sign({ id: user.id }),
+          uid: user.id,
+          username,
+          email,
+          profile: {
+            id: profile.id,
+            thumbnail: profile.profileImageUrl,
+          },
+        };
       });
 
       return {
         ok: true,
+        data,
       };
     } catch (err) {
       console.log(err);
