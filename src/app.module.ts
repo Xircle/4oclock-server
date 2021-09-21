@@ -16,35 +16,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaceModule } from './place/place.module';
 import { ReservationModule } from './reservation/reservation.module';
 import SocialAccount from './user/entities/social-account.entity';
-import * as Joi from 'joi';
 
-console.log(process.env.DB_HOST, process.env.DB_PORT);
-
+console.log(process.env.DATABASE_URL);
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      validationSchema: Joi.object({
-        DB_PORT: Joi.number().required(),
-        DB_HOST: Joi.string().required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_NAME: Joi.string().required(),
-        KAKAO_ID: Joi.string().required(),
-        JWT_SECRET_KEY: Joi.string().required(),
-        AWS_S3_BUCKET_NAME: Joi.string().required(),
-        AWS_ACCESS_KEY: Joi.string().required(),
-        AWS_SECRET_KEY: Joi.string().required(),
-      }),
     }),
     TypeOrmModule.forRoot({
+      url: process.env.DATABASE_URL,
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
       cache: {
         duration: 6000,
       },
