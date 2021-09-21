@@ -16,6 +16,8 @@ import { ReservationModule } from './reservation/reservation.module';
 import SocialAccount from './user/entities/social-account.entity';
 import * as Joi from 'joi';
 
+console.log(process.env.DB_HOST, process.env.DB_PORT);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
