@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { Reservation } from './reservation/entities/reservation.entity';
 import { PlaceDetail } from './place/entities/place-detail.entity';
 import { Place } from './place/entities/place.entity';
