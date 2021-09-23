@@ -9,11 +9,11 @@ import {
 import { Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export enum Gender {
-  female = 'female',
-  male = 'male',
+  Female = 'Female',
+  Male = 'Male',
 }
 
-@Entity('user_profiles')
+@Entity('user_profiles', { synchronize: true })
 export class UserProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -45,7 +45,7 @@ export class UserProfile {
   @MaxLength(8)
   job: string;
 
-  @Column({ name: 'short_bio', length: 255 })
+  @Column({ name: 'short_bio', length: 1023 })
   @MinLength(1)
   shortBio: string;
 
