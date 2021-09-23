@@ -9,8 +9,8 @@ import {
 import { Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export enum Gender {
-  Female = 'Female',
-  Male = 'Male',
+  female = 'female',
+  male = 'male',
 }
 
 @Entity('user_profiles')
