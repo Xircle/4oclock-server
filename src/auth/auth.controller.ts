@@ -61,11 +61,11 @@ export class SocialAuthController {
     );
   }
 
-  @Get('redirect/')
+  @Get('redirect/:provider')
   async socialRedirect(
-    @Query('email') email: string,
     @Param('provider') provider: string,
+    @Query('socialId') socialId: string,
   ): Promise<SocialRedirectOutput> {
-    return this.socialAuthService.socialRedirect(email, provider);
+    return this.socialAuthService.socialRedirect(provider, socialId);
   }
 }

@@ -220,23 +220,21 @@ export class SocialAuthService {
   }
 
   async socialRedirect(
-    email: string,
     provider: string,
+    socialId: string,
   ): Promise<SocialRedirectOutput> {
     try {
-      const exists = await this.userRepository.findOne(
-        {
-          email,
+      const socialAccount = await this.socialAccountRepository.findOne({
+        where: {
+          socialId,
+          provider,
         },
-        {
-          select: ['id'],
-        },
-      );
-      if (exists) {
+      });
+      if (socialAccount) {
         // Get user data
         const user = await this.userRepository.findOne({
           where: {
-            email,
+            id: socialAccount.fk_user_id,
           },
         });
         const token = this.jwtService.sign({ id: user.id });
