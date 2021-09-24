@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/swagger';
 import { SocialRegisterInput } from 'src/auth/dtos/social-register.dto';
 
-export interface EditProfileInput extends Partial<SocialRegisterInput> {}
+export class EditProfileInput extends PartialType(SocialRegisterInput) {}
