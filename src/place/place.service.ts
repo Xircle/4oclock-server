@@ -37,7 +37,7 @@ export class PlaceService {
     private placeRepository: Repository<Place>,
     @InjectRepository(PlaceDetail)
     private placeDetailRepository: Repository<PlaceDetail>,
-    @InjectRepository(PlaceDetail)
+    @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
     private placeUtilService: PlaceUtilService,
     private s3Service: S3Service,
@@ -161,7 +161,6 @@ export class PlaceService {
       // 참여 여부
       let isParticipating = false;
       if (anyUser) {
-        console.log(anyUser);
         isParticipating = await this.reservationUtilService.isParticipating(
           anyUser.id,
           placeId,
