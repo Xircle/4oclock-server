@@ -1,14 +1,18 @@
+import { S3Service } from './../aws/s3/s3.service';
+import { EditProfileInput } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { UserRepository } from './repositories/user.repository';
 import { PlaceUtilService } from './../utils/place/place-util.service';
-import { GetMyPlaceOutput, MyXircle } from './dtos/getPlaceHistory.dto';
+import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
 import { Reservation } from './../reservation/entities/reservation.entity';
 import { MeOutput } from './dtos/me.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
+import { CoreOutput } from 'src/common/common.interface';
+import { UserProfile } from './entities/user-profile.entity';
 
 @Injectable()
 export class UserService {
@@ -17,6 +21,7 @@ export class UserService {
     private reservationRepository: Repository<Reservation>,
     private placeUtilRepository: PlaceUtilService,
     private users: UserRepository,
+    private readonly s3Service: S3Service,
   ) {}
 
   async me(authUser: User): Promise<MeOutput> {
@@ -145,6 +150,55 @@ export class UserService {
       return {
         ok: true,
         places: historyPlaces,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async editProfile(
+    authUser: User,
+    profileImageFile: Express.Multer.File,
+    editProfileInput: EditProfileInput,
+  ): Promise<CoreOutput> {
+    try {
+      const user = await this.users.findOne({
+        where: {
+          id: authUser.id,
+        },
+      });
+      if (!user) {
+        return {
+          ok: false,
+          error: '존재하지 않는 계정입니다.',
+        };
+      }
+
+      let profile_image_s3;
+      // Upload to s3 when profile file exists
+      if (profileImageFile) {
+        profile_image_s3 = await this.s3Service.uploadToS3(
+          profileImageFile,
+          user.id,
+        );
+      }
+      console.log('edit profile data : ', editProfileInput);
+      console.log('profile_image_s3 : ', profile_image_s3);
+      await getManager().transaction(async (transactionalEntityManager) => {
+        // Update profile
+        await transactionalEntityManager.update(
+          UserProfile,
+          {
+            fk_user_id: user.id,
+          },
+          {
+            ...editProfileInput,
+          },
+        );
+      });
+      return {
+        ok: true,
       };
     } catch (err) {
       console.log(err);
