@@ -32,10 +32,21 @@ export class UserService {
           user_id: authUser.id,
         },
       });
-      const { profileImageUrl, age, university, username } = authUser.profile;
+      const {
+        profileImageUrl,
+        age,
+        gender,
+        shortBio,
+        job,
+        university,
+        username,
+      } = authUser.profile;
       return {
         ok: true,
         data: {
+          gender,
+          shortBio,
+          job,
           profileImageUrl,
           username,
           university,
