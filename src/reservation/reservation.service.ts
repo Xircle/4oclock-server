@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Reservation, StartTime } from './entities/reservation.entity';
-import { getManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ReservationService {
@@ -55,18 +55,12 @@ export class ReservationService {
         };
       }
 
-      console.log('exists : ', exists);
-
-      await getManager().transaction(async (transactionEntityManager) => {
-        const reservation = this.reservationRepository.create({
-          place_id: placeId,
-          user_id: authUser.id,
-          startTime,
-        });
-        await transactionEntityManager.save(reservation);
-        targetPlace.participantsCount++;
-        await transactionEntityManager.save(targetPlace);
+      const reservation = this.reservationRepository.create({
+        place_id: placeId,
+        user_id: authUser.id,
+        startTime,
       });
+      await this.reservationRepository.save(reservation);
 
       return {
         ok: true,

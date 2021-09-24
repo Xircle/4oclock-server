@@ -19,7 +19,6 @@ export class ReservationUtilService {
         place_id: placeId,
       },
     });
-    console.log('exists : ', exists);
     if (exists) return true;
     else return false;
   }

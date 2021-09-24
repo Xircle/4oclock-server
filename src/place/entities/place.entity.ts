@@ -42,9 +42,6 @@ export class Place extends CoreEntity {
   @Column({ name: 'is_closed', default: false })
   isClosed: boolean;
 
-  @Column({ name: 'participant_count', default: 0 })
-  participantsCount: number;
-
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
     cascade: true,
     eager: true,

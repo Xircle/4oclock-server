@@ -28,6 +28,7 @@ import {
   PlaceData,
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
+import { Reservation } from 'src/reservation/entities/reservation.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
@@ -36,6 +37,8 @@ export class PlaceService {
     private placeRepository: Repository<Place>,
     @InjectRepository(PlaceDetail)
     private placeDetailRepository: Repository<PlaceDetail>,
+    @InjectRepository(PlaceDetail)
+    private reservationRepository: Repository<Reservation>,
     private placeUtilService: PlaceUtilService,
     private s3Service: S3Service,
     private reservationUtilService: ReservationUtilService,
@@ -68,7 +71,6 @@ export class PlaceService {
           'recommendation',
           'startDateAt',
           'isClosed',
-          'participantsCount',
         ],
         loadEagerRelations: false,
         take: 10,
@@ -86,6 +88,12 @@ export class PlaceService {
             place.id,
           );
         }
+        const participantsCount: number =
+          await this.reservationRepository.count({
+            where: {
+              place_id: place.id,
+            },
+          });
         const participants: MainFeedPlaceParticipantsProfile[] =
           await this.reservationUtilService.getParticipantsProfile(place.id);
         const deadline = this.placeUtilService.getDeadlineCaption(
@@ -100,10 +108,11 @@ export class PlaceService {
         }
         mainFeedPlaces.push({
           ...place,
+          isParticipating,
+          participantsCount,
+          participants,
           deadline,
           startDateFromNow,
-          participants,
-          isParticipating,
         });
       }
 
@@ -134,7 +143,6 @@ export class PlaceService {
           'recommendation',
           'startDateAt',
           'isClosed',
-          'participantsCount',
         ],
       });
 
@@ -159,7 +167,11 @@ export class PlaceService {
           placeId,
         );
       }
-
+      const participantsCount = await this.reservationRepository.count({
+        where: {
+          place_id: place.id,
+        },
+      });
       // 참여자 성비, 평균 나이 추가
       const participants: PlaceDataParticipantsProfile[] =
         await this.reservationUtilService.getParticipantsProfile(placeId);
@@ -181,6 +193,7 @@ export class PlaceService {
       const placeData: PlaceData = {
         ...place,
         isParticipating,
+        participantsCount,
         startDateFromNow,
         participants,
         participantsInfo,
