@@ -64,8 +64,8 @@ export class SocialAuthController {
   @Get('redirect/:provider')
   async socialRedirect(
     @Param('provider') provider: string,
-    @Query('socialId') socialId: string,
+    @Query('email') email: string,
   ): Promise<SocialRedirectOutput> {
-    return this.socialAuthService.socialRedirect(provider, socialId);
+    return this.socialAuthService.socialRedirect(provider, email);
   }
 }

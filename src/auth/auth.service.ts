@@ -146,7 +146,7 @@ export class SocialAuthService {
         final_profile_image = await this.s3Service.uploadToS3(
           profileImageFile,
           socialId,
-        );
+        );    
       }
       const exists = await this.userRepository.findOne({
         where: {
@@ -221,22 +221,16 @@ export class SocialAuthService {
 
   async socialRedirect(
     provider: string,
-    socialId: string,
+    email: string,
   ): Promise<SocialRedirectOutput> {
     try {
-      const socialAccount = await this.socialAccountRepository.findOne({
+      const user = await this.userRepository.findOne({
         where: {
-          socialId,
-          provider,
+          email,
         },
       });
-      if (socialAccount) {
-        // Get user data
-        const user = await this.userRepository.findOne({
-          where: {
-            id: socialAccount.fk_user_id,
-          },
-        });
+      console.log(user);
+      if (user) {
         const token = this.jwtService.sign({ id: user.id });
         return {
           ok: true,
