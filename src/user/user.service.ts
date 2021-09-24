@@ -13,6 +13,7 @@ import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { UserProfile } from './entities/user-profile.entity';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UserService {
@@ -175,6 +176,7 @@ export class UserService {
         };
       }
 
+      let updateData: Partial<UserProfile> = {};
       let profile_image_s3;
       // Upload to s3 when profile file exists
       if (profileImageFile) {
@@ -182,9 +184,17 @@ export class UserService {
           profileImageFile,
           user.id,
         );
+        updateData.profileImageUrl = profile_image_s3;
       }
-      console.log('edit profile data : ', editProfileInput);
-      console.log('profile_image_s3 : ', profile_image_s3);
+      updateData = {
+        ...updateData,
+        ...editProfileInput,
+      };
+      if (_.isEqual(updateData, {})) {
+        return {
+          ok: true,
+        };
+      }
       await getManager().transaction(async (transactionalEntityManager) => {
         // Update profile
         await transactionalEntityManager.update(
@@ -193,7 +203,7 @@ export class UserService {
             fk_user_id: user.id,
           },
           {
-            ...editProfileInput,
+            ...updateData,
           },
         );
       });

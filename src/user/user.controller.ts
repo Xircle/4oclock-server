@@ -31,7 +31,7 @@ export class UserController {
     return this.userService.me(authUser);
   }
 
-  @Put()
+  @Put('')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('profileImageFile'))
   async editProfile(
