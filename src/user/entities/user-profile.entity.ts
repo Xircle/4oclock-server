@@ -13,7 +13,7 @@ export enum Gender {
   Male = 'Male',
 }
 
-@Entity('user_profiles', { synchronize: true })
+@Entity('user_profiles')
 export class UserProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string;

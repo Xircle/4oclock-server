@@ -146,7 +146,7 @@ export class SocialAuthService {
         final_profile_image = await this.s3Service.uploadToS3(
           profileImageFile,
           socialId,
-        );    
+        );
       }
       const exists = await this.userRepository.findOne({
         where: {
@@ -229,7 +229,6 @@ export class SocialAuthService {
           email,
         },
       });
-      console.log(user);
       if (user) {
         const token = this.jwtService.sign({ id: user.id });
         return {

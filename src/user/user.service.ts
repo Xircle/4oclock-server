@@ -40,6 +40,8 @@ export class UserService {
         job,
         university,
         username,
+        location,
+        interests,
       } = authUser.profile;
       return {
         ok: true,
@@ -51,6 +53,8 @@ export class UserService {
           username,
           university,
           age,
+          location,
+          interests,
           reservation_count: reservations.length,
         },
       };
@@ -71,7 +75,9 @@ export class UserService {
         job,
         university,
         age,
+        interests,
         shortBio,
+        gender,
       } = randomUser.profile;
       return {
         ok: true,
@@ -83,7 +89,9 @@ export class UserService {
           job,
           university,
           age,
+          gender,
           shortBio,
+          interests,
         },
       };
     } catch (err) {
@@ -108,6 +116,8 @@ export class UserService {
         university,
         age,
         shortBio,
+        gender,
+        interests,
       } = user.profile;
 
       if (!user) {
@@ -123,10 +133,12 @@ export class UserService {
           profileImageUrl,
           location,
           username,
+          gender,
           job,
           university,
           age,
           shortBio,
+          interests,
         },
       };
     } catch (err) {

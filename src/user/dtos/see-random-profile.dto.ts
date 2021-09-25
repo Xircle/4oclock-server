@@ -9,6 +9,8 @@ export class UserProfile {
   university: string;
   age: number;
   shortBio: string;
+  gender: string;
+  interests?: string[];
 }
 
 export class SeeRandomProfileOutput extends CoreOutput {

@@ -8,6 +8,8 @@ export class MeData {
   username: string;
   university: string;
   age: number;
+  location: string;
+  interests: string[];
   reservation_count: number;
 }
 
