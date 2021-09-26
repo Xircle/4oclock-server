@@ -1,11 +1,4 @@
-import { config } from 'dotenv';
-config();
-import { Reservation } from './reservation/entities/reservation.entity';
-import { PlaceDetail } from './place/entities/place-detail.entity';
-import { Place } from './place/entities/place.entity';
 import { S3Module } from './aws/s3/s3.module';
-import { User } from './user/entities/user.entity';
-import { UserProfile } from './user/entities/user-profile.entity';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,39 +8,36 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaceModule } from './place/place.module';
 import { ReservationModule } from './reservation/reservation.module';
-import SocialAccount from './user/entities/social-account.entity';
+import { RoomModule } from './room/room.module';
+import { MessageModule } from './message/message.module';
+import { ormconfig } from '../ormconfig';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string().valid('dev', 'prod').default('dev').required(),
+        DATABASE_URL: Joi.string().required(),
+        KAKAO_ID: Joi.string().required(),
+        JWT_SECRET_KEY: Joi.string().required(),
+        AWS_S3_BUCKET_NAME: Joi.string().required(),
+        AWS_ACCESS_KEY: Joi.string().required(),
+        AWS_SECRET_KEY: Joi.string().required(),
+      }),
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
+      ignoreEnvFile: false,
     }),
-    TypeOrmModule.forRoot({
-      url: process.env.DATABASE_URL,
-      type: 'postgres',
-      ssl: {
-        rejectUnauthorized: false,
-      },
-      cache: {
-        duration: 6000,
-      },
-      entities: [
-        User,
-        UserProfile,
-        SocialAccount,
-        Place,
-        PlaceDetail,
-        Reservation,
-      ],
-      synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV !== 'prod',
-    }),
+    TypeOrmModule.forRoot(ormconfig),
     UserModule,
     AuthModule,
     S3Module,
     PlaceModule,
     ReservationModule,
+    RoomModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
