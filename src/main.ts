@@ -20,21 +20,21 @@ async function bootstrap() {
     }),
   );
 
-  // const config = new DocumentBuilder()
-  //   .setTitle('네시모해 API')
-  //   .setDescription('네시모해 개발을 위한 API 문서입니다.')
-  //   .setVersion('1.0')
-  //   .addBearerAuth(
-  //     {
-  //       type: 'http',
-  //       scheme: 'bearer',
-  //       bearerFormat: 'JWT',
-  //     },
-  //     'jwt',
-  //   )
-  //   .build();
-  // const document = SwaggerModule.createDocument(app, config);
-  // SwaggerModule.setup('api', app, document);
+  const config = new DocumentBuilder()
+    .setTitle('네시모해 API')
+    .setDescription('네시모해 개발을 위한 API 문서입니다.')
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'jwt',
+    )
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT || 3080);
 }
