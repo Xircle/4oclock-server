@@ -1,33 +1,26 @@
-import { config } from 'dotenv';
-config();
-import { SocialAccount } from 'src/user/entities/social-account.entity';
-import { Message } from './src/message/entities/message.entity';
-import { PlaceDetail } from './src/place/entities/place-detail.entity';
-import { UserProfile } from './src/user/entities/user-profile.entity';
-import { User } from './src/user/entities/user.entity';
+import * as dotenv from 'dotenv';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Place } from 'src/place/entities/place.entity';
-import { Reservation } from 'src/reservation/entities/reservation.entity';
-import { Room } from 'src/room/entities/room.entity';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+dotenv.config({
+  path: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
+});
+console.log();
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  url: process.env.DATABASE_URL,
-  entities: [
-    User,
-    UserProfile,
-    SocialAccount,
-    Place,
-    PlaceDetail,
-    Reservation,
-    Room,
-    Message,
-  ],
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: +process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  entities: ['dist/**/*.entity.{js,ts}'],
   ...(process.env.NODE_ENV === 'prod' && {
     ssl: {
       rejectUnauthorized: false,
     },
   }),
-  synchronize: process.env.NODE_ENV === 'prod' && true,
+  synchronize: true,
   logging: true,
+  keepConnectionAlive: true,
+  namingStrategy: new SnakeNamingStrategy(),
 };
