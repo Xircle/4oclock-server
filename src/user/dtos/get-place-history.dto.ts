@@ -4,7 +4,6 @@ export class MyXircle {
   id: string;
   coverImage: string;
   name: string;
-  tags: string[];
   recommendation: string;
   startDateFromNow: string;
   isClosed: boolean;

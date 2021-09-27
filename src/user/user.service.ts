@@ -166,7 +166,6 @@ export class UserService {
           id: res.place.id,
           coverImage: res.place.coverImage,
           name: res.place.name,
-          tags: res.place.tags,
           recommendation: res.place.recommendation,
           isClosed: res.place.isClosed,
           startDateFromNow,
