@@ -11,10 +11,9 @@ export class MainFeedPlace {
   id: string;
   name: string;
   coverImage: string;
-  tags: string[];
-  recommendation: string;
   deadline?: string | undefined;
   startDateFromNow: string;
+  oneLineIntroText: string;
   participants: MainFeedPlaceParticipantsProfile[];
   isParticipating: boolean;
   participantsCount: number;

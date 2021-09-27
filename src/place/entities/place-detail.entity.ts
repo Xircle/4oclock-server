@@ -29,6 +29,9 @@ export class PlaceDetail {
   @Column({ length: 255 })
   detailAddress: string;
 
+  @Column({ default: 0 })
+  participationFee: number;
+
   @OneToOne((type) => Place, (place) => place.placeDetail, {
     onDelete: 'CASCADE',
   })

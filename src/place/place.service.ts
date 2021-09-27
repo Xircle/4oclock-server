@@ -67,10 +67,9 @@ export class PlaceService {
           'id',
           'name',
           'coverImage',
-          'tags',
-          'recommendation',
           'startDateAt',
           'isClosed',
+          'oneLineIntroText',
         ],
         loadEagerRelations: false,
         take: 10,
@@ -116,7 +115,6 @@ export class PlaceService {
         });
       }
 
-      //   places startDateAt을 기준으로 place-util로 커스텀해서 바꾼후에 보내주기.
       return {
         ok: true,
         places: mainFeedPlaces,
@@ -141,6 +139,7 @@ export class PlaceService {
           'name',
           'coverImage',
           'recommendation',
+          'oneLineIntroText',
           'startDateAt',
           'isClosed',
         ],
@@ -227,6 +226,8 @@ export class PlaceService {
 
     try {
       // Upload to S3
+      if (!coverImage)
+        return { ok: false, error: '대표 이미지를 선택해주세요' };
       const coverImageS3Url = await this.s3Service.uploadToS3(
         coverImage[0],
         authUser.id,
@@ -247,7 +248,6 @@ export class PlaceService {
           name,
           coverImage: coverImageS3Url,
           location,
-          tags,
           recommendation,
           startDateAt,
         });

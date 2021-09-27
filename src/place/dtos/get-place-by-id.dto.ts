@@ -5,8 +5,9 @@ export class PlaceDataParticipantsProfile extends MainFeedPlaceParticipantsProfi
 
 export class PlaceData {
   name: string;
-  startDateFromNow: string;
+  oneLineIntroText: string;
   recommendation: string;
+  startDateFromNow: string;
   coverImage: string;
   isClosed: boolean;
   isParticipating: boolean;
@@ -23,6 +24,7 @@ export class PlaceData {
     categories: string[];
     detailAddress: string;
     photos: string[];
+    participationFee: number;
   };
 }
 

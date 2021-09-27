@@ -26,9 +26,6 @@ export class Place {
   @Column({ length: 255 })
   location: string;
 
-  @Column({ type: 'json' })
-  tags: string[];
-
   @Column({ length: 255 })
   recommendation: string;
 
@@ -41,6 +38,9 @@ export class Place {
 
   @Column({ default: false })
   isClosed: boolean;
+
+  @Column({ length: 255, default: '' })
+  oneLineIntroText: string;
 
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
     cascade: true,
