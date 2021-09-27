@@ -25,6 +25,9 @@ export class Reservation {
   @Column({ type: 'enum', enum: StartTime })
   startTime: StartTime;
 
+  @Column({ default: false })
+  isVaccinated: boolean;
+
   @Column('uuid')
   user_id: string;
 

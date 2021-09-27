@@ -19,6 +19,12 @@ export class MakeReservationDto {
   @IsEnum(StartTime)
   @IsNotEmpty()
   startTime: StartTime;
+
+  @ApiProperty({
+    name: '백신 2차 접종 유무',
+  })
+  @IsNotEmpty()
+  isVaccinated: boolean;
 }
 
 export class MakeReservationOutput extends CoreOutput {}
