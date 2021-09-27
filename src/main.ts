@@ -10,11 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(logger('dev'));
   app.enableCors({
-    origin: [
-      '172.20.10.14:3000',
-      'http://localhost:3000',
-      'https://xircle.netlify.app/',
-    ],
+    origin: '*',
     credentials: true,
   });
   app.useGlobalPipes(
