@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(logger('dev'));
   app.enableCors({
-    origin: 'https://xircle.netlify.app/',
+    origin: ['https://xircle.netlify.app', 'http://localhost:300'],
     credentials: true,
   });
   app.useGlobalPipes(
@@ -37,6 +37,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  console.log('port : ', process.env.PORT);
   await app.listen(process.env.PORT || 3080);
 }
 bootstrap();
