@@ -1,10 +1,12 @@
 import { User } from './user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Max, MaxLength, Min, MinLength } from 'class-validator';
 
@@ -13,7 +15,7 @@ export enum Gender {
   Male = 'Male',
 }
 
-@Entity('user_profiles')
+@Entity({ name: 'user_profiles' })
 export class UserProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,13 +25,13 @@ export class UserProfile {
   @Max(20)
   username: string;
 
-  @Column({ name: 'phone_number', length: 255 })
+  @Column({ length: 255 })
   phoneNumber: string;
 
   @Column({ length: 255 })
   university: string;
 
-  @Column({ name: 'is_graduate' })
+  @Column()
   isGraduate: boolean;
 
   @Column()
@@ -45,7 +47,7 @@ export class UserProfile {
   @MaxLength(8)
   job: string;
 
-  @Column({ name: 'short_bio', length: 1023 })
+  @Column({ length: 1023 })
   @MinLength(1)
   shortBio: string;
 
@@ -56,14 +58,13 @@ export class UserProfile {
   interests?: string[];
 
   @Column({
-    name: 'profile_image_url',
     length: 512,
     nullable: true,
     type: 'varchar',
   })
   profileImageUrl?: string;
 
-  @Column()
+  @Column({ default: false })
   isMarketingAgree: boolean;
 
   @OneToOne((type) => User, (user) => user.profile, { onDelete: 'CASCADE' })
@@ -72,4 +73,12 @@ export class UserProfile {
 
   @Column('uuid')
   fk_user_id: string;
+
+  @Column('timestamptz', { name: 'created_at', select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { name: 'created_at', select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

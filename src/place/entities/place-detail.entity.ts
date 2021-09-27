@@ -1,15 +1,16 @@
-import { CoreEntity } from './../../common/entities/core.entity';
 import { Place } from './place.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'place_detail' })
-export class PlaceDetail extends CoreEntity {
+@Entity()
+export class PlaceDetail {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -36,4 +37,12 @@ export class PlaceDetail extends CoreEntity {
 
   @Column({ type: 'uuid' })
   place_id: string;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

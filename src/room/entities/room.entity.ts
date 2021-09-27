@@ -1,10 +1,17 @@
 import { Message } from './../../message/entities/message.entity';
-import { CoreEntity } from './../../common/entities/core.entity';
-import { Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 
 @Entity({ name: 'rooms' })
-export class Room extends CoreEntity {
+export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -13,4 +20,12 @@ export class Room extends CoreEntity {
 
   @OneToMany((type) => Message, (message) => message.room)
   messages: Message[];
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

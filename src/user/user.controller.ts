@@ -20,19 +20,31 @@ import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ParsePipe } from 'src/common/pipe/parse.pipe';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('User')
+@ApiBearerAuth('jwt')
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
+@UseGuards(AuthGuard('jwt'))
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
-  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: '유저 정보 ' })
   async me(@GetUser() authUser: User) {
     return this.userService.me(authUser);
   }
 
   @Put('')
-  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: '유저 정보 수정 ' })
   @UseInterceptors(FileInterceptor('profileImageFile'))
   async editProfile(
     @UploadedFile() file: Express.Multer.File,
@@ -44,7 +56,7 @@ export class UserController {
   }
 
   @Get('/profile/random')
-  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: '랜덤 유저 프로필 조회' })
   async seeRandomProfile(
     @GetUser() authUser: User,
   ): Promise<SeeRandomProfileOutput> {
@@ -52,6 +64,7 @@ export class UserController {
   }
 
   @Get('/profile/:id')
+  @ApiOperation({ summary: '특정 유저 조회 ' })
   async seeUserById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SeeUserByIdOutput> {
@@ -59,7 +72,7 @@ export class UserController {
   }
 
   @Get('history')
-  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: '유저가 신청한 써클 조회' })
   async getMyPlace(@GetUser() authUser: User): Promise<GetMyPlaceOutput> {
     return this.userService.getMyPlace(authUser);
   }

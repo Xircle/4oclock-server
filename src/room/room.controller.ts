@@ -9,25 +9,34 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { GetRoomsOutput } from './dtos/get-rooms.dto';
 import { GetRoomMessagesOutput } from './dtos/get-room-messages.dto';
 
-@ApiTags('ROOM')
+@ApiTags('Room')
+@ApiBearerAuth('jwt')
 @UseGuards(AuthGuard('jwt'))
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
 @Controller('room')
 export class RoomController {
   constructor(private roomService: RoomService) {}
 
-  @ApiOperation({ summary: '채팅방 모두 가져오기' })
   @Get('')
+  @ApiOperation({ summary: '채팅방 모두 가져오기' })
   getRooms(@GetUser() authUser: User): Promise<GetRoomsOutput> {
     return this.roomService.getRooms(authUser);
   }
 
-  @ApiOperation({ summary: '채팅방 특정 방 채팅 모두 가져오기' })
   @Get(':id')
+  @ApiOperation({ summary: '채팅방 특정 방 채팅 모두 가져오기' })
   getRoomMessages(
     @Param('id', ParseUUIDPipe) roomId: string,
     @GetUser() authUser: User,
@@ -35,8 +44,8 @@ export class RoomController {
     return this.roomService.getRoomMessages(authUser, roomId);
   }
 
+  @Post('')
   @ApiOperation({ summary: '채팅방 생성' })
-  @Post()
   createRoom(@GetUser() authUser: User) {
     return this.roomService.createRoom(authUser);
   }

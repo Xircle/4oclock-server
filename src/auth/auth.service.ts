@@ -18,7 +18,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { S3Service } from 'src/aws/s3/s3.service';
-import SocialAccount from 'src/user/entities/social-account.entity';
+import { SocialAccount } from 'src/user/entities/social-account.entity';
 
 @Injectable()
 export class AuthService {
@@ -228,16 +228,18 @@ export class SocialAuthService {
         where: {
           email,
         },
+        relations: ['profile'],
       });
+      console.log('user here:', user);
       if (user) {
         const token = this.jwtService.sign({ id: user.id });
         return {
           ok: true,
-          code: 201,
+          code: 200,
           data: {
             token,
             uid: user.id,
-            username: user.profile.username,
+            username: user.profile?.username,
             email: user.email,
             profile: {
               id: user.profile.id,

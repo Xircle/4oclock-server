@@ -22,12 +22,23 @@ import {
   Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('Auth')
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('create')
+  @ApiCreatedResponse({ description: '유저 생성' })
   async createUser(
     @Body() createUserInput: CreateUserInput,
   ): Promise<CreateUserOutput> {
@@ -41,11 +52,14 @@ export class AuthController {
     return this.authService.loginUser(loginUserInput);
   }
 }
+
+@ApiTags('Auth/Social')
 @Controller('auth/social')
 export class SocialAuthController {
   constructor(private socialAuthService: SocialAuthService) {}
 
   @Post('register/:provider')
+  @ApiCreatedResponse({ description: '유저 소셜 계정 생성' })
   @UseInterceptors(FileInterceptor('profileImageFile'))
   async socialRegister(
     @UploadedFile() file: Express.Multer.File,
@@ -62,6 +76,8 @@ export class SocialAuthController {
   }
 
   @Get('redirect/:provider')
+  @ApiOkResponse()
+  @ApiResponse({ status: 401, description: '유저 소셜 계정 생성 필요' })
   async socialRedirect(
     @Param('provider') provider: string,
     @Query('email') email: string,

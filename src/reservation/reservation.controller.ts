@@ -1,5 +1,4 @@
 import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
-import { JwtService } from '@nestjs/jwt';
 import { User } from './../user/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -18,13 +17,25 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('Reservation')
+@ApiBearerAuth('jwt')
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
+@UseGuards(AuthGuard())
 @Controller('reservation')
 export class ReservationController {
   constructor(private reservationService: ReservationService) {}
 
-  @Post()
-  @UseGuards(AuthGuard())
+  @Post('')
+  @ApiOperation({ summary: '장소 예약하기' })
   async makeReservation(
     @GetUser() authUser: User,
     @Body() makeReservation: MakeReservationDto,
@@ -33,7 +44,7 @@ export class ReservationController {
   }
 
   @Get(':placeId/number')
-  @UseGuards(AuthGuard())
+  @ApiOperation({ summary: '장소 시간대별 참가자 수 보기' })
   async getReservationParticipantNumber(
     @Param('placeId') placeId: string,
   ): Promise<GetReservationParticipantNumberOutput> {

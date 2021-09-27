@@ -1,4 +1,3 @@
-import { CoreEntity } from '../../common/entities/core.entity';
 import { User } from './user.entity';
 import {
   Entity,
@@ -7,17 +6,19 @@ import {
   Index,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Index(['socialId', 'provider'], { unique: true })
 @Entity('social_accounts', {
   synchronize: true,
 })
-export default class SocialAccount extends CoreEntity {
+export class SocialAccount {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ name: 'social_id', length: 255 })
+  @Column({ length: 255 })
   socialId!: string;
 
   @Column({ length: 255 })
@@ -29,4 +30,12 @@ export default class SocialAccount extends CoreEntity {
 
   @Column('uuid')
   fk_user_id!: string;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

@@ -1,13 +1,14 @@
 import { Place } from './../../place/entities/place.entity';
 import { User } from './../../user/entities/user.entity';
-import { CoreEntity } from './../../common/entities/core.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export enum StartTime {
@@ -17,11 +18,11 @@ export enum StartTime {
 
 @Index(['place_id', 'user_id'], { unique: true })
 @Entity({ name: 'reservations' })
-export class Reservation extends CoreEntity {
+export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'start_time', type: 'enum', enum: StartTime })
+  @Column({ type: 'enum', enum: StartTime })
   startTime: StartTime;
 
   @Column('uuid')
@@ -37,4 +38,12 @@ export class Reservation extends CoreEntity {
   @ManyToOne((type) => Place, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'place_id' })
   place: Place;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

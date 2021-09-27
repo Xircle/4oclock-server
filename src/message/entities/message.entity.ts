@@ -1,10 +1,16 @@
 import { User } from 'src/user/entities/user.entity';
 import { Room } from './../../room/entities/room.entity';
-import { CoreEntity } from './../../common/entities/core.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'messages' })
-export class Message extends CoreEntity {
+export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -16,4 +22,12 @@ export class Message extends CoreEntity {
 
   @ManyToOne((type) => User, (user) => user.messages)
   user: User;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

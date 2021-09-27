@@ -1,24 +1,25 @@
 import { Reservation } from './../../reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
-import { CoreEntity } from './../../common/entities/core.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   Index,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'places' })
-export class Place extends CoreEntity {
+export class Place {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ length: 255 })
   name: string;
 
-  @Column({ name: 'cover_image', length: 255 })
+  @Column({ length: 255 })
   coverImage: string;
 
   @Index()
@@ -33,13 +34,12 @@ export class Place extends CoreEntity {
 
   @Index()
   @Column({
-    name: 'start_date_at',
     type: 'date',
     nullable: true,
   })
   startDateAt: Date;
 
-  @Column({ name: 'is_closed', default: false })
+  @Column({ default: false })
   isClosed: boolean;
 
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
@@ -50,4 +50,12 @@ export class Place extends CoreEntity {
 
   @OneToMany((type) => Reservation, (reservation) => reservation.place)
   reservations: Reservation[];
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

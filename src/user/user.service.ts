@@ -67,6 +67,7 @@ export class UserService {
   async seeRandomProfile(authUser: User): Promise<SeeRandomProfileOutput> {
     try {
       const randomUser = await this.users.findRandomUser(authUser.id);
+      if (!randomUser) return { ok: true };
 
       const {
         profileImageUrl,
@@ -118,7 +119,7 @@ export class UserService {
         shortBio,
         gender,
         interests,
-      } = user.profile;
+      } = user?.profile;
 
       if (!user) {
         return {

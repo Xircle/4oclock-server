@@ -1,4 +1,3 @@
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { User } from './../user/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
@@ -17,20 +16,32 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
-  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
 import { Roles } from 'src/auth/roles.decorator';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('Place')
+@ApiBearerAuth('jwt')
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('place')
 export class PlaceController {
   constructor(private placeService: PlaceService) {}
 
-  @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @Get('')
+  @ApiOperation({ summary: '위치별 생성된 장소 보기' })
   async getPlacesByLocation(
     @GetUser() anyUser: User | undefined,
     @Query('location') location: string,
@@ -40,7 +51,7 @@ export class PlaceController {
   }
 
   @Get(':placeId')
-  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: '장소의 세부정보 보기' })
   async getPlaceById(
     @GetUser() anyUser: User | undefined,
     @Param('placeId', new ParseUUIDPipe()) placeId: string,
@@ -48,8 +59,9 @@ export class PlaceController {
     return this.placeService.getPlaceById(anyUser, placeId);
   }
 
-  @Post()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('')
+  @ApiOperation({ summary: '장소 생성하기' })
+  @ApiCreatedResponse({ description: '장소가 성공적으로 생성됨.' })
   @Roles(['Admin', 'Owner'])
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -76,7 +88,7 @@ export class PlaceController {
   }
 
   @Delete('/:placeId')
-  @UseGuards(RolesGuard)
+  @ApiOperation({ summary: '장소 제거하기' })
   @Roles(['Admin'])
   async deletePlace(
     @Param('placeId') placeId: string,
