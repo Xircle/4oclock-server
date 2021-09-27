@@ -33,7 +33,6 @@ import * as Joi from 'joi';
         AWS_SECRET_KEY: Joi.string().required(),
       }),
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
-      ignoreEnvFile: false,
     }),
     TypeOrmModule.forRoot(ormconfig),
     UserModule,
