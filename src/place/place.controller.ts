@@ -1,3 +1,4 @@
+import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { User } from './../user/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
@@ -94,5 +95,13 @@ export class PlaceController {
     @Param('placeId') placeId: string,
   ): Promise<DeletePlaceOutput> {
     return this.placeService.deletePlace(placeId);
+  }
+
+  @Get('/:placeId/participants')
+  @ApiOperation({ summary: '해당 장소에 예약한 참가자 리스트 보기' })
+  async getPlaceParticipantList(
+    @Param('placeId') placeId: string,
+  ): Promise<GetPlaceParticipantListOutput> {
+    return this.placeService.getPlaceParticipantList(placeId);
   }
 }

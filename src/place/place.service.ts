@@ -29,6 +29,7 @@ import {
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
+import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
@@ -290,6 +291,33 @@ export class PlaceService {
       });
       return {
         ok: true,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getPlaceParticipantList(
+    placeId: string,
+  ): Promise<GetPlaceParticipantListOutput> {
+    try {
+      const exists = await this.placeRepository.find({
+        where: {
+          id: placeId,
+        },
+      });
+      if (!exists) {
+        return {
+          ok: false,
+          error: '존재하지 않는 장소입니다.',
+        };
+      }
+      const participants =
+        await this.reservationUtilService.getParticipantsProfile(placeId);
+      return {
+        ok: true,
+        participants,
       };
     } catch (err) {
       console.log(err);
