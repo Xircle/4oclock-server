@@ -269,7 +269,7 @@ export class PlaceService {
           categories,
           photos: photoImagesUrl,
           place,
-          participationFee,
+          participationFee: +participationFee,
           detailAddress: detailAddress,
         });
         await transactionalEntityManager.save(placeDetail);

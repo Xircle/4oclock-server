@@ -37,9 +37,9 @@ export class CreatePlaceInput {
     example: '3000',
     description: '참가비',
   })
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  participationFee: number;
+  participationFee: string;
 
   @ApiProperty({
     example: '나이 20 ~ 25 중간',
