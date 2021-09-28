@@ -15,12 +15,9 @@ export const ormconfig: TypeOrmModuleOptions = {
   port: +process.env.DB_PORT,
   database: process.env.DB_NAME,
   entities: ['dist/**/*.entity.{js,ts}'],
-  ssl:
-    process.env.NODE_ENV === 'dev'
-      ? false
-      : {
-          rejectUnauthorized: false,
-        },
+  ssl: {
+    rejectUnauthorized: false,
+  },
   synchronize: process.env.NODE_ENV === 'dev' ? true : false,
   logging: true,
   keepConnectionAlive: true,
