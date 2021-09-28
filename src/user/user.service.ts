@@ -37,6 +37,7 @@ export class UserService {
         age,
         gender,
         shortBio,
+        activities,
         job,
         university,
         username,
@@ -48,6 +49,7 @@ export class UserService {
         data: {
           gender,
           shortBio,
+          activities,
           job,
           profileImageUrl,
           username,
