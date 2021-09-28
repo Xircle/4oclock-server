@@ -5,7 +5,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config({
   path: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
 });
-console.log();
+console.log(process.env.DB_HOST);
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
   username: process.env.DB_USERNAME,
