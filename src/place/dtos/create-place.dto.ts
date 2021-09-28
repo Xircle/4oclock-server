@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsDate,
   IsDateString,
   IsNotEmpty,
   IsString,
   MaxLength,
+  IsNumber,
 } from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
 export class CreatePlaceInput {
@@ -26,14 +26,20 @@ export class CreatePlaceInput {
   location: string;
 
   @ApiProperty({
-    example: '[카패, 깔끔, 웅장]',
-    description: '장소의 키워드',
+    example: '안암에 이런 집은 없었다.',
+    description: '장소 한줄소개',
   })
-  @IsString({
-    each: true,
-  })
+  @IsString()
   @IsNotEmpty()
-  tags: string[];
+  oneLineIntroText: string;
+
+  @ApiProperty({
+    example: '3000',
+    description: '참가비',
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  participationFee: number;
 
   @ApiProperty({
     example: '나이 20 ~ 25 중간',
