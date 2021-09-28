@@ -29,7 +29,10 @@ import {
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
-import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
+import {
+  GetPlaceParticipantListOutput,
+  PlaceParticipantListDataProfile,
+} from './dtos/get-place-participant-list.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
@@ -215,10 +218,11 @@ export class PlaceService {
     const {
       name,
       location,
-      tags,
       recommendation,
       startDateAt,
       title,
+      oneLineIntroText,
+      participationFee,
       description,
       categories,
       detailAddress,
@@ -227,8 +231,11 @@ export class PlaceService {
 
     try {
       // Upload to S3
-      if (!coverImage)
-        return { ok: false, error: '대표 이미지를 선택해주세요' };
+      if (!coverImage || !reviewImages)
+        return {
+          ok: false,
+          error: '대표 이미지, 매장 이미지를 업로드 해주세요.',
+        };
       const coverImageS3Url = await this.s3Service.uploadToS3(
         coverImage[0],
         authUser.id,
@@ -250,6 +257,7 @@ export class PlaceService {
           coverImage: coverImageS3Url,
           location,
           recommendation,
+          oneLineIntroText,
           startDateAt,
         });
         await transactionalEntityManager.save(place);
@@ -261,6 +269,7 @@ export class PlaceService {
           categories,
           photos: photoImagesUrl,
           place,
+          participationFee,
           detailAddress: detailAddress,
         });
         await transactionalEntityManager.save(placeDetail);
@@ -313,11 +322,32 @@ export class PlaceService {
           error: '존재하지 않는 장소입니다.',
         };
       }
-      const participants =
+
+      // 참가자들 간략한 프로필 정보
+      const participantListProfiles: PlaceDataParticipantsProfile[] =
         await this.reservationUtilService.getParticipantsProfile(placeId);
+
+      // 참여자 성비, 평균 나이 추가
+      let total_count = participantListProfiles.length;
+      let male_count = 0;
+      let sum_age = 0;
+      participantListProfiles.map((participant) => {
+        if (participant.gender === 'Male') male_count++;
+        sum_age += participant.age;
+      });
+
+      const participantsInfo = {
+        total_count,
+        male_count,
+        average_age: Math.floor(sum_age / total_count) || 0,
+      };
+
       return {
         ok: true,
-        participants,
+        participants: {
+          participantListProfiles,
+          participantsInfo,
+        },
       };
     } catch (err) {
       console.log(err);

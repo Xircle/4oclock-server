@@ -31,6 +31,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
 
 @ApiTags('Place')
 @ApiBearerAuth('jwt')
@@ -56,7 +57,7 @@ export class PlaceController {
   async getPlaceById(
     @GetUser() anyUser: User | undefined,
     @Param('placeId', new ParseUUIDPipe()) placeId: string,
-  ) {
+  ): Promise<GetPlaceByIdOutput> {
     return this.placeService.getPlaceById(anyUser, placeId);
   }
 
