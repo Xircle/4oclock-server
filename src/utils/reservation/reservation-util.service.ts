@@ -39,6 +39,8 @@ export class ReservationUtilService {
         profileImgUrl: parti.participant.profile.profileImageUrl,
         gender: parti.participant.profile.gender,
         age: parti.participant.profile.age,
+        job: parti.participant.profile.job,
+        shortBio: parti.participant.profile.shortBio,
       });
     });
     return mainFeedPlacePartiProfile;

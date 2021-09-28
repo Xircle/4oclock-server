@@ -10,6 +10,7 @@ export class UserProfile {
   age: number;
   shortBio: string;
   gender: string;
+  activities: string;
   interests?: string[];
 }
 

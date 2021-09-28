@@ -4,9 +4,10 @@ export class MyXircle {
   id: string;
   coverImage: string;
   name: string;
-  recommendation: string;
+  oneLineIntroText: string;
   startDateFromNow: string;
   isClosed: boolean;
+  participantsCount: number;
 }
 
 export class GetMyPlaceOutput extends CoreOutput {

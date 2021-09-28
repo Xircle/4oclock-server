@@ -6,6 +6,8 @@ export class MainFeedPlaceParticipantsProfile {
   profileImgUrl: string;
   gender: Gender;
   age: number;
+  job: string;
+  shortBio: string;
 }
 export class MainFeedPlace {
   id: string;

@@ -52,6 +52,9 @@ export class UserProfile {
   shortBio: string;
 
   @Column({ length: 255, nullable: true })
+  activities?: string;
+
+  @Column({ length: 255, nullable: true })
   location?: string;
 
   @Column({ type: 'json', nullable: true })

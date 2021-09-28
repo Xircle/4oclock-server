@@ -79,6 +79,7 @@ export class UserService {
         interests,
         shortBio,
         gender,
+        activities,
       } = randomUser.profile;
       return {
         ok: true,
@@ -92,6 +93,7 @@ export class UserService {
           age,
           gender,
           shortBio,
+          activities,
           interests,
         },
       };
@@ -109,6 +111,13 @@ export class UserService {
         },
       });
 
+      if (!user) {
+        return {
+          ok: false,
+          error: '존재하지 않는 유저입니다.',
+        };
+      }
+
       const {
         profileImageUrl,
         location,
@@ -119,14 +128,9 @@ export class UserService {
         shortBio,
         gender,
         interests,
-      } = user?.profile;
+        activities,
+      } = user.profile;
 
-      if (!user) {
-        return {
-          ok: false,
-          error: '존재하지 않는 유저입니다.',
-        };
-      }
       return {
         ok: true,
         user: {
@@ -139,6 +143,7 @@ export class UserService {
           university,
           age,
           shortBio,
+          activities,
           interests,
         },
       };
@@ -158,19 +163,27 @@ export class UserService {
       });
 
       const historyPlaces: MyXircle[] = [];
-      reservations.map((res) => {
+      for (let reservation of reservations) {
         const startDateFromNow = this.placeUtilRepository.getEventDateCaption(
-          res.place.startDateAt,
+          reservation.place.startDateAt,
         );
+        const participantsCount: number =
+          await this.reservationRepository.count({
+            where: {
+              place_id: reservation.place_id,
+            },
+          });
         historyPlaces.push({
-          id: res.place.id,
-          coverImage: res.place.coverImage,
-          name: res.place.name,
-          recommendation: res.place.recommendation,
-          isClosed: res.place.isClosed,
+          id: reservation.place.id,
+          coverImage: reservation.place.coverImage,
+          name: reservation.place.name,
+          oneLineIntroText: reservation.place.oneLineIntroText,
+          participantsCount,
+          isClosed: reservation.place.isClosed,
           startDateFromNow,
         });
-      });
+      }
+
       return {
         ok: true,
         places: historyPlaces,
@@ -200,10 +213,9 @@ export class UserService {
       }
 
       let updateData: Partial<UserProfile> = {};
-      let profile_image_s3;
       // Upload to s3 when profile file exists
       if (profileImageFile) {
-        profile_image_s3 = await this.s3Service.uploadToS3(
+        const profile_image_s3 = await this.s3Service.uploadToS3(
           profileImageFile,
           user.id,
         );
@@ -214,6 +226,7 @@ export class UserService {
         ...editProfileInput,
       };
       if (_.isEqual(updateData, {})) {
+        // 바뀐 내용이 없으면 업데이트 없이 리턴
         return {
           ok: true,
         };
