@@ -6,6 +6,7 @@ dotenv.config({
   path: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
 });
 console.log(process.env.DB_HOST);
+console.log(process.env.NODE_ENV);
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
   username: process.env.DB_USERNAME,
@@ -14,10 +15,13 @@ export const ormconfig: TypeOrmModuleOptions = {
   port: +process.env.DB_PORT,
   database: process.env.DB_NAME,
   entities: ['dist/**/*.entity.{js,ts}'],
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  synchronize: true,
+  ssl:
+    process.env.NODE_ENV === 'dev'
+      ? false
+      : {
+          rejectUnauthorized: false,
+        },
+  synchronize: process.env.NODE_ENV === 'dev' ? true : false,
   logging: true,
   keepConnectionAlive: true,
   namingStrategy: new SnakeNamingStrategy(),
