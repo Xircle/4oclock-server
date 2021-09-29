@@ -96,6 +96,14 @@ export class SocialRegisterInput {
   shortBio: string;
 
   @ApiProperty({
+    example: '인사이더스 12기',
+    description: '활동이력',
+  })
+  @IsString()
+  @IsOptional()
+  activities: string;
+
+  @ApiProperty({
     example: '서울시 강남구 신사동',
     description: '나의 현재 위치',
   })
