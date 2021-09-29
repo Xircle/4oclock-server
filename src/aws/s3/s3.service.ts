@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 
@@ -16,15 +16,20 @@ export class S3Service {
   ): Promise<string> {
     const { originalname, filename, buffer } = file;
 
-    const { Location } = await this.getS3()
-      .upload({
-        Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
-        Key: `${folderName}-${uid}-${Date.now()}-${filename || originalname}`,
-        ACL: 'public-read',
-        Body: buffer,
-      })
-      .promise();
-    return Location;
+    try {
+      const { Location } = await this.getS3()
+        .upload({
+          Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
+          Key: `${folderName}-${uid}-${Date.now()}-${filename || originalname}`,
+          ACL: 'public-read',
+          Body: buffer,
+        })
+        .promise();
+      return Location;
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException(err);
+    }
   }
 
   getS3() {
