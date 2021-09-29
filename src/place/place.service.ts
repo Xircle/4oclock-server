@@ -226,6 +226,7 @@ export class PlaceService {
       description,
       categories,
       detailAddress,
+      detailLink,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
@@ -270,7 +271,8 @@ export class PlaceService {
           photos: photoImagesUrl,
           place,
           participationFee: +participationFee,
-          detailAddress: detailAddress,
+          detailAddress,
+          detailLink,
         });
         await transactionalEntityManager.save(placeDetail);
       });

@@ -29,6 +29,9 @@ export class PlaceDetail {
   @Column({ length: 255 })
   detailAddress: string;
 
+  @Column({ length: 255, default: '' })
+  detailLink: string;
+
   @Column({ default: 0 })
   participationFee: number;
 
