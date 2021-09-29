@@ -10,7 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(logger('dev'));
   app.enableCors({
-    origin: ['https://4oclock.netlify.app', 'http://localhost:3000'],
+    origin: [
+      'https://4oclock.netlify.app',
+      'https://www.4oclock.kr',
+      'http://localhost:3000',
+    ],
     credentials: true,
   });
   app.useGlobalPipes(
