@@ -28,6 +28,15 @@ export class Reservation {
   @Column({ default: false })
   isVaccinated: boolean;
 
+  @Column({ default: false })
+  isCanceled: boolean;
+
+  @Column({ length: 255, nullable: true })
+  cancelReason?: string;
+
+  @Column({ length: 255, nullable: true })
+  detailReason?: string;
+
   @Column('uuid')
   user_id: string;
 

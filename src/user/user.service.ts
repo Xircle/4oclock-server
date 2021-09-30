@@ -160,6 +160,7 @@ export class UserService {
       const reservations = await this.reservationRepository.find({
         where: {
           user_id: authUser.id,
+          isCanceled: false,
         },
         relations: ['place'],
       });
