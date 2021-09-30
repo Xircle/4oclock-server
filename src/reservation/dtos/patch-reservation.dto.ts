@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class DeleteReservationInput {
+export class PatchReservationInput {
   @ApiProperty({
     name: 'cancelReason',
     description: '취소사유',

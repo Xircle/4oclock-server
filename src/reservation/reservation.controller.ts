@@ -24,7 +24,7 @@ import {
   ApiUnauthorizedResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { DeleteReservationInput } from './dtos/delete-reservation.dto';
+import { PatchReservationInput } from './dtos/patch-reservation.dto';
 
 @ApiTags('Reservation')
 @ApiBearerAuth('jwt')
@@ -54,15 +54,15 @@ export class ReservationController {
 
   @Patch(':placeId')
   @ApiOperation({ summary: '장소 예약 취소하기' })
-  async deleteReservation(
+  async patchReservation(
     @GetUser() authUser: User,
     @Param('placeId') placeId: string,
-    @Body() deleteReservationInput: DeleteReservationInput,
+    @Body() patchReservationInput: PatchReservationInput,
   ) {
-    return this.reservationService.deleteReservation(
+    return this.reservationService.patchReservation(
       authUser,
       placeId,
-      deleteReservationInput,
+      patchReservationInput,
     );
   }
 

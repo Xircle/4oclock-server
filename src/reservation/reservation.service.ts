@@ -10,7 +10,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Reservation, StartTime } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
 import { DeleteReservationOutput } from 'src/user/dtos/delete-reservation.dto';
-import { DeleteReservationInput } from './dtos/delete-reservation.dto';
+import { PatchReservationInput } from './dtos/patch-reservation.dto';
 
 @Injectable()
 export class ReservationService {
@@ -128,10 +128,10 @@ export class ReservationService {
     }
   }
 
-  async deleteReservation(
+  async patchReservation(
     authUser: User,
     placeId: string,
-    deleteReservationInput: DeleteReservationInput,
+    patchReservationInput: PatchReservationInput,
   ): Promise<DeleteReservationOutput> {
     try {
       const exists = await this.placeRepository.findOne({
@@ -147,7 +147,7 @@ export class ReservationService {
       }
 
       // 예약 취소하고, 사유 업데이트 하기
-      const { cancelReason, detailReason } = deleteReservationInput;
+      const { cancelReason, detailReason } = patchReservationInput;
       await this.reservationRepository.update(
         {
           place_id: placeId,
