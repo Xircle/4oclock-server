@@ -17,6 +17,7 @@ export class ReservationUtilService {
       where: {
         user_id: userId,
         place_id: placeId,
+        isCanceled: false,
       },
     });
     if (exists) return true;
