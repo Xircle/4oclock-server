@@ -22,6 +22,9 @@ export class Place {
   @Column({ length: 255 })
   coverImage: string;
 
+  @Column({ length: 255, default: '' })
+  oneLineIntroText: string;
+
   @Index()
   @Column({ length: 255 })
   location: string;
@@ -39,8 +42,8 @@ export class Place {
   @Column({ default: false })
   isClosed: boolean;
 
-  @Column({ length: 255, default: '' })
-  oneLineIntroText: string;
+  @Column({ default: 0 })
+  views: number;
 
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
     cascade: true,

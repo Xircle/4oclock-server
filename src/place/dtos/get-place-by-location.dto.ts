@@ -16,6 +16,7 @@ export class MainFeedPlace {
   deadline?: string | undefined;
   startDateFromNow: string;
   oneLineIntroText: string;
+  views: number;
   participants: MainFeedPlaceParticipantsProfile[];
   isParticipating: boolean;
   participantsCount: number;

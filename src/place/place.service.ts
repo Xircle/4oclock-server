@@ -29,10 +29,7 @@ import {
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
-import {
-  GetPlaceParticipantListOutput,
-  PlaceParticipantListDataProfile,
-} from './dtos/get-place-participant-list.dto';
+import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
@@ -74,6 +71,7 @@ export class PlaceService {
           'startDateAt',
           'isClosed',
           'oneLineIntroText',
+          'views',
         ],
         loadEagerRelations: false,
         take: 10,
@@ -146,15 +144,24 @@ export class PlaceService {
           'oneLineIntroText',
           'startDateAt',
           'isClosed',
+          'views',
         ],
       });
-
       if (!place) {
         return {
           ok: false,
           error: '모임이 존재하지 않습니다.',
         };
       }
+      // 조회수 업데이트
+      await this.placeRepository.update(
+        {
+          id: placeId,
+        },
+        {
+          views: place.views + 1,
+        },
+      );
 
       // 이벤트 시작 시간
       const startDateFromNow = this.placeUtilService.getEventDateCaption(

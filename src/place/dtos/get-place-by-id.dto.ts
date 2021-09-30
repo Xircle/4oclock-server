@@ -10,6 +10,7 @@ export class PlaceData {
   startDateFromNow: string;
   coverImage: string;
   isClosed: boolean;
+  views: number;
   isParticipating: boolean;
   participantsCount: number;
   participants: PlaceDataParticipantsProfile[];
