@@ -5,8 +5,6 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config({
   path: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
 });
-console.log(process.env.DB_HOST);
-console.log(process.env.NODE_ENV);
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
   username: process.env.DB_USERNAME,
@@ -18,7 +16,7 @@ export const ormconfig: TypeOrmModuleOptions = {
   ssl: {
     rejectUnauthorized: false,
   },
-  synchronize: process.env.NODE_ENV === 'dev' ? true : false,
+  synchronize: true,
   logging: true,
   keepConnectionAlive: true,
   namingStrategy: new SnakeNamingStrategy(),
