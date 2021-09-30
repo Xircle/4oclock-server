@@ -93,6 +93,7 @@ export class PlaceService {
           await this.reservationRepository.count({
             where: {
               place_id: place.id,
+              isCanceled: false,
             },
           });
         const participants: MainFeedPlaceParticipantsProfile[] =
@@ -179,6 +180,7 @@ export class PlaceService {
       const participantsCount = await this.reservationRepository.count({
         where: {
           place_id: place.id,
+          isCanceled: false,
         },
       });
       // 참여자 성비, 평균 나이 추가

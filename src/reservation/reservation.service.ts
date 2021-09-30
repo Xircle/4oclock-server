@@ -10,6 +10,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Reservation, StartTime } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
 import { DeleteReservationOutput } from 'src/user/dtos/delete-reservation.dto';
+import { DeleteReservationInput } from './dtos/delete-reservation.dto';
 
 @Injectable()
 export class ReservationService {
@@ -48,6 +49,7 @@ export class ReservationService {
         where: {
           place_id: placeId,
           user_id: authUser.id,
+          isCanceled: false,
         },
       });
       if (exists) {
@@ -60,8 +62,9 @@ export class ReservationService {
       const reservation = this.reservationRepository.create({
         place_id: placeId,
         user_id: authUser.id,
-        startTime,
+        isCanceled: false,
         isVaccinated,
+        startTime,
       });
       await this.reservationRepository.save(reservation);
 
@@ -83,7 +86,6 @@ export class ReservationService {
           id: placeId,
         },
       });
-      console.log('place : ', place);
       if (!place) {
         return {
           ok: false,
@@ -94,6 +96,7 @@ export class ReservationService {
         where: {
           place_id: placeId,
           startTime: StartTime.Four,
+          isCanceled: false,
         },
       });
       const count_reservation_at_seven = await this.reservationRepository.count(
@@ -101,6 +104,7 @@ export class ReservationService {
           where: {
             place_id: placeId,
             startTime: StartTime.Seven,
+            isCanceled: false,
           },
         },
       );
@@ -127,6 +131,7 @@ export class ReservationService {
   async deleteReservation(
     authUser: User,
     placeId: string,
+    deleteReservationInput: DeleteReservationInput,
   ): Promise<DeleteReservationOutput> {
     try {
       const exists = await this.placeRepository.findOne({
@@ -140,10 +145,20 @@ export class ReservationService {
           error: '존재하지 않는 장소입니다.',
         };
       }
-      await this.reservationRepository.delete({
-        place_id: placeId,
-        user_id: authUser.id,
-      });
+
+      // 예약 취소하고, 사유 업데이트 하기
+      const { cancelReason, detailReason } = deleteReservationInput;
+      await this.reservationRepository.update(
+        {
+          place_id: placeId,
+          user_id: authUser.id,
+        },
+        {
+          isCanceled: true,
+          cancelReason,
+          detailReason,
+        },
+      );
       return {
         ok: true,
       };

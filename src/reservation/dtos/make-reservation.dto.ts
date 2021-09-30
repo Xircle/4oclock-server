@@ -5,7 +5,7 @@ import { StartTime } from './../entities/reservation.entity';
 
 export class MakeReservationDto {
   @ApiProperty({
-    name: '장소 id',
+    name: 'placeId',
   })
   @IsString()
   @IsNotEmpty()
@@ -13,7 +13,7 @@ export class MakeReservationDto {
   placeId: string;
 
   @ApiProperty({
-    name: '시작 시간',
+    name: 'StartTime',
     enum: StartTime,
   })
   @IsEnum(StartTime)
@@ -21,7 +21,8 @@ export class MakeReservationDto {
   startTime: StartTime;
 
   @ApiProperty({
-    name: '백신 2차 접종 유무',
+    name: 'isVaccinated',
+    description: '백신 2차 접종 유무',
   })
   @IsNotEmpty()
   isVaccinated: boolean;

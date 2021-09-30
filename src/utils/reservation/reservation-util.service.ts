@@ -29,6 +29,7 @@ export class ReservationUtilService {
     const participants = await this.reservationRepository.find({
       where: {
         place_id: placeId,
+        isCanceled: false,
       },
       relations: ['participant'],
     });
