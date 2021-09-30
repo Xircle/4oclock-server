@@ -52,7 +52,7 @@ export class ReservationController {
     return this.reservationService.getReservationParticipantNumber(placeId);
   }
 
-  @Delete(':placeId')
+  @Patch(':placeId')
   @ApiOperation({ summary: '장소 예약 취소하기' })
   async deleteReservation(
     @GetUser() authUser: User,
