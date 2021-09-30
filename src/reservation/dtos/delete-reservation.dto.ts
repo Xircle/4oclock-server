@@ -10,7 +10,7 @@ export class DeleteReservationInput {
   cancelReason: string;
 
   @ApiProperty({
-    name: 'cancelReason',
+    name: 'detailReason',
     description: '상세사유',
   })
   @IsString()
