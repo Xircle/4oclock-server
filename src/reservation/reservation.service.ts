@@ -67,7 +67,7 @@ export class ReservationService {
           ok: true,
         };
       } else if (exists.isCanceled) {
-        // 예약한 적이 있는데, 취소를 했었을 때 
+        // 예약한 적이 있는데, 취소를 했었을 때
         await this.reservationRepository.update(
           {
             place_id: placeId,
@@ -78,6 +78,9 @@ export class ReservationService {
             detailReason: null,
           },
         );
+        return {
+          ok: true,
+        };
       } else {
         // 예약이 생성은 됐는데 취소를 한 적이 없으면, 예약이 중복된 상황
         return {
