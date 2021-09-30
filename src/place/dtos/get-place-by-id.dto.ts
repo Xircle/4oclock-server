@@ -8,6 +8,7 @@ export class PlaceData {
   oneLineIntroText: string;
   recommendation: string;
   startDateFromNow: string;
+  deadline: string;
   coverImage: string;
   isClosed: boolean;
   views: number;

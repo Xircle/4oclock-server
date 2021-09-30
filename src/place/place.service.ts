@@ -168,7 +168,9 @@ export class PlaceService {
       const startDateFromNow = this.placeUtilService.getEventDateCaption(
         place.startDateAt,
       );
-
+      const deadline = this.placeUtilService.getDeadlineCaption(
+        place.startDateAt,
+      );
       // 참여 여부
       let isParticipating = false;
       if (anyUser) {
@@ -206,6 +208,7 @@ export class PlaceService {
         isParticipating,
         participantsCount,
         startDateFromNow,
+        deadline,
         participants,
         participantsInfo,
       };
