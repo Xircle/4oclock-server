@@ -49,28 +49,42 @@ export class ReservationService {
         where: {
           place_id: placeId,
           user_id: authUser.id,
-          isCanceled: false,
         },
       });
-      if (exists) {
+
+      if (!exists) {
+        // 유저가 최초에 예약할 때
+        const reservation = this.reservationRepository.create({
+          place_id: placeId,
+          user_id: authUser.id,
+          isCanceled: false,
+          isVaccinated,
+          startTime,
+        });
+        await this.reservationRepository.save(reservation);
+
+        return {
+          ok: true,
+        };
+      } else if (exists.isCanceled) {
+        // 예약한 적이 있는데, 취소를 했었을 때 
+        await this.reservationRepository.update(
+          {
+            place_id: placeId,
+          },
+          {
+            isCanceled: false,
+            cancelReason: null,
+            detailReason: null,
+          },
+        );
+      } else {
+        // 예약이 생성은 됐는데 취소를 한 적이 없으면, 예약이 중복된 상황
         return {
           ok: false,
           error: '이미 신청하셨습니다.',
         };
       }
-
-      const reservation = this.reservationRepository.create({
-        place_id: placeId,
-        user_id: authUser.id,
-        isCanceled: false,
-        isVaccinated,
-        startTime,
-      });
-      await this.reservationRepository.save(reservation);
-
-      return {
-        ok: true,
-      };
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException();
