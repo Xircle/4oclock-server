@@ -124,7 +124,10 @@ export class ReservationService {
     }
   }
 
-  async deleteReservation(placeId: string): Promise<DeleteReservationOutput> {
+  async deleteReservation(
+    authUser: User,
+    placeId: string,
+  ): Promise<DeleteReservationOutput> {
     try {
       const exists = await this.placeRepository.findOne({
         where: {
@@ -139,6 +142,7 @@ export class ReservationService {
       }
       await this.reservationRepository.delete({
         place_id: placeId,
+        user_id: authUser.id,
       });
       return {
         ok: true,

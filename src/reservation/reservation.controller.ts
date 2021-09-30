@@ -53,8 +53,11 @@ export class ReservationController {
 
   @Delete(':placeId')
   @ApiOperation({ summary: '장소 예약 취소하기' })
-  async deleteReservation(@Param('placeId') placeId: string) {
-    return this.reservationService.deleteReservation(placeId);
+  async deleteReservation(
+    @GetUser() authUser: User,
+    @Param('placeId') placeId: string,
+  ) {
+    return this.reservationService.deleteReservation(authUser, placeId);
   }
 
   @Patch()
