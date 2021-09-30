@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'xircle-server',
       script: './dist/src/main.js',
-      instances: 'max',
+      instances: '4',
       env: {
         NODE_ENV: 'dev',
       },
