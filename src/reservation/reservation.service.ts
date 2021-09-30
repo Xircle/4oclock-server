@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Reservation, StartTime } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
+import { DeleteReservationOutput } from 'src/user/dtos/delete-reservation.dto';
 
 @Injectable()
 export class ReservationService {
@@ -116,6 +117,31 @@ export class ReservationService {
             participantNumber: count_reservation_at_seven,
           },
         ],
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async deleteReservation(placeId: string): Promise<DeleteReservationOutput> {
+    try {
+      const exists = await this.placeRepository.findOne({
+        where: {
+          id: placeId,
+        },
+      });
+      if (!exists) {
+        return {
+          ok: false,
+          error: '존재하지 않는 장소입니다.',
+        };
+      }
+      await this.reservationRepository.delete({
+        place_id: placeId,
+      });
+      return {
+        ok: true,
       };
     } catch (err) {
       console.log(err);
