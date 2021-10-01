@@ -22,14 +22,18 @@ export class PlaceUtilService {
    * @returns
    */
   getDeadlineCaption(eventDate: Date): string {
-    const current_date = moment();
+    const current_date = moment().format('YYYY-MM-DD');
     const event_date = moment(eventDate);
-    if (event_date.diff(current_date, 'hours') < -1) {
+    if (event_date.diff(current_date, 'days') === 0) {
       return '마감';
-    } else if (event_date.diff(current_date, 'hours') < 23) {
+    } else if (event_date.diff(current_date, 'days') === 1) {
       return '오늘 마감';
-    } else if (event_date.diff(current_date, 'hours') < 47) {
+    } else if (event_date.diff(current_date, 'days') === 2) {
       return 'D-1';
+    } else if (event_date.diff(current_date, 'days') === 3) {
+      return 'D-2';
+    } else if (event_date.diff(current_date, 'days') === 4) {
+      return 'D-3';
     } else {
       return undefined;
     }
@@ -38,7 +42,7 @@ export class PlaceUtilService {
   /**
    * Returns event's date with custom caption.
    * @param eventDate
-   * @example "오늘", "내일", "이번주 목요일"
+   * @example 마감, 오늘, 이번주 *요일, 다음주 *요일, 10월 31일
    */
   getEventDateCaption(eventDate: Date): string {
     let event_date_caption: string[] = [];
@@ -50,13 +54,19 @@ export class PlaceUtilService {
         // 적어도 내일 이상
         const this_monday = moment().startOf('isoWeek');
         const this_sunday = moment().endOf('isoWeek');
+        const current_date = moment().format('YYYY-MM-DD');
+        const event_date = moment(eventDate);
         if (
           moment(eventDate).isBetween(this_monday, this_sunday, undefined, '[]')
         ) {
-          event_date_caption.push(
-            '이번주',
-            moment(eventDate).format('dddd')
-          );
+          // console.log(event_date, current_date);
+          if (event_date.diff(current_date, 'days') === 1) {
+            event_date_caption.push('내일');
+          } else if (event_date.diff(current_date, 'days') === 2) {
+            event_date_caption.push('모래');
+          } else {
+            event_date_caption.push('이번주', moment(eventDate).format('dddd'));
+          }
         } else {
           // 다음주 이상
           const next_monday = moment(this_monday).add(7, 'days');
@@ -69,10 +79,7 @@ export class PlaceUtilService {
               '[]',
             )
           ) {
-            event_date_caption.push(
-              '다음주',
-              moment(eventDate).format('dddd')
-            );
+            event_date_caption.push('다음주', moment(eventDate).format('dddd'));
           } else {
             event_date_caption.push(moment(eventDate).format('M월DD일'));
           }
