@@ -73,6 +73,8 @@ export class ReservationService {
             place_id: placeId,
           },
           {
+            startTime,
+            isVaccinated,
             isCanceled: false,
             cancelReason: null,
             detailReason: null,
