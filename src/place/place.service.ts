@@ -30,6 +30,8 @@ import {
 } from './dtos/get-place-by-id.dto';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
+import { CoreOutput } from 'src/common/common.interface';
+import { EditPlaceInput } from './dtos/edit-place.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
@@ -276,7 +278,7 @@ export class PlaceService {
         await transactionalEntityManager.save(place);
 
         //   Create place detail
-        const placeDetail = this.placeDetailRepository.create({
+        const placeDetail = await this.placeDetailRepository.create({
           title,
           description,
           categories,
@@ -312,6 +314,37 @@ export class PlaceService {
       await this.placeRepository.delete({
         id: placeId,
       });
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async editPlace(
+    placeId: string,
+    editPlaceInput: EditPlaceInput,
+    editPhotoInput: PlacePhotoInput,
+  ): Promise<CoreOutput> {
+    try {
+      const exists = await this.placeRepository.findOne({
+        where: {
+          id: placeId,
+        },
+      });
+      if (!exists) {
+        return {
+          ok: false,
+          error: '존재하지 않는 장소입니다.',
+        };
+      }
+
+      let updateData: Partial<Place & PlaceDetail> = {};
+      // Upload to s3 when Image is given
+      if (editPhotoInput) {
+      }
       return {
         ok: true,
       };

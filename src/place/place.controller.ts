@@ -15,6 +15,7 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UploadedFiles,
@@ -32,6 +33,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
+import { CoreOutput } from 'src/common/common.interface';
+import { EditPlaceInput } from './dtos/edit-place.dto';
 
 @ApiTags('Place')
 @ApiBearerAuth('jwt')
@@ -73,7 +76,7 @@ export class PlaceController {
       },
       {
         name: 'reviewImages',
-        maxCount: 6,
+        maxCount: 12,
       },
     ]),
   )
@@ -87,6 +90,33 @@ export class PlaceController {
     },
   ): Promise<CreatePlaceOutput> {
     return this.placeService.createPlace(authUser, createPlaceInput, files);
+  }
+
+  @Patch('/:placeId')
+  @ApiOperation({ summary: '장소 정보 수정하기' })
+  @Roles(['Admin', 'Owner'])
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      {
+        name: 'coverImage',
+        maxCount: 1,
+      },
+      {
+        name: 'reviewImages',
+        maxCount: 12,
+      },
+    ]),
+  )
+  async editPlace(
+    @Param('placeId') placeId: string,
+    @Body() editPlaceInput: EditPlaceInput,
+    @UploadedFiles()
+    files: {
+      coverImage: Express.Multer.File[];
+      reviewImages: Express.Multer.File[];
+    },
+  ): Promise<CoreOutput> {
+    return this.placeService.editPlace(placeId, editPlaceInput, files);
   }
 
   @Delete('/:placeId')
