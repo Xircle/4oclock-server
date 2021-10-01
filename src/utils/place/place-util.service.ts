@@ -42,11 +42,11 @@ export class PlaceUtilService {
   /**
    * Returns event's date with custom caption.
    * @param eventDate
-   * @example 마감, 오늘, 이번주 *요일, 다음주 *요일, 10월 31일
+   * @example 마감, 오늘, 내일, 모래 이번주 *요일, 다음주 *요일, 10월 31일
    */
   getEventDateCaption(eventDate: Date): string {
     let event_date_caption: string[] = [];
-
+    
     if (moment(eventDate).isSame(moment(), 'day')) {
       event_date_caption.push('오늘');
     } else {

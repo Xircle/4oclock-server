@@ -7,6 +7,7 @@ export class PlaceData {
   name: string;
   oneLineIntroText: string;
   recommendation: string;
+  startDateAt: Date;
   startDateFromNow: string;
   deadline: string;
   coverImage: string;
