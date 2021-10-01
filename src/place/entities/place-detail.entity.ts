@@ -4,10 +4,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Review } from 'src/review/entities/review.entity';
 
 @Entity()
 export class PlaceDetail {
@@ -22,6 +24,9 @@ export class PlaceDetail {
 
   @Column({ type: 'json' })
   categories: string[];
+
+  @OneToMany((type) => Review, (review) => review.place)
+  reviews: Review[];
 
   @Column({ type: 'json' })
   photos: string[];
