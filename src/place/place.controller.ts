@@ -22,8 +22,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
-import { Roles } from 'src/auth/roles.decorator';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -32,6 +30,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
+import { Roles } from 'src/auth/roles.decorator';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { EditPlaceInput } from './dtos/edit-place.dto';

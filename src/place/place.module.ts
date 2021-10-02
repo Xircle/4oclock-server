@@ -1,3 +1,4 @@
+import { Review } from 'src/review/entities/review.entity';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -17,7 +18,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Place, PlaceDetail, Reservation, User])],
+  imports: [
+    TypeOrmModule.forFeature([Place, PlaceDetail, Reservation, User, Review]),
+  ],
   providers: [
     PlaceService,
     PlaceUtilService,

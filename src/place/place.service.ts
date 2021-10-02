@@ -1,3 +1,4 @@
+import { Review } from 'src/review/entities/review.entity';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
   GetPlaceByLocationWhereOptions,
@@ -16,11 +17,7 @@ import {
 } from './dtos/create-place.dto';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
 import { Place } from './entities/place.entity';
-import {
-  Injectable,
-  InternalServerErrorException,
-  Scope,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import {
@@ -33,7 +30,7 @@ import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list
 import { CoreOutput } from 'src/common/common.interface';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class PlaceService {
   constructor(
     @InjectRepository(Place)
@@ -42,6 +39,8 @@ export class PlaceService {
     private placeDetailRepository: Repository<PlaceDetail>,
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
+    @InjectRepository(Review)
+    private reviewRepository: Repository<Review>,
     private placeUtilService: PlaceUtilService,
     private s3Service: S3Service,
     private reservationUtilService: ReservationUtilService,
@@ -255,13 +254,13 @@ export class PlaceService {
         coverImage[0],
         authUser.id,
       );
-      const photoImagesUrl: string[] = [];
+      const reviewImagesUrl: string[] = [];
       for (const reviewImage of reviewImages) {
         const s3_url = await this.s3Service.uploadToS3(
           reviewImage,
           authUser.id,
         );
-        photoImagesUrl.push(s3_url);
+        reviewImagesUrl.push(s3_url);
       }
 
       //   Transction start
@@ -277,12 +276,15 @@ export class PlaceService {
         });
         await transactionalEntityManager.save(place);
 
+        let reviews: Review[] = [];
+        for (let reviewImageUrl of reviewImagesUrl) {
+        }
         //   Create place detail
-        const placeDetail = await this.placeDetailRepository.create({
+        const placeDetail = this.placeDetailRepository.create({
           title,
           description,
           categories,
-          photos: photoImagesUrl,
+          // photos: photoImagesUrl,
           place,
           participationFee: +participationFee,
           detailAddress,
