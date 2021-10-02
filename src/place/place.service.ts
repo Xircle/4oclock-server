@@ -1,3 +1,5 @@
+import { EditProfileInput } from './../user/dtos/edit-profile.dto';
+import { EditPlaceInput } from './dtos/edit-place.dto';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
   GetPlaceByLocationWhereOptions,
@@ -30,6 +32,7 @@ import {
 } from './dtos/get-place-by-id.dto';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
+import { CoreOutput } from 'src/common/common.interface';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PlaceService {
@@ -312,6 +315,35 @@ export class PlaceService {
       await this.placeRepository.delete({
         id: placeId,
       });
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async editPlace(
+    placeId: string,
+    editPlaceInput: EditPlaceInput,
+    editProfileInput: PlacePhotoInput,
+  ): Promise<CoreOutput> {
+    try {
+      const exists = await this.placeRepository.findOne({
+        where: {
+          id: placeId,
+        },
+      });
+      if (!exists) {
+        return {
+          ok: false,
+          error: '존재하지 않는 공간입니다.',
+        };
+      }
+
+      const { coverImage, reviewImages } = editProfileInput;
+
       return {
         ok: true,
       };
