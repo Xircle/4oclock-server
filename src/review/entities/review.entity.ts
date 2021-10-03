@@ -18,8 +18,8 @@ export class Review {
   @Column({ length: 255 })
   description: string;
 
-  @Column({ default: 0 })
-  ratings: number;
+  @Column({ nullable: true })
+  ratings?: number;
 
   @Column({ default: 0 })
   likesNumber: number;

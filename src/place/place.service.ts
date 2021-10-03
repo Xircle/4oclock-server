@@ -5,16 +5,16 @@ import {
   MainFeedPlace,
   MainFeedPlaceParticipantsProfile,
 } from './dtos/get-place-by-location.dto';
-import { PlaceUtilService } from './../utils/place/place-util.service';
-import { PlaceDetail } from './entities/place-detail.entity';
-import { User } from './../user/entities/user.entity';
-import { DeletePlaceOutput } from './dtos/delete-place.dto';
-import { S3Service } from 'src/aws/s3/s3.service';
 import {
   CreatePlaceInput,
   CreatePlaceOutput,
   PlacePhotoInput,
 } from './dtos/create-place.dto';
+import { PlaceUtilService } from './../utils/place/place-util.service';
+import { PlaceDetail } from './entities/place-detail.entity';
+import { User } from './../user/entities/user.entity';
+import { DeletePlaceOutput } from './dtos/delete-place.dto';
+import { S3Service } from 'src/aws/s3/s3.service';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
 import { Place } from './entities/place.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
@@ -138,6 +138,7 @@ export class PlaceService {
         where: {
           id: placeId,
         },
+        relations: ['reviews'],
         select: [
           'id',
           'name',
@@ -155,6 +156,7 @@ export class PlaceService {
           error: '모임이 존재하지 않습니다.',
         };
       }
+
       // 조회수 업데이트
       await this.placeRepository.update(
         {
@@ -240,11 +242,12 @@ export class PlaceService {
       categories,
       detailAddress,
       detailLink,
+      reviewDescriptions,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
     try {
-      // Upload to S3
+      // Upload to S3 (url 생성)
       if (!coverImage || !reviewImages)
         return {
           ok: false,
@@ -254,15 +257,14 @@ export class PlaceService {
         coverImage[0],
         authUser.id,
       );
-      const reviewImagesUrl: string[] = [];
+      const reviewImagesS3Url: string[] = [];
       for (const reviewImage of reviewImages) {
         const s3_url = await this.s3Service.uploadToS3(
           reviewImage,
           authUser.id,
         );
-        reviewImagesUrl.push(s3_url);
+        reviewImagesS3Url.push(s3_url);
       }
-
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
@@ -276,15 +278,24 @@ export class PlaceService {
         });
         await transactionalEntityManager.save(place);
 
+        //  Create reviews
         let reviews: Review[] = [];
-        for (let reviewImageUrl of reviewImagesUrl) {
+        for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
+          console.log(index, reviewImageUrl);
+          const review = this.reviewRepository.create({
+            reviewImageUrl: reviewImageUrl,
+            description: reviewDescriptions[index],
+            place,
+          });
+          reviews.push(review);
         }
+        await transactionalEntityManager.save(reviews);
+
         //   Create place detail
         const placeDetail = this.placeDetailRepository.create({
           title,
           description,
           categories,
-          // photos: photoImagesUrl,
           place,
           participationFee: +participationFee,
           detailAddress,

@@ -25,9 +25,6 @@ export class PlaceDetail {
   @Column({ type: 'json' })
   categories: string[];
 
-  @OneToMany((type) => Review, (review) => review.place)
-  reviews: Review[];
-
   @Column({ type: 'json' })
   photos: string[];
 
