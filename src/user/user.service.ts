@@ -59,6 +59,7 @@ export class UserService {
           location,
           interests,
           reservation_count: reservations.length,
+          isYkClub: authUser.isYkClub,
         },
       };
     } catch (err) {
