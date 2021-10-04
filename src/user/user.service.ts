@@ -211,24 +211,12 @@ export class UserService {
     editProfileInput: EditProfileInput,
   ): Promise<CoreOutput> {
     try {
-      const user = await this.users.findOne({
-        where: {
-          id: authUser.id,
-        },
-      });
-      if (!user) {
-        return {
-          ok: false,
-          error: '존재하지 않는 계정입니다.',
-        };
-      }
-
-      let updateData: Partial<UserProfile> = {};
+      let updateData: Partial<UserProfile & User> = {};
       // Upload to s3 when profile file exists
       if (profileImageFile) {
         const profile_image_s3 = await this.s3Service.uploadToS3(
           profileImageFile,
-          user.id,
+          authUser.id,
         );
         updateData.profileImageUrl = profile_image_s3;
       }
@@ -247,7 +235,7 @@ export class UserService {
         await transactionalEntityManager.update(
           UserProfile,
           {
-            fk_user_id: user.id,
+            fk_user_id: authUser.id,
           },
           {
             ...updateData,
