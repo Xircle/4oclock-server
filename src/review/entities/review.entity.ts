@@ -5,6 +5,9 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  Index,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -24,10 +27,19 @@ export class Review {
   @Column({ default: 0 })
   likesNumber: number;
 
+  @Index()
   @Column('uuid')
   place_id: string;
 
   @ManyToOne((type) => Place)
   @JoinColumn({ name: 'place_id' })
   place: Place;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
