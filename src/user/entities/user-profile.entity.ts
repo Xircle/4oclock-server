@@ -54,6 +54,9 @@ export class UserProfile {
   @Column({ length: 255, nullable: true })
   activities?: string;
 
+  @Column({ default: false })
+  isYkClub: boolean;
+
   @Column({ length: 255, nullable: true })
   location?: string;
 

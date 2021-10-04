@@ -44,6 +44,7 @@ export class UserService {
         username,
         location,
         interests,
+        isYkClub,
       } = authUser.profile;
       return {
         ok: true,
@@ -59,7 +60,7 @@ export class UserService {
           location,
           interests,
           reservation_count: reservations.length,
-          isYkClub: authUser.isYkClub,
+          isYkClub,
         },
       };
     } catch (err) {

@@ -8,6 +8,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseUUIDPipe,
   Put,
   Query,
@@ -20,7 +21,6 @@ import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ParsePipe } from 'src/common/pipe/parse.pipe';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -51,10 +51,13 @@ export class UserController {
   async editProfile(
     @UploadedFile() file: Express.Multer.File,
     @GetUser() authUser: User,
-    @Body(new ParsePipe())
-    editProfileInput: EditProfileInput,
+    @Body('isYkClub', new ParseBoolPipe()) isYkClub: boolean,
+    @Body() editProfileInput: EditProfileInput,
   ): Promise<CoreOutput> {
-    return this.userService.editProfile(authUser, file, editProfileInput);
+    return this.userService.editProfile(authUser, file, {
+      ...editProfileInput,
+      isYkClub,
+    });
   }
 
   @Get('/profile/random')
