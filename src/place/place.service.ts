@@ -148,6 +148,7 @@ export class PlaceService {
           'startDateAt',
           'isClosed',
           'views',
+          'reviews',
         ],
       });
       if (!place) {
@@ -156,7 +157,7 @@ export class PlaceService {
           error: '모임이 존재하지 않습니다.',
         };
       }
-
+      console.log(place);
       // 조회수 업데이트
       await this.placeRepository.update(
         {
