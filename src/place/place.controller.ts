@@ -103,19 +103,6 @@ export class PlaceController {
       },
     ]),
   )
-  async editPlace(
-    @Param('placeId') placeId: string,
-    @Body() editPlaceInput: EditPlaceInput,
-    @UploadedFiles()
-    files: {
-      coverImage: Express.Multer.File[];
-    },
-  ): Promise<CoreOutput> {
-    console.log(editPlaceInput, files);
-    return { ok: true };
-    // return this.placeService.editPlace(placeId, editPlaceInput, files);
-  }
-
   @Delete('/:placeId')
   @ApiOperation({ summary: '장소 제거하기' })
   @Roles(['Admin'])

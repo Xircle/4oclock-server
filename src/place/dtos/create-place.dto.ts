@@ -13,16 +13,6 @@ export class CreatePlaceInput {
   name: string;
 
   @ApiProperty({
-    example:
-      '[너무 맛있네요~^^, 세상에 이런 집은 없었다, 고대친구랑 갔는데 너무 재밌었다]',
-    description:
-      '리뷰 사진 각각의 글 (업로드 하는 순서대로 매치해서 보내야합니다.)',
-  })
-  @IsString()
-  @IsNotEmpty()
-  reviewDescriptions: string[];
-
-  @ApiProperty({
     example: '안암',
     description: '장소의 대학가 주변 위치',
   })

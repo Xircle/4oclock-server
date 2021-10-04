@@ -1,4 +1,6 @@
 import { Review } from 'src/review/entities/review.entity';
+import { EditProfileInput } from './../user/dtos/edit-profile.dto';
+import { EditPlaceInput } from './dtos/edit-place.dto';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
   GetPlaceByLocationWhereOptions,
@@ -28,7 +30,6 @@ import {
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CoreOutput } from 'src/common/common.interface';
-import { EditPlaceInput } from './dtos/edit-place.dto';
 
 @Injectable()
 export class PlaceService {
@@ -243,7 +244,6 @@ export class PlaceService {
       categories,
       detailAddress,
       detailLink,
-      reviewDescriptions,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
@@ -281,16 +281,16 @@ export class PlaceService {
 
         //  Create reviews
         let reviews: Review[] = [];
-        for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
-          console.log(index, reviewImageUrl);
-          const review = this.reviewRepository.create({
-            reviewImageUrl: reviewImageUrl,
-            description: reviewDescriptions[index],
-            place,
-          });
-          reviews.push(review);
-        }
-        await transactionalEntityManager.save(reviews);
+        // for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
+        //   console.log(index, reviewImageUrl);
+        //   const review = this.reviewRepository.create({
+        //     reviewImageUrl: reviewImageUrl,
+        //     description: reviewDescriptions[index],
+        //     place,
+        //   });
+        //   reviews.push(review);
+        // }
+        // await transactionalEntityManager.save(reviews);
 
         //   Create place detail
         const placeDetail = this.placeDetailRepository.create({
@@ -340,7 +340,6 @@ export class PlaceService {
   async editPlace(
     placeId: string,
     editPlaceInput: EditPlaceInput,
-    editPhotoInput: PlacePhotoInput,
   ): Promise<CoreOutput> {
     try {
       const exists = await this.placeRepository.findOne({
@@ -357,8 +356,7 @@ export class PlaceService {
 
       let updateData: Partial<Place & PlaceDetail> = {};
       // Upload to s3 when Image is given
-      if (editPhotoInput) {
-      }
+
       return {
         ok: true,
       };
