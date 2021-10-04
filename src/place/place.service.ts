@@ -327,7 +327,6 @@ export class PlaceService {
   async editPlace(
     placeId: string,
     editPlaceInput: EditPlaceInput,
-    editProfileInput: PlacePhotoInput,
   ): Promise<CoreOutput> {
     try {
       const exists = await this.placeRepository.findOne({
@@ -342,8 +341,24 @@ export class PlaceService {
         };
       }
 
-      const { coverImage, reviewImages } = editProfileInput;
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
 
+  async editPlaceReviewImages(
+    reviewImages: (Express.Multer.File | string)[],
+  ): Promise<CoreOutput> {
+    try {
+      // 
+      for(let reviewImage of reviewImages) {
+        if(typeof reviewImage === 'string') return;
+        
+      }
       return {
         ok: true,
       };
