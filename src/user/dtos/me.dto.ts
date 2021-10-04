@@ -12,6 +12,7 @@ export class MeData {
   location: string;
   interests: string[];
   reservation_count: number;
+  isYkClub: boolean;
 }
 
 export class MeOutput extends CoreOutput {

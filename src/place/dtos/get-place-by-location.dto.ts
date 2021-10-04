@@ -8,6 +8,7 @@ export class MainFeedPlaceParticipantsProfile {
   age: number;
   job: string;
   shortBio: string;
+  isYkClub: boolean;
 }
 export class MainFeedPlace {
   id: string;

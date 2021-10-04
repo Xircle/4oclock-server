@@ -40,6 +40,9 @@ export class User {
   @Column({ default: false })
   isVerified: boolean;
 
+  @Column({ default: false })
+  isYkClub: boolean;
+
   @Column({ type: 'enum', enum: UserRole, default: UserRole.Client })
   @IsEnum(UserRole)
   role: UserRole;

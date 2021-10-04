@@ -354,9 +354,23 @@ export class PlaceService {
         };
       }
 
-      let updateData: Partial<Place & PlaceDetail> = {};
-      // Upload to s3 when Image is given
+      return {
+        ok: true,
+      };
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException();
+    }
+  }
 
+  async editPlaceReviewImages(
+    reviewImages: (Express.Multer.File | string)[],
+  ): Promise<CoreOutput> {
+    try {
+      //
+      for (let reviewImage of reviewImages) {
+        if (typeof reviewImage === 'string') return;
+      }
       return {
         ok: true,
       };

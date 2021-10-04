@@ -43,6 +43,7 @@ export class ReservationUtilService {
         age: parti.participant.profile.age,
         job: parti.participant.profile.job,
         shortBio: parti.participant.profile.shortBio,
+        isYkClub: parti.participant.isYkClub,
       });
     });
     return mainFeedPlacePartiProfile;

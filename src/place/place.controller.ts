@@ -1,10 +1,15 @@
+import { ParsePipe } from './../common/pipe/parse.pipe';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { User } from './../user/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RolesGuard } from './../auth/guard/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
 import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
 import {
@@ -18,6 +23,7 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -94,22 +100,25 @@ export class PlaceController {
 
   // @Roles(['Admin', 'Owner', 'Any'])
   @Patch('/:placeId')
-  @ApiOperation({ summary: '장소 정보 수정하기' })
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      {
-        name: 'coverImage',
-        maxCount: 1,
-      },
-    ]),
-  )
-  @Delete('/:placeId')
-  @ApiOperation({ summary: '장소 제거하기' })
-  @Roles(['Admin'])
-  async deletePlace(
+  @ApiOperation({ summary: '장소 정보 수정하기 (이미지 제외)' })
+  @Roles(['Admin', 'Owner'])
+  async editPlace(
     @Param('placeId') placeId: string,
-  ): Promise<DeletePlaceOutput> {
-    return this.placeService.deletePlace(placeId);
+    @Body() editPlaceInput: EditPlaceInput,
+  ): Promise<CoreOutput> {
+    return this.placeService.editPlace(placeId, editPlaceInput);
+  }
+
+  @Patch('/:placeId/review/images')
+  @ApiOperation({ summary: '장소 리뷰 사진 변경하기' })
+  @Roles(['Admin', 'Owner'])
+  @UseInterceptors(FilesInterceptor('reviewImages'))
+  async editPlaceReviewImages(
+    @Param('placeId') placeId: string,
+    @UploadedFiles()
+    reviewImages: (Express.Multer.File | string)[],
+  ): Promise<CoreOutput> {
+    return this.placeService.editPlaceReviewImages(reviewImages);
   }
 
   @Get('/:placeId/participants')
