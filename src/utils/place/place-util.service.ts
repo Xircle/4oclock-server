@@ -42,11 +42,12 @@ export class PlaceUtilService {
   /**
    * Returns event's date with custom caption.
    * @param eventDate
+
    * @example 마감, 오늘, 내일, 모래 이번주 *요일, 다음주 *요일, 10월 31일
    */
   getEventDateCaption(eventDate: Date): string {
     let event_date_caption: string[] = [];
-    
+
     if (moment(eventDate).isSame(moment(), 'day')) {
       event_date_caption.push('오늘');
     } else {
@@ -62,8 +63,6 @@ export class PlaceUtilService {
           // console.log(event_date, current_date);
           if (event_date.diff(current_date, 'days') === 1) {
             event_date_caption.push('내일');
-          } else if (event_date.diff(current_date, 'days') === 2) {
-            event_date_caption.push('모래');
           } else {
             event_date_caption.push('이번주', moment(eventDate).format('dddd'));
           }

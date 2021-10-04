@@ -28,8 +28,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
-import { Roles } from 'src/auth/roles.decorator';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -38,9 +36,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
+import { Roles } from 'src/auth/roles.decorator';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
-import { EditPlaceInput } from './dtos/edit-place.dto';
 import { CoreOutput } from 'src/common/common.interface';
+import { EditPlaceInput } from './dtos/edit-place.dto';
 
 @ApiTags('Place')
 @ApiBearerAuth('jwt')
@@ -98,15 +98,7 @@ export class PlaceController {
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }
 
-  @Delete('/:placeId')
-  @ApiOperation({ summary: '장소 제거하기' })
-  @Roles(['Admin'])
-  async deletePlace(
-    @Param('placeId') placeId: string,
-  ): Promise<DeletePlaceOutput> {
-    return this.placeService.deletePlace(placeId);
-  }
-
+  // @Roles(['Admin', 'Owner', 'Any'])
   @Patch('/:placeId')
   @ApiOperation({ summary: '장소 정보 수정하기 (이미지 제외)' })
   @Roles(['Admin', 'Owner'])

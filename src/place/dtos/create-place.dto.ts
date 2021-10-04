@@ -1,12 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsString,
-  MaxLength,
-  IsNumber,
-} from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
+
 export class CreatePlaceInput {
   @ApiProperty({
     example: '춘자 카페',
@@ -92,8 +87,7 @@ export class CreatePlaceInput {
   detailAddress: string;
 
   @ApiProperty({
-    example:
-      'https://map.naver.com/v5/search/%ED%8F%AC%EC%84%9D%EC%A0%95%20%EC%8B%A0%EC%B4%8C/place/11603484?c=14129921.9710383,4517285.8915961,15,0,0,0,dh&placePath=%3Fentry%253Dbmp',
+    example: 'https://map.naver.com',
     description: '맛집 정보 더보기',
   })
   @IsString()

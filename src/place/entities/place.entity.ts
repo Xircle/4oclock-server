@@ -1,3 +1,4 @@
+import { Review } from 'src/review/entities/review.entity';
 import { Reservation } from './../../reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
 import {
@@ -44,6 +45,9 @@ export class Place {
 
   @Column({ default: 0 })
   views: number;
+
+  @OneToMany((type) => Review, (review) => review.place)
+  reviews: Review[];
 
   @OneToOne((type) => PlaceDetail, (placeDetail) => placeDetail.place, {
     cascade: true,

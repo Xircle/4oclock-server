@@ -11,6 +11,7 @@ import { ReservationModule } from './reservation/reservation.module';
 import { RoomModule } from './room/room.module';
 import { MessageModule } from './message/message.module';
 import { ormconfig } from '../ormconfig';
+import { ReviewModule } from './review/review.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -41,6 +42,7 @@ import * as Joi from 'joi';
     ReservationModule,
     RoomModule,
     MessageModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

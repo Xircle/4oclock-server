@@ -1,3 +1,4 @@
+import { Review } from 'src/review/entities/review.entity';
 import { EditProfileInput } from './../user/dtos/edit-profile.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
@@ -6,23 +7,19 @@ import {
   MainFeedPlace,
   MainFeedPlaceParticipantsProfile,
 } from './dtos/get-place-by-location.dto';
-import { PlaceUtilService } from './../utils/place/place-util.service';
-import { PlaceDetail } from './entities/place-detail.entity';
-import { User } from './../user/entities/user.entity';
-import { DeletePlaceOutput } from './dtos/delete-place.dto';
-import { S3Service } from 'src/aws/s3/s3.service';
 import {
   CreatePlaceInput,
   CreatePlaceOutput,
   PlacePhotoInput,
 } from './dtos/create-place.dto';
+import { PlaceUtilService } from './../utils/place/place-util.service';
+import { PlaceDetail } from './entities/place-detail.entity';
+import { User } from './../user/entities/user.entity';
+import { DeletePlaceOutput } from './dtos/delete-place.dto';
+import { S3Service } from 'src/aws/s3/s3.service';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
 import { Place } from './entities/place.entity';
-import {
-  Injectable,
-  InternalServerErrorException,
-  Scope,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import {
@@ -34,7 +31,7 @@ import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CoreOutput } from 'src/common/common.interface';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class PlaceService {
   constructor(
     @InjectRepository(Place)
@@ -43,6 +40,8 @@ export class PlaceService {
     private placeDetailRepository: Repository<PlaceDetail>,
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
+    @InjectRepository(Review)
+    private reviewRepository: Repository<Review>,
     private placeUtilService: PlaceUtilService,
     private s3Service: S3Service,
     private reservationUtilService: ReservationUtilService,
@@ -140,6 +139,7 @@ export class PlaceService {
         where: {
           id: placeId,
         },
+        relations: ['reviews'],
         select: [
           'id',
           'name',
@@ -149,6 +149,7 @@ export class PlaceService {
           'startDateAt',
           'isClosed',
           'views',
+          'reviews',
         ],
       });
       if (!place) {
@@ -157,6 +158,7 @@ export class PlaceService {
           error: '모임이 존재하지 않습니다.',
         };
       }
+      console.log(place);
       // 조회수 업데이트
       await this.placeRepository.update(
         {
@@ -246,7 +248,7 @@ export class PlaceService {
     const { coverImage, reviewImages } = placePhotoInput;
 
     try {
-      // Upload to S3
+      // Upload to S3 (url 생성)
       if (!coverImage || !reviewImages)
         return {
           ok: false,
@@ -256,15 +258,14 @@ export class PlaceService {
         coverImage[0],
         authUser.id,
       );
-      const photoImagesUrl: string[] = [];
+      const reviewImagesS3Url: string[] = [];
       for (const reviewImage of reviewImages) {
         const s3_url = await this.s3Service.uploadToS3(
           reviewImage,
           authUser.id,
         );
-        photoImagesUrl.push(s3_url);
+        reviewImagesS3Url.push(s3_url);
       }
-
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
@@ -278,12 +279,24 @@ export class PlaceService {
         });
         await transactionalEntityManager.save(place);
 
+        //  Create reviews
+        let reviews: Review[] = [];
+        // for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
+        //   console.log(index, reviewImageUrl);
+        //   const review = this.reviewRepository.create({
+        //     reviewImageUrl: reviewImageUrl,
+        //     description: reviewDescriptions[index],
+        //     place,
+        //   });
+        //   reviews.push(review);
+        // }
+        // await transactionalEntityManager.save(reviews);
+
         //   Create place detail
         const placeDetail = this.placeDetailRepository.create({
           title,
           description,
           categories,
-          photos: photoImagesUrl,
           place,
           participationFee: +participationFee,
           detailAddress,
@@ -337,7 +350,7 @@ export class PlaceService {
       if (!exists) {
         return {
           ok: false,
-          error: '존재하지 않는 공간입니다.',
+          error: '존재하지 않는 장소입니다.',
         };
       }
 
@@ -354,10 +367,9 @@ export class PlaceService {
     reviewImages: (Express.Multer.File | string)[],
   ): Promise<CoreOutput> {
     try {
-      // 
-      for(let reviewImage of reviewImages) {
-        if(typeof reviewImage === 'string') return;
-        
+      //
+      for (let reviewImage of reviewImages) {
+        if (typeof reviewImage === 'string') return;
       }
       return {
         ok: true,
