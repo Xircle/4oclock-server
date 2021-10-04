@@ -92,18 +92,14 @@ export class PlaceController {
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }
 
+  // @Roles(['Admin', 'Owner', 'Any'])
   @Patch('/:placeId')
   @ApiOperation({ summary: '장소 정보 수정하기' })
-  @Roles(['Admin', 'Owner'])
   @UseInterceptors(
     FileFieldsInterceptor([
       {
         name: 'coverImage',
         maxCount: 1,
-      },
-      {
-        name: 'reviewImages',
-        maxCount: 12,
       },
     ]),
   )
@@ -113,10 +109,11 @@ export class PlaceController {
     @UploadedFiles()
     files: {
       coverImage: Express.Multer.File[];
-      reviewImages: Express.Multer.File[];
     },
   ): Promise<CoreOutput> {
-    return this.placeService.editPlace(placeId, editPlaceInput, files);
+    console.log(editPlaceInput, files);
+    return { ok: true };
+    // return this.placeService.editPlace(placeId, editPlaceInput, files);
   }
 
   @Delete('/:placeId')
