@@ -10,7 +10,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Index(['socialId', 'provider'], { unique: true })
 @Entity('social_accounts', {
   synchronize: true,
 })
