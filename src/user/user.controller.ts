@@ -10,6 +10,7 @@ import {
   Param,
   ParseUUIDPipe,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -24,6 +25,8 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -57,10 +60,16 @@ export class UserController {
 
   @Get('/profile/random')
   @ApiOperation({ summary: '랜덤 유저 프로필 조회' })
+  @ApiQuery({
+    name: 'ykClubOnly',
+    required: true,
+    description: '연고이팅 동아리 친구만 보기 ',
+  })
   async seeRandomProfile(
     @GetUser() authUser: User,
+    @Query('ykClubOnly') ykClubOnly: boolean,
   ): Promise<SeeRandomProfileOutput> {
-    return this.userService.seeRandomProfile(authUser);
+    return this.userService.seeRandomProfile(authUser, ykClubOnly);
   }
 
   @Get('/profile/:id')
