@@ -15,6 +15,8 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
@@ -51,13 +53,9 @@ export class UserController {
   async editProfile(
     @UploadedFile() file: Express.Multer.File,
     @GetUser() authUser: User,
-    @Body('isYkClub', new ParseBoolPipe()) isYkClub: boolean,
     @Body() editProfileInput: EditProfileInput,
   ): Promise<CoreOutput> {
-    return this.userService.editProfile(authUser, file, {
-      ...editProfileInput,
-      isYkClub,
-    });
+    return this.userService.editProfile(authUser, file, editProfileInput);
   }
 
   @Get('/profile/random')
