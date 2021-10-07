@@ -5,9 +5,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+<<<<<<< HEAD
   Index,
   UpdateDateColumn,
   CreateDateColumn,
+=======
+>>>>>>> a9ade52ec571f1f2b33eeb6832caba64e83dd578
 } from 'typeorm';
 
 @Entity()
@@ -27,13 +30,17 @@ export class Review {
   @Column({ default: 0 })
   likesNumber: number;
 
+<<<<<<< HEAD
   @Index()
+=======
+>>>>>>> a9ade52ec571f1f2b33eeb6832caba64e83dd578
   @Column('uuid')
   place_id: string;
 
   @ManyToOne((type) => Place)
   @JoinColumn({ name: 'place_id' })
   place: Place;
+<<<<<<< HEAD
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()
@@ -42,4 +49,6 @@ export class Review {
   @Column('timestamptz', { select: false })
   @UpdateDateColumn()
   updatedAt: Date;
+=======
+>>>>>>> a9ade52ec571f1f2b33eeb6832caba64e83dd578
 }

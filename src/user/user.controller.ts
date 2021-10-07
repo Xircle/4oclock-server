@@ -8,19 +8,21 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseUUIDPipe,
   Put,
   Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ParsePipe } from 'src/common/pipe/parse.pipe';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -51,8 +53,7 @@ export class UserController {
   async editProfile(
     @UploadedFile() file: Express.Multer.File,
     @GetUser() authUser: User,
-    @Body(new ParsePipe())
-    editProfileInput: EditProfileInput,
+    @Body() editProfileInput: EditProfileInput,
   ): Promise<CoreOutput> {
     return this.userService.editProfile(authUser, file, editProfileInput);
   }
