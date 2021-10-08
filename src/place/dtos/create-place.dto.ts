@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsDateString, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
 
 export class CreatePlaceInput {
@@ -48,7 +48,7 @@ export class CreatePlaceInput {
     example: '2021-09-53',
     description: '장소 미팅 시작 시간',
   })
-  @IsDateString()
+  @IsDate()
   @IsNotEmpty()
   startDateAt: Date;
 

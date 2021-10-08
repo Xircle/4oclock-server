@@ -1,3 +1,4 @@
+import { Review } from 'src/review/entities/review.entity';
 import { MainFeedPlaceParticipantsProfile } from './get-place-by-location.dto';
 import { CoreOutput } from 'src/common/common.interface';
 
@@ -16,6 +17,7 @@ export class PlaceData {
   isParticipating: boolean;
   participantsCount: number;
   participants: PlaceDataParticipantsProfile[];
+  reviews: Review[];
   participantsInfo: {
     total_count: number;
     male_count: number;
@@ -26,7 +28,6 @@ export class PlaceData {
     description: string;
     categories: string[];
     detailAddress: string;
-    photos: string[];
     participationFee: number;
   };
 }

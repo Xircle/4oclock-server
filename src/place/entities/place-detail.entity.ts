@@ -25,9 +25,6 @@ export class PlaceDetail {
   @Column({ type: 'json' })
   categories: string[];
 
-  @Column({ type: 'json' })
-  photos: string[];
-
   @Column({ length: 255 })
   detailAddress: string;
 
