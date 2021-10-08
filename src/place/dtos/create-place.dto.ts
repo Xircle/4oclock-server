@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsDateString, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
 
@@ -32,9 +33,8 @@ export class CreatePlaceInput {
     example: '3000',
     description: '참가비',
   })
-  @IsString()
-  @IsNotEmpty()
-  participationFee: string;
+  @Transform((param) => JSON.parse(param.obj.participationFee))
+  participationFee: number;
 
   @ApiProperty({
     example: '나이 20 ~ 25 중간',
