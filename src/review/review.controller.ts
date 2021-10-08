@@ -1,11 +1,15 @@
+import { User } from 'src/user/entities/user.entity';
+import { CreateReviewInput } from './dtos/create-review.dto';
+import { ReviewService } from './review.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
 
 @ApiTags('Review')
 @ApiBearerAuth('jwt')
@@ -14,5 +18,13 @@ import {
 @UseGuards(AuthGuard())
 @Controller('review')
 export class ReviewController {
-    constructor() {}
+  constructor(private reviewService: ReviewService) {}
+
+  @Post()
+  async createReview(
+    @GetUser() authUser: User,
+    @Body() createReviewInput: CreateReviewInput,
+  ) {
+    return this.reviewService.createReview(authUser, createReviewInput);
+  }
 }
