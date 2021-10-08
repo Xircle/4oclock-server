@@ -18,7 +18,7 @@ export class Review {
   id: string;
 
   @Column({ length: 512 })
-  reviewImageUrl: string;
+  imageUrl: string;
 
   @Column({ length: 255 })
   description: string;
@@ -39,7 +39,7 @@ export class Review {
   @Column('uuid')
   user_id: string;
 
-  @ManyToOne(() => User, (user) => user.reviews)
+  @ManyToOne(() => User, (user) => user.reviews, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
