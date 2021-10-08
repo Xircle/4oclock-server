@@ -165,7 +165,6 @@ export class PlaceService {
           error: '모임이 존재하지 않습니다.',
         };
       }
-      console.log(place);
       // 조회수 업데이트
       await this.placeRepository.update(
         {
@@ -217,6 +216,7 @@ export class PlaceService {
 
       const placeData: PlaceData = {
         ...place,
+        reviews: place.reviews,
         isParticipating,
         participantsCount,
         startDateFromNow,
@@ -292,9 +292,10 @@ export class PlaceService {
         for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
           console.log(index, reviewImageUrl);
           const review = this.reviewRepository.create({
-            reviewImageUrl,
+            imageUrl: reviewImageUrl,
             description: reviewDescriptions[index],
             place,
+            user: authUser,
           });
           reviews.push(review);
         }
@@ -437,7 +438,7 @@ export class PlaceService {
               id: reviewPayload[index].id,
             },
             {
-              reviewImageUrl: s3_url,
+              imageUrl: s3_url,
               description: reviewPayload[index].description,
             },
           );

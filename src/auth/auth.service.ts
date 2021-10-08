@@ -230,8 +230,8 @@ export class SocialAuthService {
         },
         relations: ['profile'],
       });
-      console.log('user here:', user);
       if (user) {
+        console.log('Existing user : ', user);
         const token = this.jwtService.sign({ id: user.id });
         return {
           ok: true,

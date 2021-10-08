@@ -30,6 +30,8 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -72,7 +74,7 @@ export class PlaceController {
 
   @Post('')
   @ApiOperation({ summary: '장소 생성하기' })
-  @ApiCreatedResponse({ description: '장소가 성공적으로 생성됨.' })
+  @ApiConsumes('multipart/form-data')
   @Roles(['Admin', 'Owner'])
   @UseInterceptors(
     FileFieldsInterceptor([
