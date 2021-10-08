@@ -33,12 +33,14 @@ export class ReviewService {
         };
       }
 
-      this.reviewRepository.create({
-        imageUrl: createReviewInput.imageUrl,
-        description: createReviewInput.description,
-        place_id: createReviewInput.placeId,
-        user_id: authUser.id,
-      });
+      await this.reviewRepository.save(
+        this.reviewRepository.create({
+          imageUrl: createReviewInput.imageUrl,
+          description: createReviewInput.description,
+          place_id: createReviewInput.placeId,
+          user_id: authUser.id,
+        }),
+      );
       return {
         ok: true,
       };
