@@ -1,3 +1,4 @@
+import { ReviewPayload } from './dtos/edit-place-review-image.dto';
 import { ParsePipe } from './../common/pipe/parse.pipe';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
@@ -23,7 +24,6 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -98,7 +98,6 @@ export class PlaceController {
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }
 
-  // @Roles(['Admin', 'Owner', 'Any'])
   @Patch('/:placeId')
   @ApiOperation({ summary: '장소 정보 수정하기 (이미지 제외)' })
   @Roles(['Admin', 'Owner'])
@@ -116,9 +115,14 @@ export class PlaceController {
   async editPlaceReviewImages(
     @Param('placeId') placeId: string,
     @UploadedFiles()
-    reviewImages: (Express.Multer.File | string)[],
+    reviewImages: Express.Multer.File[],
+    @Body() reviewPayload: ReviewPayload[],
   ): Promise<CoreOutput> {
-    return this.placeService.editPlaceReviewImages(reviewImages);
+    return this.placeService.editPlaceReviewImages(
+      placeId,
+      reviewImages,
+      reviewPayload,
+    );
   }
 
   @Get('/:placeId/participants')

@@ -8,15 +8,12 @@ import {
   Controller,
   Get,
   Param,
-  ParseBoolPipe,
   ParseUUIDPipe,
   Put,
   Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';

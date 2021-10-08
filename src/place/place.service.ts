@@ -1,3 +1,4 @@
+import { ReviewPayload } from './dtos/edit-place-review-image.dto';
 import { Review } from 'src/review/entities/review.entity';
 import { EditProfileInput } from './../user/dtos/edit-profile.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
@@ -244,6 +245,7 @@ export class PlaceService {
       categories,
       detailAddress,
       detailLink,
+      reviewDescriptions
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
@@ -281,16 +283,16 @@ export class PlaceService {
 
         //  Create reviews
         let reviews: Review[] = [];
-        // for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
-        //   console.log(index, reviewImageUrl);
-        //   const review = this.reviewRepository.create({
-        //     reviewImageUrl: reviewImageUrl,
-        //     description: reviewDescriptions[index],
-        //     place,
-        //   });
-        //   reviews.push(review);
-        // }
-        // await transactionalEntityManager.save(reviews);
+        for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
+          console.log(index, reviewImageUrl);
+          const review = this.reviewRepository.create({
+            reviewImageUrl,
+            description: reviewDescriptions[index],
+            place,
+          });
+          reviews.push(review);
+        }
+        await transactionalEntityManager.save(reviews);
 
         //   Create place detail
         const placeDetail = this.placeDetailRepository.create({
@@ -364,13 +366,39 @@ export class PlaceService {
   }
 
   async editPlaceReviewImages(
-    reviewImages: (Express.Multer.File | string)[],
+    placeId: string,
+    reviewImages: Express.Multer.File[],
+    reviewPayload: ReviewPayload[],
   ): Promise<CoreOutput> {
     try {
-      //
-      for (let reviewImage of reviewImages) {
-        if (typeof reviewImage === 'string') return;
+      const exist = await this.placeRepository.findOne({
+        where: {
+          id: placeId,
+        },
+      });
+      if (!exist) {
+        return {
+          ok: false,
+          error: '존재하지 않는 장소입니다.',
+        };
       }
+
+      // Transaction start
+      await getManager().transaction(async (transactionalEntityManager) => {
+        for (let [index, reviewImage] of reviewImages.entries()) {
+          const s3_url = await this.s3Service.uploadToS3(reviewImage, placeId);
+          transactionalEntityManager.update(
+            Review,
+            {
+              id: reviewPayload[index].id,
+            },
+            {
+              reviewImageUrl: s3_url,
+              description: reviewPayload[index].description,
+            },
+          );
+        }
+      });
       return {
         ok: true,
       };
