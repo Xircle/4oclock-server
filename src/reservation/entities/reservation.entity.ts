@@ -43,7 +43,9 @@ export class Reservation {
   @Column('uuid')
   place_id: string;
 
-  @ManyToOne((type) => User, { onDelete: 'CASCADE' })
+  @ManyToOne((type) => User, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   participant: User;
 

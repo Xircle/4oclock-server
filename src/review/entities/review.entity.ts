@@ -30,14 +30,14 @@ export class Review {
   @Column('uuid')
   place_id: string;
 
-  @ManyToOne((type) => Place)
+  @ManyToOne((type) => Place, (place) => place.reviews)
   @JoinColumn({ name: 'place_id' })
   place: Place;
 
   @Column('uuid')
   user_id: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.reviews)
   @JoinColumn({ name: 'user_id' })
   user: User;
 }
