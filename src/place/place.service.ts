@@ -31,7 +31,7 @@ import {
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CoreOutput } from 'src/common/common.interface';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class PlaceService {
@@ -61,7 +61,7 @@ export class PlaceService {
       };
     }
     try {
-      const places = await this.placeRepository.find({
+      let places = await this.placeRepository.find({
         where: {
           ...whereOptions,
         },
@@ -81,6 +81,11 @@ export class PlaceService {
         take: 10,
         skip: 10 * (page - 1),
       });
+
+      const closedPlace = _.takeWhile(places, (place) => place.isClosed);
+      const openPlace = _.difference(places, closedPlace);
+      openPlace.push(...closedPlace);
+      places = openPlace;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
