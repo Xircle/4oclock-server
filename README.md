@@ -1,73 +1,50 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# 네시모해, Xircle
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is source code of `4o'clock` server.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- https://github.com/Xircle/4oclock-client
+- https://github.com/Xircle/4oclock-server
 
-## Description
+> `4o'clock` is a meeting reservation platform for university students. It provides you with lots of places where you can make any kinds of networks. Feel free to make a network in 4o'clock
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Project Stack
 
-## Installation
+### Client
 
-```bash
-$ npm install
-```
+Following items are core frontend technologies used in this project:
 
-## Running the app
+- Typescript
+- React
+- React Router v4
+- React-query
+- Styled-components
 
-```bash
-# development
-$ npm run start
+### Server
 
-# watch mode
-$ npm run start:dev
+Following items are core backend technologies used in this project:
 
-# production mode
-$ npm run start:prod
-```
+- NestJs
+- TypeScript
+- TypeORM
+- PostgreSQL
 
-## Test
+### Infra
 
-```bash
-# unit tests
-$ npm run test
+- Netlify for clinet
+- Heroku for server
+- AWS S3 for static image
 
-# e2e tests
-$ npm run test:e2e
+### Trouble shooting
 
-# test coverage
-$ npm run test:cov
-```
+- Cross-browsing problem with old version of `Samsung Internet Browser`
 
-## Support
+## Upcoming Feature
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- [ ] Chatting
+- [ ] Review other participants, After meeting
+- [ ] Push notification
+- [ ] Thumbnail image with Lambda
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+## Challenge for infra
+- [ ] Docker compose
+- [ ] Mono repository in nestjs 

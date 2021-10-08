@@ -12,6 +12,7 @@
     "start": "nest start",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:prod": "cross-env NODE_ENV=prod pm2-runtime start ecosystem.config.js --env prod",
+    "docker-start:prod": "cross-env NODE_ENV=prod node ./dist/src/main.js --env prod",
     "start:test": "cross-env NODE_ENV=prod pm2-runtime start ecosystem.config.js --env prod",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
