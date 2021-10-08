@@ -1,14 +1,11 @@
 import { ReviewPayload } from './dtos/edit-place-review-image.dto';
-import { ParsePipe } from './../common/pipe/parse.pipe';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
-import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { User } from './../user/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RolesGuard } from './../auth/guard/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import {
   FileFieldsInterceptor,
-  FileInterceptor,
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
@@ -16,7 +13,6 @@ import { PlaceService } from './place.service';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   ParseIntPipe,
