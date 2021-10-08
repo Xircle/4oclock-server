@@ -31,6 +31,7 @@ import {
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CoreOutput } from 'src/common/common.interface';
+import _ from 'lodash';
 
 @Injectable()
 export class PlaceService {
@@ -245,7 +246,7 @@ export class PlaceService {
       categories,
       detailAddress,
       detailLink,
-      reviewDescriptions
+      reviewDescriptions,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
@@ -356,6 +357,44 @@ export class PlaceService {
         };
       }
 
+      if (_.isEqual(editPlaceInput, {})) {
+        return {
+          ok: true,
+        };
+      }
+      let editedPlace: Partial<Place> = {
+        ...editPlaceInput,
+      };
+      let editedPlaceDetail: Partial<PlaceDetail> = {
+        ...editPlaceInput,
+      };
+      await getManager().transaction(async (transactionalEntityManager) => {
+        if (!_.isEqual(editedPlace, {})) {
+          // Edit place
+          await transactionalEntityManager.update(
+            Place,
+            {
+              id: placeId,
+            },
+            {
+              ...editedPlace,
+            },
+          );
+        }
+        if (!_.isEqual(editedPlaceDetail, {})) {
+          // Edit place detail
+          await transactionalEntityManager.update(
+            PlaceDetail,
+            {
+              place_id: placeId,
+            },
+            {
+              ...editedPlaceDetail,
+            },
+          );
+        }
+      });
+
       return {
         ok: true,
       };
@@ -387,7 +426,7 @@ export class PlaceService {
       await getManager().transaction(async (transactionalEntityManager) => {
         for (let [index, reviewImage] of reviewImages.entries()) {
           const s3_url = await this.s3Service.uploadToS3(reviewImage, placeId);
-          transactionalEntityManager.update(
+          await transactionalEntityManager.update(
             Review,
             {
               id: reviewPayload[index].id,
