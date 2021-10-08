@@ -46,5 +46,6 @@ Following items are core backend technologies used in this project:
 - [ ] Thumbnail image with Lambda
 
 ## Challenge for infra
+
 - [ ] Docker compose
-- [ ] Mono repository in nestjs 
+- [ ] Mono repository in nestjs

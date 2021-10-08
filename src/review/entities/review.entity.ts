@@ -1,3 +1,4 @@
+import { User } from 'src/user/entities/user.entity';
 import { Place } from 'src/place/entities/place.entity';
 import {
   Column,
@@ -10,6 +11,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
+@Index(['place_id', 'user_id'])
 @Entity()
 export class Review {
   @PrimaryGeneratedColumn('uuid')
@@ -30,9 +32,16 @@ export class Review {
   @Column('uuid')
   place_id: string;
 
-  @ManyToOne((type) => Place)
+  @ManyToOne((type) => Place, (place) => place.reviews)
   @JoinColumn({ name: 'place_id' })
   place: Place;
+
+  @Column('uuid')
+  user_id: string;
+
+  @ManyToOne(() => User, (user) => user.reviews)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()

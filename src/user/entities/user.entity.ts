@@ -1,3 +1,4 @@
+import { Review } from 'src/review/entities/review.entity';
 import { Message } from './../../message/entities/message.entity';
 import { Room } from './../../room/entities/room.entity';
 import { Reservation } from './../../reservation/entities/reservation.entity';
@@ -58,6 +59,9 @@ export class User {
 
   @ManyToMany((type) => Message, (message) => message.user)
   messages: Message[];
+
+  @OneToMany((type) => Review, (review) => review.user)
+  reviews: Review[];
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()

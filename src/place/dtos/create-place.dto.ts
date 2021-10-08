@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsDateString, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
 
@@ -32,9 +33,8 @@ export class CreatePlaceInput {
     example: '3000',
     description: '참가비',
   })
-  @IsString()
-  @IsNotEmpty()
-  participationFee: string;
+  @Transform((param) => JSON.parse(param.obj.participationFee))
+  participationFee: number;
 
   @ApiProperty({
     example: '나이 20 ~ 25 중간',
@@ -93,6 +93,14 @@ export class CreatePlaceInput {
   @IsString()
   @IsNotEmpty()
   detailLink: string;
+
+  @ApiProperty({
+    example: '["정말 꿀잼인듯!!", "와 이런 장소가 있었다니 또 와야겠네요"]',
+    description: '리뷰 설명 (사진과 순서대로)',
+  })
+  @IsString()
+  @IsNotEmpty()
+  reviewDescriptions: string[];
 }
 export class PlacePhotoInput {
   coverImage: Express.Multer.File[];
