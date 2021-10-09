@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
-import { StartTime } from './../entities/reservation.entity';
 
 export class MakeReservationDto {
   @ApiProperty({
@@ -13,12 +12,11 @@ export class MakeReservationDto {
   placeId: string;
 
   @ApiProperty({
-    name: 'StartTime',
-    enum: StartTime,
+    name: 'startTime',
+    description: '시작 시간',
   })
-  @IsEnum(StartTime)
   @IsNotEmpty()
-  startTime: StartTime;
+  startTime: number;
 
   @ApiProperty({
     name: 'isVaccinated',

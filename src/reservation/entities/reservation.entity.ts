@@ -11,19 +11,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum StartTime {
-  Four = 'Four',
-  Seven = 'Seven',
-}
-
 @Index(['place_id', 'user_id'], { unique: true })
 @Entity({ name: 'reservations' })
 export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'enum', enum: StartTime })
-  startTime: StartTime;
+  @Column({ default: 12 })
+  startTime: number;
 
   @Column({ default: false })
   isVaccinated: boolean;

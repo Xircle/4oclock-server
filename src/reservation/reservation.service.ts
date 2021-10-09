@@ -7,7 +7,7 @@ import {
 } from './dtos/make-reservation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Reservation, StartTime } from './entities/reservation.entity';
+import { Reservation } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
 import { DeleteReservationOutput } from 'src/user/dtos/delete-reservation.dto';
 import { PatchReservationInput } from './dtos/patch-reservation.dto';
@@ -100,7 +100,7 @@ export class ReservationService {
     placeId: string,
   ): Promise<GetReservationParticipantNumberOutput> {
     try {
-      const place = await this.placeRepository.find({
+      const place = await this.placeRepository.findOne({
         where: {
           id: placeId,
         },
@@ -111,35 +111,17 @@ export class ReservationService {
           error: '존재하지 않는 써클입니다.',
         };
       }
-      const count_reservation_at_four = await this.reservationRepository.count({
+
+      const number_reservations = await this.reservationRepository.count({
         where: {
           place_id: placeId,
-          startTime: StartTime.Four,
           isCanceled: false,
         },
       });
-      const count_reservation_at_seven = await this.reservationRepository.count(
-        {
-          where: {
-            place_id: placeId,
-            startTime: StartTime.Seven,
-            isCanceled: false,
-          },
-        },
-      );
 
       return {
         ok: true,
-        info: [
-          {
-            startTime: StartTime.Four,
-            participantNumber: count_reservation_at_four,
-          },
-          {
-            startTime: StartTime.Seven,
-            participantNumber: count_reservation_at_seven,
-          },
-        ],
+        participantsNumber: number_reservations,
       };
     } catch (err) {
       console.log(err);
