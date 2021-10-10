@@ -20,7 +20,6 @@ import { CoreOutput } from 'src/common/common.interface';
 import { UserProfile } from './entities/user-profile.entity';
 import { Cache } from 'cache-manager';
 import * as _ from 'lodash';
-import { CUSTOM_CACHE_KEYS } from 'src/place/constants/placeCacheKey.constnat';
 
 @Injectable()
 export class UserService {
@@ -34,7 +33,7 @@ export class UserService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async clearCache(clearTargetKey: CUSTOM_CACHE_KEYS | string = '') {
+  async clearCache(clearTargetKey: string = '') {
     await this.cacheManager.del(clearTargetKey);
   }
 
