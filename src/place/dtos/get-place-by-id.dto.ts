@@ -29,6 +29,7 @@ export class PlaceData {
     categories: string[];
     detailAddress: string;
     participationFee: number;
+    maxParticipantsNumber?: number;
   };
 }
 

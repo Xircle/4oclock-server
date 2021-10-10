@@ -14,6 +14,20 @@ export class CreatePlaceInput {
   name: string;
 
   @ApiProperty({
+    example: 'true',
+    description: '장소 타입이 번개 모임',
+  })
+  @Transform((param) => JSON.parse(param?.obj.isLightning))
+  isLightning: boolean;
+
+  @ApiProperty({
+    example: '4',
+    description: '모임 인원수',
+  })
+  @Transform((param) => JSON.parse(param?.obj.maxParticipantsNumber))
+  maxParticipantsNumber: number;
+
+  @ApiProperty({
     example: '안암',
     description: '장소의 대학가 주변 위치',
   })
@@ -77,13 +91,10 @@ export class CreatePlaceInput {
   description: string;
 
   @ApiProperty({
-    example: '[맥주, 호프]',
+    example: '"[맥주, 호프]"',
     description: '장소 해시태그',
   })
-  @IsString({
-    each: true,
-  })
-  @IsNotEmpty()
+  @Transform((param) => JSON.parse(param?.obj.categories))
   categories: string[];
 
   @ApiProperty({

@@ -1,6 +1,5 @@
 import { ReviewPayload } from './dtos/edit-place-review-image.dto';
 import { Review } from 'src/review/entities/review.entity';
-import { EditProfileInput } from './../user/dtos/edit-profile.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
@@ -70,6 +69,7 @@ export class PlaceService {
         },
         select: [
           'id',
+          'isLightning',
           'name',
           'coverImage',
           'startDateAt',
@@ -83,7 +83,10 @@ export class PlaceService {
         skip: 10 * (page - 1),
       });
 
-      const closedPlace = _.takeWhile(places, (place) => place.isClosed);
+      const closedPlace = _.takeWhile(
+        places,
+        (place) => place.isClosed,
+      ).reverse();
       const openPlace = _.difference(places, closedPlace);
       openPlace.push(...closedPlace);
       places = openPlace;
@@ -152,6 +155,7 @@ export class PlaceService {
           'id',
           'name',
           'coverImage',
+          'isLightning',
           'recommendation',
           'oneLineIntroText',
           'startDateAt',
@@ -242,6 +246,8 @@ export class PlaceService {
     placePhotoInput: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
     const {
+      isLightning,
+      maxParticipantsNumber,
       name,
       location,
       recommendation,
@@ -281,6 +287,7 @@ export class PlaceService {
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
         const place = this.placeRepository.create({
+          isLightning,
           name,
           coverImage: coverImageS3Url,
           location,
@@ -308,6 +315,7 @@ export class PlaceService {
         const placeDetail = this.placeDetailRepository.create({
           title,
           description,
+          maxParticipantsNumber,
           categories,
           place,
           participationFee: +participationFee,

@@ -46,6 +46,9 @@ export class Place {
   @Column({ default: false })
   isClosed: boolean;
 
+  @Column({ default: false })
+  isLightning: boolean;
+
   @Column({ default: 0 })
   views: number;
 

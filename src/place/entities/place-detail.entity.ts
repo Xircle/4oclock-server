@@ -23,6 +23,9 @@ export class PlaceDetail {
   @Column({ type: 'json' })
   categories: string[];
 
+  @Column({ default: 4 })
+  maxParticipantsNumber?: number;
+
   @Column({ length: 255 })
   detailAddress: string;
 
