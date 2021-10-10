@@ -7,23 +7,36 @@ import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
 import { Reservation } from './../reservation/entities/reservation.entity';
 import { MeOutput } from './dtos/me.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { getManager, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { UserProfile } from './entities/user-profile.entity';
+import { Cache } from 'cache-manager';
 import * as _ from 'lodash';
+import { CUSTOM_CACHE_KEYS } from 'src/place/constants/placeCacheKey.constnat';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
     private placeUtilRepository: PlaceUtilService,
     private users: UserRepository,
     private readonly s3Service: S3Service,
   ) {}
+
+  async clearCache(clearTargetKey: CUSTOM_CACHE_KEYS | string = '') {
+    await this.cacheManager.del(clearTargetKey);
+  }
 
   async me(authUser: User): Promise<MeOutput> {
     try {
@@ -242,6 +255,7 @@ export class UserService {
             ...updateData,
           },
         );
+        await this.clearCache('/user/me');
       });
       return {
         ok: true,
