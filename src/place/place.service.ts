@@ -60,6 +60,25 @@ export class PlaceService {
       };
     }
     try {
+      let lightningPlace = await this.placeRepository.find({
+        where: {
+          isLightning: true,
+          isClosed: false,
+        },
+        select: [
+          'id',
+          'isLightning',
+          'name',
+          'coverImage',
+          'startDateAt',
+          'startTime',
+          'isClosed',
+          'oneLineIntroText',
+          'views',
+        ],
+        take: 3,
+        loadEagerRelations: false,
+      });
       let places = await this.placeRepository.find({
         where: {
           ...whereOptions,
@@ -82,14 +101,14 @@ export class PlaceService {
         take: 10,
         skip: 10 * (page - 1),
       });
-
       const closedPlace = _.takeWhile(
         places,
         (place) => place.isClosed,
       ).reverse();
       const openPlace = _.difference(places, closedPlace);
-      openPlace.push(...closedPlace);
-      places = openPlace;
+      const openPlaceWithLightning: Place[] = [...lightningPlace, ...openPlace];
+      openPlaceWithLightning.push(...closedPlace);
+      places = openPlaceWithLightning;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
