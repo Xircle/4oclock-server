@@ -33,7 +33,7 @@ export class CreatePlaceInput {
     example: '3000',
     description: '참가비',
   })
-  @Transform((param) => JSON.parse(param.obj.participationFee))
+  @Transform((param) => JSON.parse(param?.obj.participationFee))
   participationFee: number;
 
   @ApiProperty({
@@ -46,11 +46,19 @@ export class CreatePlaceInput {
 
   @ApiProperty({
     example: '2021-09-53',
-    description: '장소 미팅 시작 시간',
+    description: '미팅 시작 날짜',
   })
   @IsDate()
   @IsNotEmpty()
   startDateAt: Date;
+
+  @ApiProperty({
+    example: '16',
+    description: '미팅 시작 시각 ',
+  })
+  @IsNotEmpty()
+  @Transform((param) => JSON.parse(param?.obj.startTime))
+  startTime: number;
 
   @ApiProperty({
     example: '고대에서 가장 시원한 맥주집!',

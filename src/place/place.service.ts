@@ -73,6 +73,7 @@ export class PlaceService {
           'name',
           'coverImage',
           'startDateAt',
+          'startTime',
           'isClosed',
           'oneLineIntroText',
           'views',
@@ -154,6 +155,7 @@ export class PlaceService {
           'recommendation',
           'oneLineIntroText',
           'startDateAt',
+          'startTime',
           'isClosed',
           'views',
           'reviews',
@@ -244,6 +246,7 @@ export class PlaceService {
       location,
       recommendation,
       startDateAt,
+      startTime,
       title,
       oneLineIntroText,
       participationFee,
@@ -284,13 +287,13 @@ export class PlaceService {
           recommendation,
           oneLineIntroText,
           startDateAt,
+          startTime,
         });
         await transactionalEntityManager.save(place);
 
         //  Create reviews
         let reviews: Review[] = [];
         for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
-          console.log(index, reviewImageUrl);
           const review = this.reviewRepository.create({
             imageUrl: reviewImageUrl,
             description: reviewDescriptions[index],

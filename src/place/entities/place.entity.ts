@@ -40,6 +40,9 @@ export class Place {
   })
   startDateAt: Date;
 
+  @Column()
+  startTime: number;
+
   @Column({ default: false })
   isClosed: boolean;
 
