@@ -12,7 +12,6 @@ import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
 import {
   Body,
-  CacheInterceptor,
   Controller,
   Get,
   Param,
@@ -48,9 +47,9 @@ import { EditPlaceInput } from './dtos/edit-place.dto';
 export class PlaceController {
   constructor(private placeService: PlaceService) {}
 
+  // @UseInterceptors(CacheInterceptor)
   @Get('')
   @ApiOperation({ summary: '위치별 생성된 장소 보기' })
-  @UseInterceptors(CacheInterceptor)
   async getPlacesByLocation(
     @GetUser() anyUser: User | undefined,
     @Query('location') location: string,
@@ -59,8 +58,8 @@ export class PlaceController {
     return this.placeService.getPlacesByLocation(anyUser, location, page);
   }
 
+  // @UseInterceptors(CacheInterceptor)
   @Get(':placeId')
-  @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: '장소의 세부정보 보기' })
   async getPlaceById(
     @GetUser() anyUser: User | undefined,
