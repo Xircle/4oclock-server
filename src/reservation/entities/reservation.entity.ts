@@ -17,9 +17,6 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ default: 12 })
-  startTime: number;
-
   @Column({ default: false })
   isVaccinated: boolean;
 

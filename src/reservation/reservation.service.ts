@@ -25,7 +25,7 @@ export class ReservationService {
     authUser: User,
     makeReservation: MakeReservationDto,
   ): Promise<MakeReservationOutput> {
-    const { isVaccinated, placeId, startTime } = makeReservation;
+    const { isVaccinated, placeId } = makeReservation;
     console.log(makeReservation);
     try {
       const targetPlace = await this.placeRepository.findOne({
@@ -59,7 +59,6 @@ export class ReservationService {
           user_id: authUser.id,
           isCanceled: false,
           isVaccinated,
-          startTime,
         });
         await this.reservationRepository.save(reservation);
 
@@ -73,7 +72,6 @@ export class ReservationService {
             place_id: placeId,
           },
           {
-            startTime,
             isVaccinated,
             isCanceled: false,
             cancelReason: null,

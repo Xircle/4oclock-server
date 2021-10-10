@@ -40,7 +40,7 @@ export class Place {
   })
   startDateAt: Date;
 
-  @Column()
+  @Column({ default: 18 })
   startTime: number;
 
   @Column({ default: false })

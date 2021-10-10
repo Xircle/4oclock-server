@@ -12,13 +12,6 @@ export class MakeReservationDto {
   placeId: string;
 
   @ApiProperty({
-    name: 'startTime',
-    description: '시작 시간',
-  })
-  @IsNotEmpty()
-  startTime: number;
-
-  @ApiProperty({
     name: 'isVaccinated',
     description: '백신 2차 접종 유무',
   })
