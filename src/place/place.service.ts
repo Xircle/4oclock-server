@@ -79,9 +79,10 @@ export class PlaceService {
         take: 3,
         loadEagerRelations: false,
       });
-      let places = await this.placeRepository.find({
+      let normalPlaces = await this.placeRepository.find({
         where: {
           ...whereOptions,
+          isLightning: false,
         },
         order: {
           startDateAt: 'ASC',
@@ -102,17 +103,17 @@ export class PlaceService {
         skip: 10 * (page - 1),
       });
       const closedPlace = _.takeWhile(
-        places,
+        normalPlaces,
         (place) => place.isClosed,
       ).reverse();
-      const openPlace = _.difference(places, closedPlace);
+      const openPlace = _.difference(normalPlaces, closedPlace);
       const openPlaceWithLightning: Place[] = [...lightningPlace, ...openPlace];
       openPlaceWithLightning.push(...closedPlace);
-      places = openPlaceWithLightning;
+      normalPlaces = openPlaceWithLightning;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
-      for (const place of places) {
+      for (const place of normalPlaces) {
         let isParticipating = false;
         if (anyUser) {
           // AuthUser 일 때만
