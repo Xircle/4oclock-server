@@ -12,6 +12,7 @@ import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Get,
   Param,
@@ -26,9 +27,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiConsumes,
-  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -51,6 +50,7 @@ export class PlaceController {
 
   @Get('')
   @ApiOperation({ summary: '위치별 생성된 장소 보기' })
+  @UseInterceptors(CacheInterceptor)
   async getPlacesByLocation(
     @GetUser() anyUser: User | undefined,
     @Query('location') location: string,
@@ -60,6 +60,7 @@ export class PlaceController {
   }
 
   @Get(':placeId')
+  @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: '장소의 세부정보 보기' })
   async getPlaceById(
     @GetUser() anyUser: User | undefined,

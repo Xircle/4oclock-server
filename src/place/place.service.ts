@@ -365,6 +365,7 @@ export class PlaceService {
           error: '존재하지 않는 공간입니다.',
         };
       }
+
       await this.placeRepository.delete({
         id: placeId,
       });
@@ -381,6 +382,7 @@ export class PlaceService {
     placeId: string,
     editPlaceInput: EditPlaceInput,
   ): Promise<CoreOutput> {
+    const { editedPlace, editedPlaceDetail } = editPlaceInput;
     try {
       const exists = await this.placeRepository.findOne({
         where: {
@@ -399,37 +401,28 @@ export class PlaceService {
           ok: true,
         };
       }
-      let editedPlace: Partial<Place> = {
-        ...editPlaceInput,
-      };
-      let editedPlaceDetail: Partial<PlaceDetail> = {
-        ...editPlaceInput,
-      };
+
       await getManager().transaction(async (transactionalEntityManager) => {
-        if (!_.isEqual(editedPlace, {})) {
-          // Edit place
-          await transactionalEntityManager.update(
-            Place,
-            {
-              id: placeId,
-            },
-            {
-              ...editedPlace,
-            },
-          );
-        }
-        if (!_.isEqual(editedPlaceDetail, {})) {
-          // Edit place detail
-          await transactionalEntityManager.update(
-            PlaceDetail,
-            {
-              place_id: placeId,
-            },
-            {
-              ...editedPlaceDetail,
-            },
-          );
-        }
+        // Edit place
+        await transactionalEntityManager.update(
+          Place,
+          {
+            id: placeId,
+          },
+          {
+            ...editedPlace,
+          },
+        );
+        // Edit place detail
+        await transactionalEntityManager.update(
+          PlaceDetail,
+          {
+            place_id: placeId,
+          },
+          {
+            ...editedPlaceDetail,
+          },
+        );
       });
 
       return {
