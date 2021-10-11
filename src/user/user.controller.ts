@@ -42,8 +42,6 @@ export class UserController {
 
   @Get('me')
   @ApiOperation({ summary: '유저 정보 ' })
-  @CacheTTL(3 * 60 * 60)
-  @UseInterceptors(CacheInterceptor)
   async me(@GetUser() authUser: User) {
     return this.userService.me(authUser);
   }
