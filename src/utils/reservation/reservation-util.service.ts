@@ -32,8 +32,10 @@ export class ReservationUtilService {
         place_id: placeId,
         isCanceled: false,
       },
+      loadEagerRelations: true,
       relations: ['participant'],
     });
+    if (participants.length === 0) return [];
     const mainFeedPlacePartiProfile: MainFeedPlaceParticipantsProfile[] = [];
     participants.map((parti) => {
       mainFeedPlacePartiProfile.push({
