@@ -32,7 +32,7 @@ export class Review {
   @Column('uuid')
   place_id: string;
 
-  @ManyToOne((type) => Place, (place) => place.reviews)
+  @ManyToOne((type) => Place, (place) => place.reviews, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'place_id' })
   place: Place;
 
