@@ -5,6 +5,8 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import {
   Body,
+  CacheInterceptor,
+  CacheTTL,
   Controller,
   Get,
   Param,
@@ -38,10 +40,10 @@ import {
 export class UserController {
   constructor(private userService: UserService) {}
 
-  // @CacheTTL(3 * 60 * 60)
-  // @UseInterceptors(CacheInterceptor)
   @Get('me')
   @ApiOperation({ summary: '유저 정보 ' })
+  @CacheTTL(3 * 60 * 60)
+  @UseInterceptors(CacheInterceptor)
   async me(@GetUser() authUser: User) {
     return this.userService.me(authUser);
   }
@@ -71,10 +73,10 @@ export class UserController {
     return this.userService.seeRandomProfile(authUser, ykClubOnly);
   }
 
-  // @UseInterceptors(CacheInterceptor)
-  // @CacheTTL(100)
   @Get('/profile/:id')
   @ApiOperation({ summary: '특정 유저 조회 ' })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(100)
   async seeUserById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SeeUserByIdOutput> {
