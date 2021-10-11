@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,19 +16,37 @@ export class Message {
   id: string;
 
   @Column({ length: 255 })
-  payload: string;
+  message: string;
+
+  @Column({ type: 'uuid' })
+  room_id: string;
+
+  @Column({ type: 'uuid' })
+  sender_id: string;
+
+  @Column({ type: 'uuid' })
+  receiver_id: string;
 
   @ManyToOne((type) => Room, (room) => room.messages)
+  @JoinColumn({ name: 'room_id' })
   room: Room;
 
   @ManyToOne((type) => User, (user) => user.messages)
-  user: User;
+  @JoinColumn({ name: 'receiver_id' })
+  receiver: User;
+
+  @ManyToOne((type) => User, (user) => user.messages)
+  sender: User;
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()
-  createdAt: Date;
+  sentDate: Date;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdDate: Date;
 
   @Column('timestamptz', { select: false })
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedDate: Date;
 }
