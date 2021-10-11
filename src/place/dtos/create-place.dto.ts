@@ -66,7 +66,7 @@ export class CreatePlaceInput {
   recommendation: string;
 
   @ApiProperty({
-    example: '2021-09-53',
+    example: '2021-09-13',
     description: '미팅 시작 날짜',
   })
   @IsDate()
