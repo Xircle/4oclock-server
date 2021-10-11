@@ -1,4 +1,3 @@
-import { validate } from 'class-validator';
 import { UserProfile } from '../user/entities/user-profile.entity';
 import {
   AuthDataToFront,
@@ -133,6 +132,9 @@ export class SocialAuthService {
       job,
       shortBio,
       location,
+      personality,
+      MBTI,
+      drinkingStyle,
       interests,
       isMarketingAgree,
     } = socialRegisterInput;
@@ -181,6 +183,9 @@ export class SocialAuthService {
           gender,
           job,
           shortBio,
+          personality,
+          MBTI,
+          drinkingStyle,
           location,
           profileImageUrl: final_profile_image,
           interests,

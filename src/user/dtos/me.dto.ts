@@ -13,6 +13,9 @@ export class MeData {
   interests: string[];
   reservation_count: number;
   isYkClub: boolean;
+  personality: string;
+  MBTI: string;
+  drinkingStyle: number;
 }
 
 export class MeOutput extends CoreOutput {

@@ -34,7 +34,10 @@ export class UserService {
   ) {}
 
   async clearCache(clearTargetKey: string = '') {
-    console.log('existing cache in user!', await this.cacheManager.store.keys());
+    console.log(
+      'existing cache in user!',
+      await this.cacheManager.store.keys(),
+    );
     // await this.cacheManager.del(clearTargetKey);
   }
 
@@ -58,6 +61,9 @@ export class UserService {
         location,
         interests,
         isYkClub,
+        personality,
+        MBTI,
+        drinkingStyle,
       } = authUser.profile;
       return {
         ok: true,
@@ -72,6 +78,9 @@ export class UserService {
           age,
           location,
           interests,
+          personality,
+          MBTI,
+          drinkingStyle,
           reservation_count: reservations.length,
           isYkClub,
         },
@@ -104,6 +113,9 @@ export class UserService {
         shortBio,
         gender,
         activities,
+        drinkingStyle,
+        MBTI,
+        personality,
       } = randomUser.profile;
       return {
         ok: true,
@@ -119,6 +131,9 @@ export class UserService {
           shortBio,
           activities,
           interests,
+          drinkingStyle,
+          MBTI,
+          personality,
         },
       };
     } catch (err) {
@@ -153,6 +168,9 @@ export class UserService {
         gender,
         interests,
         activities,
+        MBTI,
+        personality,
+        drinkingStyle,
       } = user.profile;
 
       return {
@@ -169,6 +187,9 @@ export class UserService {
           shortBio,
           activities,
           interests,
+          MBTI,
+          personality,
+          drinkingStyle,
         },
       };
     } catch (err) {

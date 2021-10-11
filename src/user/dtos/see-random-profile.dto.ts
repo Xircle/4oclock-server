@@ -12,6 +12,9 @@ export class UserProfile {
   gender: string;
   activities: string;
   interests?: string[];
+  drinkingStyle: number;
+  MBTI: string;
+  personality: string;
 }
 
 export class SeeRandomProfileOutput extends CoreOutput {

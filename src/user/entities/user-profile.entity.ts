@@ -54,6 +54,15 @@ export class UserProfile {
   @Column({ length: 255, nullable: true })
   activities?: string;
 
+  @Column({ length: 255, nullable: true })
+  personality?: string;
+
+  @Column({ length: 255, nullable: true })
+  MBTI?: string;
+
+  @Column({ nullable: true })
+  drinkingStyle?: number;
+
   @Column({ default: false })
   isYkClub: boolean;
 

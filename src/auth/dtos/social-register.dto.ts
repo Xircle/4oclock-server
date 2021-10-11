@@ -8,6 +8,7 @@ import {
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SocialRegisterInput {
@@ -63,6 +64,7 @@ export class SocialRegisterInput {
     description: '대학 졸업 유무',
   })
   @IsNotEmpty()
+  @Transform((param) => JSON.parse(param.obj?.drinkingStyle))
   isGraduate: boolean;
 
   @ApiProperty({
@@ -102,6 +104,30 @@ export class SocialRegisterInput {
   @IsString()
   @IsOptional()
   activities: string;
+
+  @ApiProperty({
+    example: '친해지면 말 많아요 / 드립력 상 / 조용하고 성실함',
+    description: '성격',
+  })
+  @IsString()
+  @IsOptional()
+  personality: string;
+
+  @ApiProperty({
+    example: 'ESFP, ENPJ',
+    description: 'mbti 16가지',
+  })
+  @IsString()
+  @IsOptional()
+  MBTI: string;
+
+  @ApiProperty({
+    example: '0',
+    description:
+      '0 : 안마셔요, 1: 가끔, 2: 술은 내 동반자, 3: 피할 수 없을 때만, 5: 메뉴가 좋을 때만',
+  })
+  @Transform((param) => JSON.parse(param.obj?.drinkingStyle))
+  drinkingStyle: number;
 
   @ApiProperty({
     example: '서울시 강남구 신사동',
