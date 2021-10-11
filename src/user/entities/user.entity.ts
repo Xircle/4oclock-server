@@ -57,7 +57,7 @@ export class User {
   @ManyToMany((type) => Room, (room) => room.users)
   rooms: Room[];
 
-  @ManyToMany((type) => Message, (message) => message.user)
+  @ManyToMany((type) => Message, (message) => message.sender)
   messages: Message[];
 
   @OneToMany((type) => Review, (review) => review.user)
