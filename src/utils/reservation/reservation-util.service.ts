@@ -38,11 +38,11 @@ export class ReservationUtilService {
     if (participants.length === 0) return [];
     const mainFeedPlacePartiProfile: MainFeedPlaceParticipantsProfile[] = [];
     participants.map((parti) => {
-      console.log(parti.participant.profile);
+      console.log(parti.participant);
       mainFeedPlacePartiProfile.push({
         userId: parti.participant.id,
         profileImgUrl: parti.participant.profile?.profileImageUrl,
-        gender: parti.participant.profile.gender,
+        gender: parti.participant.profile?.gender,
         age: parti.participant.profile?.age,
         job: parti.participant.profile?.job,
         shortBio: parti.participant.profile?.shortBio,
