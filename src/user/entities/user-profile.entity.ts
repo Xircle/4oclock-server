@@ -63,7 +63,7 @@ export class UserProfile {
   @Column({ nullable: true })
   drinkingStyle?: number;
 
-  @Column({ default: false })
+  @Column({ default: true })
   isYkClub: boolean;
 
   @Column({ length: 255, nullable: true })
