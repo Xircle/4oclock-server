@@ -18,7 +18,7 @@ import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import { UserProfile } from './entities/user-profile.entity';
-// import { Cache } from 'cache-manager';
+import { Cache } from 'cache-manager';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -26,14 +26,15 @@ export class UserService {
   constructor(
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
-    // @Inject(CACHE_MANAGER)
-    // private cacheManager: Cache,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
     private placeUtilRepository: PlaceUtilService,
     private users: UserRepository,
     private readonly s3Service: S3Service,
   ) {}
 
   async clearCache(clearTargetKey: string = '') {
+    console.log('existing cache in user!', await this.cacheManager.store.keys());
     // await this.cacheManager.del(clearTargetKey);
   }
 
