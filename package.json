@@ -2,7 +2,7 @@
   "name": "xircle-server",
   "version": "0.0.1",
   "description": "네시모해 서버",
-  "main": "main.js",
+  "main": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
