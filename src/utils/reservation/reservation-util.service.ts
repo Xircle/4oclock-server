@@ -38,14 +38,15 @@ export class ReservationUtilService {
     if (participants.length === 0) return [];
     const mainFeedPlacePartiProfile: MainFeedPlaceParticipantsProfile[] = [];
     participants.map((parti) => {
+      console.log(parti.participant.profile);
       mainFeedPlacePartiProfile.push({
         userId: parti.participant.id,
-        profileImgUrl: parti.participant.profile.profileImageUrl,
+        profileImgUrl: parti.participant.profile?.profileImageUrl,
         gender: parti.participant.profile.gender,
-        age: parti.participant.profile.age,
-        job: parti.participant.profile.job,
-        shortBio: parti.participant.profile.shortBio,
-        isYkClub: parti.participant.profile.isYkClub,
+        age: parti.participant.profile?.age,
+        job: parti.participant.profile?.job,
+        shortBio: parti.participant.profile?.shortBio,
+        isYkClub: parti.participant.profile?.isYkClub,
       });
     });
     return mainFeedPlacePartiProfile;
