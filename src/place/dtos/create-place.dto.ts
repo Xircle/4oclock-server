@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { CoreOutput } from 'src/common/common.interface';
 
 export class CreatePlaceInput {
@@ -24,8 +30,9 @@ export class CreatePlaceInput {
     example: '4',
     description: '모임 인원수',
   })
-  @Transform((param) => JSON.parse(param?.obj.maxParticipantsNumber))
-  maxParticipantsNumber: number;
+  @Transform((param) => JSON.parse(param?.obj?.maxParticipantsNumber))
+  @IsOptional()
+  maxParticipantsNumber?: number;
 
   @ApiProperty({
     example: '안암',
