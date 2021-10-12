@@ -336,7 +336,7 @@ export class PlaceService {
           title,
           description,
           maxParticipantsNumber,
-          categories,
+          categories: JSON.stringify(categories),
           place,
           participationFee: +participationFee,
           detailAddress,

@@ -21,7 +21,7 @@ export class PlaceDetail {
   description!: string;
 
   @Column({ type: 'json' })
-  categories: string[];
+  categories: string;
 
   @Column({ default: 4 })
   maxParticipantsNumber?: number;

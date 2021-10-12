@@ -26,7 +26,7 @@ export class PlaceData {
   placeDetail: {
     title: string;
     description: string;
-    categories: string[];
+    categories: string;
     detailAddress: string;
     participationFee: number;
     maxParticipantsNumber?: number;

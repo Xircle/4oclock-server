@@ -139,6 +139,7 @@ export class SocialAuthService {
       isMarketingAgree,
     } = socialRegisterInput;
 
+    console.log('Registered User : ', socialRegisterInput);
     try {
       let final_profile_image: string;
       if (profileImageUrl) {
