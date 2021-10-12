@@ -38,7 +38,6 @@ export class UserService {
       'existing cache in user!',
       await this.cacheManager.store.keys(),
     );
-    // await this.cacheManager.del(clearTargetKey);
   }
 
   async me(authUser: User): Promise<MeOutput> {
@@ -217,6 +216,7 @@ export class UserService {
           await this.reservationRepository.count({
             where: {
               place_id: reservation.place_id,
+              isCanceled: false,
             },
           });
         historyPlaces.push({
