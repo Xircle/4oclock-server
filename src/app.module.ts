@@ -1,3 +1,4 @@
+import { ChatsModule } from './chats/chats.module';
 import { S3Module } from './aws/s3/s3.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -43,6 +44,7 @@ import * as Joi from 'joi';
     RoomModule,
     MessageModule,
     ReviewModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
