@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class SendMessageInput {
+export class SendMessageData {
   @IsString()
   roomId: string;
 

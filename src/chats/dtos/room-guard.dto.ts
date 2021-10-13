@@ -1,3 +1,3 @@
-import { SendMessageInput } from './send-message.dto';
+import { SendMessageData } from './send-message.dto';
 
-export class RoomGuardDto extends SendMessageInput {}
+export class RoomGuardDto extends SendMessageData {}
