@@ -16,7 +16,7 @@ export class Message {
   id: string;
 
   @Column({ length: 255 })
-  message: string;
+  content: string;
 
   @Column({ type: 'uuid' })
   room_id: string;
@@ -27,7 +27,10 @@ export class Message {
   @Column({ type: 'uuid' })
   receiver_id: string;
 
-  @ManyToOne((type) => Room, (room) => room.messages)
+  @ManyToOne((type) => Room, (room) => room.messages, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'room_id' })
   room: Room;
 

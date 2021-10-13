@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinTable,
 } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 
@@ -16,9 +17,13 @@ export class Room {
   id: string;
 
   @ManyToMany((type) => User, (user) => user.rooms)
+  @JoinTable()
   users: User[];
 
-  @OneToMany((type) => Message, (message) => message.room)
+  @OneToMany((type) => Message, (message) => message.room, {
+    eager: true,
+    cascade: true,
+  })
   messages: Message[];
 
   @Column('timestamptz', { select: false })
