@@ -1,6 +1,6 @@
+import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
 import { User } from './../user/entities/user.entity';
-import { AuthGuard } from '@nestjs/passport';
 import {
   MakeReservationDto,
   MakeReservationOutput,
@@ -9,7 +9,6 @@ import { ReservationService } from './reservation.service';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Patch,
@@ -30,7 +29,7 @@ import { PatchReservationInput } from './dtos/patch-reservation.dto';
 @ApiBearerAuth('jwt')
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @Controller('reservation')
 export class ReservationController {
   constructor(private reservationService: ReservationService) {}

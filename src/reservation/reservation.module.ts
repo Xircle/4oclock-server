@@ -1,3 +1,4 @@
+import { AuthModule } from './../auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { Place } from './../place/entities/place.entity';
 import { Reservation } from './entities/reservation.entity';
@@ -7,12 +8,7 @@ import { ReservationController } from './reservation.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Reservation, Place]),
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([Reservation, Place]), AuthModule],
   providers: [ReservationService],
   controllers: [ReservationController],
   exports: [ReservationService],

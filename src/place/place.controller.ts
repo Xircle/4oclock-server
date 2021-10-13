@@ -1,9 +1,9 @@
+import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { ReviewPayload } from './dtos/edit-place-review-image.dto';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { User } from './../user/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RolesGuard } from './../auth/guard/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
 import {
   FileFieldsInterceptor,
   FilesInterceptor,
@@ -42,7 +42,7 @@ import { EditPlaceInput } from './dtos/edit-place.dto';
 @ApiBearerAuth('jwt')
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('place')
 export class PlaceController {
   constructor(private placeService: PlaceService) {}

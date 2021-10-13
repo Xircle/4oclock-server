@@ -1,3 +1,4 @@
+import { AuthModule } from './../auth/auth.module';
 import { Review } from 'src/review/entities/review.entity';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import { ConfigService } from '@nestjs/config';
@@ -15,6 +16,7 @@ import { Reservation } from 'src/reservation/entities/reservation.entity';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([Place, PlaceDetail, Reservation, User, Review]),
   ],
   providers: [

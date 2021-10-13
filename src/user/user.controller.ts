@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { EditProfileInput } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { GetMyPlaceOutput } from './dtos/get-place-history.dto';
@@ -17,7 +18,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { CoreOutput } from 'src/common/common.interface';
@@ -35,7 +35,7 @@ import {
 @ApiBearerAuth('jwt')
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}

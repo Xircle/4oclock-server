@@ -1,7 +1,7 @@
+import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { User } from 'src/user/entities/user.entity';
 import { CreateReviewInput } from './dtos/create-review.dto';
 import { ReviewService } from './review.service';
-import { AuthGuard } from '@nestjs/passport';
 import { Controller, UseGuards, Post, Body } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,7 +15,7 @@ import { GetUser } from 'src/auth/decorators/get-user.decorator';
 @ApiBearerAuth('jwt')
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
-@UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 @Controller('review')
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
