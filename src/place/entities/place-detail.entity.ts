@@ -29,7 +29,7 @@ export class PlaceDetail {
   @Column({ length: 255 })
   detailAddress: string;
 
-  @Column({ length: 255, default: '' })
+  @Column({ length: 512, default: '' })
   detailLink: string;
 
   @Column({ default: 0 })
