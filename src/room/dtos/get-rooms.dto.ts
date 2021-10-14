@@ -1,6 +1,20 @@
-import { Room } from './../entities/room.entity';
 import { CoreOutput } from 'src/common/common.interface';
 
+export interface IRoom {
+  id: string;
+  receiver: {
+    id: string;
+    profileImageUrl: string;
+    username: string;
+  };
+  lastMessage: {
+    isMe: boolean;
+    isRead: boolean;
+    content: string;
+  };
+  latestMessageAt: Date;
+}
+
 export class GetRoomsOutput extends CoreOutput {
-  myRooms?: Room[];
+  myRooms?: IRoom[];
 }
