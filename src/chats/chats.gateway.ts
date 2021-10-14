@@ -26,7 +26,7 @@ export class ChatsGateway
   private logger: Logger = new Logger(ChatsGateway.name);
 
   afterInit() {
-    this.logger.log('Socket Server Init Complete');
+    this.logger.debug('Socket Server Init Complete');
   }
 
   handleConnection(client: Socket) {

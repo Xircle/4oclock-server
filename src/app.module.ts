@@ -44,7 +44,6 @@ import * as Joi from 'joi';
     RoomModule,
     MessageModule,
     ReviewModule,
-    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
