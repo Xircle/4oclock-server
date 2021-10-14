@@ -1,7 +1,6 @@
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { RoomService } from './room.service';
 import { User } from 'src/user/entities/user.entity';
-import { AuthGuard } from '@nestjs/passport';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,

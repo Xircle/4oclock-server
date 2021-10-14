@@ -139,7 +139,6 @@ export class SocialAuthService {
       isMarketingAgree,
     } = socialRegisterInput;
 
-    console.log('Registered User : ', socialRegisterInput);
     try {
       let final_profile_image: string;
       if (profileImageUrl) {
@@ -215,6 +214,7 @@ export class SocialAuthService {
         };
       });
 
+      console.log('Registered User : ', socialRegisterInput);
       return {
         ok: true,
         data,
@@ -237,7 +237,7 @@ export class SocialAuthService {
         relations: ['profile'],
       });
       if (user) {
-        console.log('Existing user : ', user);
+        console.log('Loggedin user : ', user);
         const token = this.jwtService.sign({ id: user.id });
         return {
           ok: true,

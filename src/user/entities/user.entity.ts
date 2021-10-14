@@ -1,3 +1,4 @@
+import { RoomToUser } from '../../room/entities/rooms-to-user.entity';
 import { Review } from 'src/review/entities/review.entity';
 import { Message } from './../../message/entities/message.entity';
 import { Room } from './../../room/entities/room.entity';
@@ -8,6 +9,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -53,6 +55,9 @@ export class User {
 
   @OneToMany((type) => Reservation, (reservation) => reservation.participant)
   reservations: Reservation[];
+
+  @OneToMany((type) => RoomToUser, (RoomToUser) => RoomToUser.user)
+  roomToUser: RoomToUser[];
 
   @ManyToMany((type) => Room, (room) => room.users)
   rooms: Room[];

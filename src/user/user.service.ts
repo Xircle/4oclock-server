@@ -7,12 +7,7 @@ import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
 import { Reservation } from './../reservation/entities/reservation.entity';
 import { MeOutput } from './dtos/me.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  CACHE_MANAGER,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { getManager, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
