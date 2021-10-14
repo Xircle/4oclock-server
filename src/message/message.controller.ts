@@ -1,3 +1,4 @@
+import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { SendMessageInput } from './dtos/send-message.dto';
 import { CoreOutput } from './../common/common.interface';
@@ -14,10 +15,14 @@ import { GetUser } from 'src/auth/decorators/get-user.decorator';
 export class MessageController {
   constructor(private messageService: MessageService) {}
 
-  @Get('/:roomId/messages')
+  @Get('/:roomId/messages/:receiverId')
   @ApiOperation({ summary: '채팅방 내 메세지 모두 가져오기' })
-  getRoomsMessages(@GetUser() authUser: User, @Param('roomId') roomId: string) {
-    return this.messageService.getRoomsMessages(authUser, roomId);
+  getRoomsMessages(
+    @GetUser() authUser: User,
+    @Param('roomId') roomId: string,
+    @Param('receiverId') receiverId: string,
+  ): Promise<GetRoomsMessagesOutput> {
+    return this.messageService.getRoomsMessages(authUser, roomId, receiverId);
   }
 
   @Post('/:roomId/messages')

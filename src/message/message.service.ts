@@ -1,60 +1,46 @@
+import { RoomService } from './../room/room.service';
+import { MessageRepository } from './repository/message.repository';
 import { SendMessageInput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
-import { Room } from './../room/entities/room.entity';
-import { Message } from './entities/message.entity';
 import { User } from 'src/user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatsGateway } from 'src/chats/chats.gateway';
+import { RoomRepository } from 'src/room/repository/room.repository';
 
 @Injectable()
 export class MessageService {
   constructor(
-    @InjectRepository(Message)
-    private readonly messageRepository: Repository<Message>,
-    @InjectRepository(Room)
-    private readonly roomRepository: Repository<Room>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly roomRepository: RoomRepository,
+    private readonly messageRepository: MessageRepository,
+    private readonly roomService: RoomService,
+    private readonly chatsGateway: ChatsGateway,
   ) {}
 
   async getRoomsMessages(
     authUser: User,
     roomId: string,
+    receiverId: string,
   ): Promise<GetRoomsMessagesOutput> {
-    try {
-      const isAuthorized = await this.roomRepository.findOne({
-        where: {
-          id: roomId,
-          users: [{ id: authUser.id }],
-        },
-      });
-      console.log('isAuthorized : ', isAuthorized);
-      if (!isAuthorized) {
-        return {
-          ok: false,
-          error: '권한이 없습니다.',
-        };
-      }
-
-      const messages = await this.messageRepository.find({
-        where: {
-          room_id: roomId,
-        },
-        order: {
-          createdDate: 'DESC',
-        },
-      });
+    const existRoom = await this.roomService.getRoomByIdWithLoadedUser(roomId);
+    if (
+      !existRoom ||
+      !existRoom.users.some((user) => user.id === authUser.id)
+    ) {
       return {
-        ok: true,
-        messages,
+        ok: false,
+        error: '권한이 없습니다.',
       };
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
     }
+    return this.messageRepository.getRoomsMessages(
+      authUser,
+      roomId,
+      receiverId,
+    );
   }
 
   async sendMessage(
@@ -66,7 +52,7 @@ export class MessageService {
       if (roomId === '0') {
         const receiver = await this.userRepository.findOne({
           where: {
-            id: sendMessageInput.receiver_id,
+            id: sendMessageInput.receiverId,
           },
         });
         if (!receiver) {
@@ -83,19 +69,21 @@ export class MessageService {
 
         const message = this.messageRepository.create({
           content: sendMessageInput.content,
-          receiver_id: sendMessageInput.receiver_id,
-          sender_id: authUser.id,
-          room_id: newRoom.id,
+          receiverId: sendMessageInput.receiverId,
+          senderId: authUser.id,
+          roomId: newRoom.id,
         });
         await this.messageRepository.save(message);
-        // socket emit
+
+        // 소켓에 Join
+        this.chatsGateway.server.socketsJoin(newRoom.id);
       } else {
         //   기존 방에 메세지 추가
         const message = this.messageRepository.create({
           content: sendMessageInput.content,
-          sender_id: authUser.id,
-          receiver_id: sendMessageInput.receiver_id,
-          room_id: roomId,
+          roomId: roomId,
+          receiverId: sendMessageInput.receiverId,
+          senderId: authUser.id,
         });
         await this.messageRepository.save(message);
       }
