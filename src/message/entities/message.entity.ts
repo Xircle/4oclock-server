@@ -18,14 +18,17 @@ export class Message {
   @Column({ length: 255 })
   content: string;
 
-  @Column({ type: 'uuid' })
-  room_id: string;
+  @Column({ default: false })
+  isRead: boolean;
 
-  @Column({ type: 'uuid' })
-  sender_id: string;
+  @Column({ type: 'uuid', nullable: true })
+  roomId?: string | null;
 
-  @Column({ type: 'uuid' })
-  receiver_id: string;
+  @Column({ type: 'uuid', nullable: true })
+  senderId?: string | null;
+
+  @Column({ type: 'uuid', nullable: true })
+  receiverId?: string | null;
 
   @ManyToOne((type) => Room, (room) => room.messages, {
     onDelete: 'SET NULL',
