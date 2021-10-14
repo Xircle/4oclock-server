@@ -18,13 +18,12 @@ export class ChatsGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const client: Socket = context.switchToWs().getClient();
 
-    const token = client.handshake.auth?.authorization;
+    const BearerToken = client.handshake.auth?.authorization as string;
+    const token = BearerToken.replace('Bearer ', '');
     const payload = this.validateToken(token);
-
     if (!payload || !payload?.id) return false;
     const exists = await this.userService.findUserById(payload.id);
     if (!exists) return false;
-    console.log('connected Socket user : ', exists);
     return true;
   }
 
