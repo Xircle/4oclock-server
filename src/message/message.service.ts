@@ -7,6 +7,7 @@ import { CoreOutput } from './../common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ChatsGateway } from 'src/chats/chats.gateway';
 
 @Injectable()
 export class MessageService {
@@ -68,6 +69,12 @@ export class MessageService {
             id: sendMessageInput.receiver_id,
           },
         });
+        if (!receiver) {
+          return {
+            ok: false,
+            error: '존재하지 않는 유저입니다.',
+          };
+        }
         //   방 생성 후, 그 방에 메세지 추가
         const newRoom = this.roomRepository.create({
           users: [receiver, authUser],
@@ -81,7 +88,6 @@ export class MessageService {
           room_id: newRoom.id,
         });
         await this.messageRepository.save(message);
-
         // socket emit
       } else {
         //   기존 방에 메세지 추가
@@ -92,8 +98,6 @@ export class MessageService {
           room_id: roomId,
         });
         await this.messageRepository.save(message);
-        
-        // socket emit
       }
       return {
         ok: true,
