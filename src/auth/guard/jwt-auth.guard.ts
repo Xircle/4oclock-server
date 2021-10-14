@@ -18,11 +18,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   /**
-   *
    * 토큰이 유효한지 체크가 되면 decoded["id"]를 통해 User 객체를 가져와서 req.user에 붙인다.
    * return 값은 ```@UseGuards(JwtAuthGuard)```를 사용한 모든 곳에 자동으로 Request 객체로서 들어간다.
-   *
-   * @param payload
    */
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
@@ -36,6 +33,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     // Attach user in req.user
     const user = await this.userService.findUserById(payload.id);
+    if (!user) return false;
     req.user = user;
     return true;
   }
