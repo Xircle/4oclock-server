@@ -1,3 +1,4 @@
+import { RoomToUser } from './rooms-to-user.entity';
 import { Message } from './../../message/entities/message.entity';
 import {
   Column,
@@ -16,14 +17,26 @@ export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany((type) => User, (user) => user.rooms)
-  @JoinTable()
+  @OneToMany((type) => RoomToUser, (roomToUser) => roomToUser.room)
+  roomToUser: RoomToUser[];
+
+  @ManyToMany((type) => User, (user) => user.rooms, {
+    cascade: ['insert'],
+  })
+  @JoinTable({
+    name: 'roomToUser',
+    joinColumn: {
+      name: 'roomId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'userId',
+      referencedColumnName: 'id',
+    },
+  })
   users: User[];
 
-  @OneToMany((type) => Message, (message) => message.room, {
-    eager: true,
-    cascade: true,
-  })
+  @OneToMany((type) => Message, (message) => message.room)
   messages: Message[];
 
   @Column('timestamptz', { select: false })
