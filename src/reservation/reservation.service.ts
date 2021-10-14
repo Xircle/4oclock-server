@@ -69,6 +69,7 @@ export class ReservationService {
         // 예약한 적이 있는데, 취소를 했었을 때
         await this.reservationRepository.update(
           {
+            user_id: authUser.id,
             place_id: placeId,
           },
           {
