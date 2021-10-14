@@ -1,16 +1,11 @@
+import { RoomRepository } from './repository/room.repository';
 import { User } from 'src/user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Room } from './entities/room.entity';
-import { Repository } from 'typeorm';
-import { GetRoomsOutput } from './dtos/get-rooms.dto';
+import { GetRoomsOutput, IRoom } from './dtos/get-rooms.dto';
 
 @Injectable()
 export class RoomService {
-  constructor(
-    @InjectRepository(Room)
-    private roomRepository: Repository<Room>,
-  ) {}
+  constructor(private roomRepository: RoomRepository) {}
 
   async getRoomById(roomId: string) {
     return this.roomRepository.findOne({
@@ -25,11 +20,7 @@ export class RoomService {
 
   async getRooms(authUser: User): Promise<GetRoomsOutput> {
     try {
-      const myRooms = await this.roomRepository.find({
-        where: {
-          users: [{ id: authUser.id }],
-        },
-      });
+      const myRooms = await this.roomRepository.getRoomsOrderByRecentMessage(authUser);
       return {
         ok: true,
         myRooms,
