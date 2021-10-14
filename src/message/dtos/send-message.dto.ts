@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsString, IsDate } from 'class-validator';
 
 export class SendMessageInput {
   @ApiProperty({
@@ -14,5 +14,12 @@ export class SendMessageInput {
     description: '받는 유저 아이디',
   })
   @IsString()
-  receiver_id: string;
+  receiverId: string;
+
+  @ApiProperty({
+    example: 'new Date()',
+    description: '메세지 보낸 시각',
+  })
+  @IsDate()
+  sentAt: Date;
 }

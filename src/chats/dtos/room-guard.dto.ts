@@ -1,3 +1,7 @@
 import { SendMessageData } from './send-message.dto';
 
-export class RoomGuardDto extends SendMessageData {}
+export class RoomGuardDto {
+  roomId: string;
+
+  anonymouseId: string;
+}
