@@ -25,7 +25,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const req = context.switchToHttp().getRequest();
     const { authorization } = req.headers;
     if (!authorization)
-      throw new HttpException('Token does not exists', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        '토큰이 존재하지 않습니다.',
+        HttpStatus.UNAUTHORIZED,
+      );
     const token = authorization.replace('Bearer ', '');
     // Check token whether it is valid or not.
     const payload = await this.validateToken(token);
@@ -44,11 +47,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     } catch (e) {
       console.log(e);
       switch (e.message) {
-        case 'INVALID_TOKEN':
-        case 'TOKEN_IS_ARRAY':
-        case 'NO_USER':
+        case 'invalid token':
           throw new HttpException('유효하지 않은 토큰입니다.', 401);
-        case 'EXPIRED_TOKEN':
+        case 'jwt expired':
           throw new HttpException('토큰이 만료되었습니다.', 410);
         default:
           throw new HttpException('서버 오류입니다.', 500);
