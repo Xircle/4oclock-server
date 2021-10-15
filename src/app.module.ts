@@ -1,4 +1,3 @@
-import { ChatsModule } from './chats/chats.module';
 import { S3Module } from './aws/s3/s3.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';

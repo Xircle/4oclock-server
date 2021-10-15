@@ -1,6 +1,5 @@
-import { ChatsGateway } from 'src/chats/chats.gateway';
+// import { ChatsGateway } from 'src/chats/chats.gateway';
 import { MessageRepository } from './repository/message.repository';
-import { ChatsModule } from './../chats/chats.module';
 import { AuthModule } from './../auth/auth.module';
 import { User } from 'src/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,7 +15,6 @@ import { Message } from './entities/message.entity';
   imports: [
     TypeOrmModule.forFeature([MessageRepository, User, RoomRepository]),
     AuthModule,
-    ChatsModule,
   ],
   providers: [MessageService, RoomService],
   controllers: [MessageController],

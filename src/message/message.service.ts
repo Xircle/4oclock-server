@@ -7,7 +7,7 @@ import { CoreOutput } from './../common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ChatsGateway } from 'src/chats/chats.gateway';
+// import { ChatsGateway } from 'src/chats/chats.gateway';
 import { RoomRepository } from 'src/room/repository/room.repository';
 
 @Injectable()
@@ -18,8 +18,8 @@ export class MessageService {
     private readonly roomRepository: RoomRepository,
     private readonly messageRepository: MessageRepository,
     private readonly roomService: RoomService,
-    private readonly chatsGateway: ChatsGateway,
-  ) {}
+  ) // private readonly chatsGateway: ChatsGateway,
+  {}
 
   async getRoomsMessages(
     authUser: User,
@@ -76,7 +76,7 @@ export class MessageService {
         await this.messageRepository.save(message);
 
         // 소켓에 Join
-        this.chatsGateway.server.socketsJoin(newRoom.id);
+        // this.chatsGateway.server.socketsJoin(newRoom.id);
       } else {
         //   기존 방에 메세지 추가
         const message = this.messageRepository.create({
