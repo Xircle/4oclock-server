@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsEnteringData } from './dtos/is-entering.dto';
 import { RoomGuard } from './guards/room.guard';
@@ -18,7 +20,7 @@ import { SendMessageData } from './dtos/send-message.dto';
 import { JoinRoomData } from './dtos/join-room.dto';
 
 @ApiTags('ChatGateway')
-@WebSocketGateway(80, {
+@WebSocketGateway(+process.env.SOCKET_PORT, {
   namespace: '/chat',
   transports: ['websocket'],
 })
