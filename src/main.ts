@@ -11,6 +11,7 @@ async function bootstrap() {
   app.use(logger('dev'));
   app.enableCors({
     origin: [
+      'https://test-4oclock.netlify.app',
       'https://4oclock.netlify.app',
       'https://www.4oclock.kr',
       'http://localhost:3000',
@@ -41,6 +42,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT || 3080);
+  await app.listen(process.env.PORT || 3081);
 }
 bootstrap();
