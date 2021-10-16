@@ -20,7 +20,7 @@ import { SendMessageData } from './dtos/send-message.dto';
 import { JoinRoomData } from './dtos/join-room.dto';
 
 @ApiTags('ChatGateway')
-@WebSocketGateway(+process.env.SOCKET_PORT, {
+@WebSocketGateway({
   namespace: '/chat',
   transports: ['websocket'],
 })
