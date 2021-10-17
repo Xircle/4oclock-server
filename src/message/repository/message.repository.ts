@@ -30,9 +30,9 @@ export class MessageRepository extends Repository<Message> {
             receiverId,
           },
         )
-        .take(30)
+        .take(40)
         .skip(0)
-        .orderBy('messages.sentDate', 'DESC')
+        .orderBy('messages.sentAt', 'DESC')
         .getMany();
 
       // IMessage에 맞춰서 보내기
@@ -41,7 +41,7 @@ export class MessageRepository extends Repository<Message> {
         roomMessages.push({
           content: msg.content,
           isMe: msg.senderId === authUser.id,
-          sentAt: msg.sentDate,
+          sentAt: msg.sentAt,
           isRead: msg.isRead,
         });
       }
