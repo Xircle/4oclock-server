@@ -13,6 +13,7 @@ import { MessageModule } from './message/message.module';
 import { ormconfig } from '../ormconfig';
 import { ReviewModule } from './review/review.module';
 import * as Joi from 'joi';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import * as Joi from 'joi';
     RoomModule,
     MessageModule,
     ReviewModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
