@@ -15,6 +15,7 @@ lerna-debug.log
 .DS_Store
 /.env.dev
 /.env.prod
+/.env.test
 
 # Tests
 /coverage
