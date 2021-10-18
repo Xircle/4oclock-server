@@ -52,6 +52,12 @@ export class ChatsGateway
     socket.join(joinRoomData.roomId);
   }
 
+  @SubscribeMessage('leave_room')
+  public leaveRoom(client: Socket, data: { roomId: string }) {
+    console.log('Leave : ', data.roomId);
+    client.leave(data.roomId);
+  }
+
   @UseGuards(ChatsGuard, RoomGuard)
   @SubscribeMessage('send_message')
   @ApiOperation({ summary: '메세지를 보낼 때의 event' })
@@ -74,7 +80,6 @@ export class ChatsGateway
     @MessageBody() isEnteringData: IsEnteringData,
   ) {
     const { roomId, flag } = isEnteringData;
-    console.log(flag);
     socket.broadcast.in(roomId).emit('is_entering', {
       flag,
     });

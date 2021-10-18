@@ -10,6 +10,9 @@ module.exports = {
       env_production: {
         NODE_ENV: 'prod',
       },
+      env_test: {
+        NODE_ENV: 'test',
+      },
     },
   ],
 };

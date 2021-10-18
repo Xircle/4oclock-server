@@ -99,7 +99,7 @@ export class PlaceService {
           'views',
         ],
         loadEagerRelations: false,
-        take: 10,
+        take: 15,
         skip: 10 * (page - 1),
       });
       const closedPlace = _.takeWhile(

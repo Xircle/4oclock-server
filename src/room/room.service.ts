@@ -31,10 +31,9 @@ export class RoomService {
             roomId: myRoom.id,
           },
           order: {
-            sentDate: 'DESC',
+            sentAt: 'DESC',
           },
         });
-        console.log('lastMessage : ', lastMessage);
         if (!lastMessage) continue;
         const receiverEntity = myRoom.users.find(
           (user) => user.id !== authUser.id,
@@ -44,14 +43,15 @@ export class RoomService {
           lastMessage: {
             isMe: lastMessage.senderId === authUser.id,
             content: lastMessage.content,
-            isRead: lastMessage.isRead,
+            isRead:
+              lastMessage.senderId === authUser.id ? true : lastMessage.isRead,
           },
           receiver: {
             id: receiverEntity['id'],
             profileImageUrl: receiverEntity?.profile?.profileImageUrl,
             username: receiverEntity.profile.username,
           },
-          latestMessageAt: lastMessage.sentDate,
+          latestMessageAt: lastMessage.sentAt,
         });
       }
       return {
