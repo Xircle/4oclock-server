@@ -1,14 +1,13 @@
 import { RoomService } from './../room/room.service';
 import { MessageRepository } from './repository/message.repository';
-import { SendMessageInput } from './dtos/send-message.dto';
+import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
 import { User } from 'src/user/entities/user.entity';
-import { CoreOutput } from './../common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-// import { ChatsGateway } from 'src/chats/chats.gateway';
 import { RoomRepository } from 'src/room/repository/room.repository';
+import { ChatsGateway } from 'src/chats/chats.gateway';
 
 @Injectable()
 export class MessageService {
@@ -18,14 +17,15 @@ export class MessageService {
     private readonly roomRepository: RoomRepository,
     private readonly messageRepository: MessageRepository,
     private readonly roomService: RoomService,
-  ) // private readonly chatsGateway: ChatsGateway,
-  {}
+    private readonly chatsGateway: ChatsGateway,
+  ) {}
 
   async getRoomsMessages(
     authUser: User,
     roomId: string,
     receiverId: string,
   ): Promise<GetRoomsMessagesOutput> {
+    if (roomId === '0') return { ok: true, messages: [] };
     const existRoom = await this.roomService.getRoomByIdWithLoadedUser(roomId);
     if (
       !existRoom ||
@@ -47,7 +47,7 @@ export class MessageService {
     authUser: User,
     roomId: string,
     sendMessageInput: SendMessageInput,
-  ): Promise<CoreOutput> {
+  ): Promise<SendMessageOutput> {
     try {
       if (roomId === '0') {
         const receiver = await this.userRepository.findOne({
@@ -76,7 +76,11 @@ export class MessageService {
         await this.messageRepository.save(message);
 
         // 소켓에 Join
-        // this.chatsGateway.server.socketsJoin(newRoom.id);
+        this.chatsGateway.server.socketsJoin(newRoom.id);
+        return {
+          ok: true,
+          createdRoomId: newRoom.id,
+        };
       } else {
         //   기존 방에 메세지 추가
         const message = this.messageRepository.create({
