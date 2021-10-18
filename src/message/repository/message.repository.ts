@@ -35,6 +35,7 @@ export class MessageRepository extends Repository<Message> {
         );
 
       const totalItems = await query.getCount();
+      const totalPages = Math.floor(totalItems / limit) + 1;
       const paginatedMessages = await query
         .take(limit)
         .skip(limit * (page - 1))
@@ -56,8 +57,9 @@ export class MessageRepository extends Repository<Message> {
         messages: roomMessages,
         meta: {
           totalItems,
-          totalPages: Math.floor(totalItems / limit) + 1,
+          totalPages,
           currentPage: page,
+          hasMore: totalPages > page,
         },
       };
     } catch (err) {
