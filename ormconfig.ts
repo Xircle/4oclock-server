@@ -3,12 +3,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 dotenv.config({
-  path:
-    process.env.NODE_ENV === 'dev'
-      ? '.env.dev'
-      : process.env.NODE_ENV === 'prod'
-      ? '.env.prod'
-      : '.env.test',
+  path: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
 });
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
