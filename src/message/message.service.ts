@@ -1,3 +1,4 @@
+import { Message } from './entities/message.entity';
 import { RoomService } from './../room/room.service';
 import { MessageRepository } from './repository/message.repository';
 import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
@@ -24,6 +25,8 @@ export class MessageService {
     authUser: User,
     roomId: string,
     receiverId: string,
+    page: number,
+    limit: number,
   ): Promise<GetRoomsMessagesOutput> {
     if (roomId === '0') return { ok: true, messages: [] };
     const existRoom = await this.roomService.getRoomByIdWithLoadedUser(roomId);
@@ -40,6 +43,8 @@ export class MessageService {
       authUser,
       roomId,
       receiverId,
+      page,
+      limit,
     );
   }
 

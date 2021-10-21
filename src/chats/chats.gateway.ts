@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsEnteringData } from './dtos/is-entering.dto';
 import { RoomGuard } from './guards/room.guard';
@@ -48,12 +50,14 @@ export class ChatsGateway
     @MessageBody() joinRoomData: JoinRoomData,
   ) {
     socket.join(joinRoomData.roomId);
+    socket.broadcast.to(joinRoomData.roomId).emit('join_room');
   }
 
   @SubscribeMessage('leave_room')
   public leaveRoom(client: Socket, data: { roomId: string }) {
     console.log('Leave : ', data.roomId);
     client.leave(data.roomId);
+    client.broadcast.to(data.roomId).emit('leave_room');
   }
 
   @UseGuards(ChatsGuard, RoomGuard)
