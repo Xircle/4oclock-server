@@ -1,4 +1,4 @@
-import { CoreOutput } from './../../common/common.interface';
+import { CoreOutput, MetaTag } from './../../common/common.interface';
 
 export class IMessage {
   content: string;
@@ -8,4 +8,5 @@ export class IMessage {
 }
 export class GetRoomsMessagesOutput extends CoreOutput {
   messages?: IMessage[];
+  meta?: MetaTag;
 }

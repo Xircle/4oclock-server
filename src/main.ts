@@ -11,6 +11,7 @@ async function bootstrap() {
   app.use(logger('dev'));
   app.enableCors({
     origin: [
+      'https://test-4oclock.netlify.app',
       'https://4oclock.netlify.app',
       'https://www.4oclock.kr',
       'http://localhost:3000',

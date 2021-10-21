@@ -1,4 +1,3 @@
-import { RoomToUser } from '../../room/entities/rooms-to-user.entity';
 import { Review } from 'src/review/entities/review.entity';
 import { Message } from './../../message/entities/message.entity';
 import { Room } from './../../room/entities/room.entity';
@@ -14,6 +13,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 import { IsEnum, IsString, Length } from 'class-validator';
@@ -56,10 +56,8 @@ export class User {
   @OneToMany((type) => Reservation, (reservation) => reservation.participant)
   reservations: Reservation[];
 
-  @OneToMany((type) => RoomToUser, (RoomToUser) => RoomToUser.user)
-  roomToUser: RoomToUser[];
-
   @ManyToMany((type) => Room, (room) => room.users)
+  @JoinTable()
   rooms: Room[];
 
   @ManyToMany((type) => Message, (message) => message.sender)

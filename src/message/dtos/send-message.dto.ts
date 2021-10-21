@@ -1,3 +1,4 @@
+import { CoreOutput } from './../../common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate } from 'class-validator';
 
@@ -22,4 +23,8 @@ export class SendMessageInput {
   })
   @IsDate()
   sentAt: Date;
+}
+
+export class SendMessageOutput extends CoreOutput {
+  createdRoomId?: string;
 }

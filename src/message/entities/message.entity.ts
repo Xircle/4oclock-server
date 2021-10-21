@@ -44,15 +44,12 @@ export class Message {
   @ManyToOne((type) => User, (user) => user.messages)
   sender: User;
 
-  @Column('timestamptz', { select: false })
-  @CreateDateColumn()
-  sentDate: Date;
+  @CreateDateColumn({ type: 'timestamp with time zone' })
+  sentAt: Date;
 
-  @Column('timestamptz', { select: false })
-  @CreateDateColumn()
-  createdDate: Date;
+  @CreateDateColumn({ type: 'timestamp with time zone' })
+  createdAt: Date;
 
-  @Column('timestamptz', { select: false })
-  @UpdateDateColumn()
-  updatedDate: Date;
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  updatedAt: Date;
 }

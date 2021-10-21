@@ -8,6 +8,7 @@ export class RoomGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const data = context.switchToWs().getData<RoomGuardDto>();
+    if (data.roomId === '0') return true;
     const existRoom = await this.roomService.getRoomByIdWithLoadedUser(
       data.roomId,
     );
