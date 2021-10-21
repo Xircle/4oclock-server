@@ -1,6 +1,7 @@
 import { CoreOutput } from './../../common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDate } from 'class-validator';
+import { IsString, IsDate, IsBoolean } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class SendMessageInput {
   @ApiProperty({
@@ -16,6 +17,13 @@ export class SendMessageInput {
   })
   @IsString()
   receiverId: string;
+
+  @ApiProperty({
+    example: 'true',
+    description: '실시간으로 유저가 읽었는지 아닌지',
+  })
+  @Transform((param) => JSON.parse(param.obj?.isRead))
+  isRead: boolean;
 
   @ApiProperty({
     example: 'new Date()',

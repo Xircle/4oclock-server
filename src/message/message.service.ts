@@ -77,6 +77,7 @@ export class MessageService {
           receiverId: sendMessageInput.receiverId,
           senderId: authUser.id,
           roomId: newRoom.id,
+          isRead: sendMessageInput.isRead,
         });
         await this.messageRepository.save(message);
 
