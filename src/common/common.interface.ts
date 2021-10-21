@@ -3,6 +3,12 @@ export class CoreOutput {
   error?: string;
 }
 
+export class MetaTag {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  hasMore: boolean;
+}
 export class SocialProfile {
   uid: number | string;
   thumbnail: string;

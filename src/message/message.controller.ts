@@ -4,7 +4,17 @@ import { SendMessageInput } from './dtos/send-message.dto';
 import { CoreOutput } from './../common/common.interface';
 import { User } from 'src/user/entities/user.entity';
 import { MessageService } from './message.service';
-import { Controller, Get, Post, UseGuards, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Param,
+  Body,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 
@@ -21,8 +31,16 @@ export class MessageController {
     @GetUser() authUser: User,
     @Param('roomId') roomId: string,
     @Param('receiverId') receiverId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(40), ParseIntPipe) limit: number = 40,
   ): Promise<GetRoomsMessagesOutput> {
-    return this.messageService.getRoomsMessages(authUser, roomId, receiverId);
+    return this.messageService.getRoomsMessages(
+      authUser,
+      roomId,
+      receiverId,
+      page,
+      limit,
+    );
   }
 
   @Post('/:roomId/messages')

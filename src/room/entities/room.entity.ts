@@ -1,4 +1,3 @@
-import { RoomToUser } from './rooms-to-user.entity';
 import { Message } from './../../message/entities/message.entity';
 import {
   Column,
@@ -9,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinTable,
+  RelationId,
 } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 
@@ -17,22 +17,8 @@ export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany((type) => RoomToUser, (roomToUser) => roomToUser.room)
-  roomToUser: RoomToUser[];
-
   @ManyToMany((type) => User, (user) => user.rooms, {
     cascade: ['insert'],
-  })
-  @JoinTable({
-    name: 'roomToUser',
-    joinColumn: {
-      name: 'roomId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'userId',
-      referencedColumnName: 'id',
-    },
   })
   users: User[];
 

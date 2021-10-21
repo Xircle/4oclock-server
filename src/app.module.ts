@@ -13,6 +13,7 @@ import { MessageModule } from './message/message.module';
 import { ormconfig } from '../ormconfig';
 import { ReviewModule } from './review/review.module';
 import * as Joi from 'joi';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   imports: [
@@ -20,7 +21,10 @@ import * as Joi from 'joi';
       cache: true,
       isGlobal: true,
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod').default('dev').required(),
+        NODE_ENV: Joi.string()
+          .valid('dev', 'prod', 'test')
+          .default('dev')
+          .required(),
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_HOST: Joi.string().required(),
@@ -32,7 +36,12 @@ import * as Joi from 'joi';
         AWS_ACCESS_KEY: Joi.string().required(),
         AWS_SECRET_KEY: Joi.string().required(),
       }),
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
+      envFilePath:
+        process.env.NODE_ENV === 'dev'
+          ? '.env.dev'
+          : process.env.NODE_ENV === 'prod'
+          ? '.env.prod'
+          : '.env.test',
     }),
     TypeOrmModule.forRoot(ormconfig),
     UserModule,
@@ -43,6 +52,7 @@ import * as Joi from 'joi';
     RoomModule,
     MessageModule,
     ReviewModule,
+    ChatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

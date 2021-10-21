@@ -3,10 +3,14 @@ import { User } from 'src/user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetRoomsOutput, IRoom } from './dtos/get-rooms.dto';
 import { MessageRepository } from 'src/message/repository/message.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()
 export class RoomService {
   constructor(
+    @InjectRepository(User)
+    private userRepository: UserRepository,
     private messageRepository: MessageRepository,
     private roomRepository: RoomRepository,
   ) {}
@@ -22,41 +26,47 @@ export class RoomService {
 
   async getRooms(authUser: User): Promise<GetRoomsOutput> {
     try {
-      const myRooms = await this.roomRepository.getRooms(authUser);
+      const me = await this.userRepository.findOne({
+        where: {
+          id: authUser.id,
+        },
+        loadEagerRelations: false,
+        relations: ['rooms', 'rooms.users'],
+      });
 
-      const RoomByRecentSentMessage: IRoom[] = [];
-      for (let myRoom of myRooms) {
+      const RoomOrderByRecentSentMessage: IRoom[] = [];
+      for (let myRoom of me.rooms) {
         const lastMessage = await this.messageRepository.findOne({
           where: {
             roomId: myRoom.id,
           },
           order: {
-            sentDate: 'DESC',
+            sentAt: 'DESC',
           },
         });
-        console.log('lastMessage : ', lastMessage);
         if (!lastMessage) continue;
         const receiverEntity = myRoom.users.find(
           (user) => user.id !== authUser.id,
         );
-        RoomByRecentSentMessage.push({
+        RoomOrderByRecentSentMessage.push({
           id: myRoom.id,
           lastMessage: {
             isMe: lastMessage.senderId === authUser.id,
             content: lastMessage.content,
-            isRead: lastMessage.isRead,
+            isRead:
+              lastMessage.senderId === authUser.id ? true : lastMessage.isRead,
           },
           receiver: {
             id: receiverEntity['id'],
             profileImageUrl: receiverEntity?.profile?.profileImageUrl,
             username: receiverEntity.profile.username,
           },
-          latestMessageAt: lastMessage.sentDate,
+          latestMessageAt: lastMessage.sentAt,
         });
       }
       return {
         ok: true,
-        myRooms: RoomByRecentSentMessage,
+        myRooms: RoomOrderByRecentSentMessage,
       };
     } catch (err) {
       console.log(err);
