@@ -6,10 +6,10 @@ import { EntityRepository, Repository } from 'typeorm';
 export class RoomRepository extends Repository<Room> {
   public async getRooms(authUser: User) {
     const qb = this.createQueryBuilder('room')
-      .leftJoinAndSelect('room.users', 'users', 'users.id NOT IN (:...ids)', {
+      .innerJoin('room.users', 'users')
+      .where('users.id IN (:...ids)', {
         ids: [authUser.id],
-      })
-      .leftJoinAndSelect('users.profile', 'profile');
+      });
     return qb.getMany();
   }
 }

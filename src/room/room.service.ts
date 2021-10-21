@@ -3,10 +3,14 @@ import { User } from 'src/user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetRoomsOutput, IRoom } from './dtos/get-rooms.dto';
 import { MessageRepository } from 'src/message/repository/message.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()
 export class RoomService {
   constructor(
+    @InjectRepository(User)
+    private userRepository: UserRepository,
     private messageRepository: MessageRepository,
     private roomRepository: RoomRepository,
   ) {}
@@ -22,10 +26,16 @@ export class RoomService {
 
   async getRooms(authUser: User): Promise<GetRoomsOutput> {
     try {
-      const myRooms = await this.roomRepository.getRooms(authUser);
+      const me = await this.userRepository.findOne({
+        where: {
+          id: authUser.id,
+        },
+        loadEagerRelations: false,
+        relations: ['rooms', 'rooms.users'],
+      });
 
-      const RoomByRecentSentMessage: IRoom[] = [];
-      for (let myRoom of myRooms) {
+      const RoomOrderByRecentSentMessage: IRoom[] = [];
+      for (let myRoom of me.rooms) {
         const lastMessage = await this.messageRepository.findOne({
           where: {
             roomId: myRoom.id,
@@ -38,7 +48,7 @@ export class RoomService {
         const receiverEntity = myRoom.users.find(
           (user) => user.id !== authUser.id,
         );
-        RoomByRecentSentMessage.push({
+        RoomOrderByRecentSentMessage.push({
           id: myRoom.id,
           lastMessage: {
             isMe: lastMessage.senderId === authUser.id,
@@ -56,7 +66,7 @@ export class RoomService {
       }
       return {
         ok: true,
-        myRooms: RoomByRecentSentMessage,
+        myRooms: RoomOrderByRecentSentMessage,
       };
     } catch (err) {
       console.log(err);
