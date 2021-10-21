@@ -11,12 +11,25 @@ import { Message } from '../entities/message.entity';
 export class MessageRepository extends Repository<Message> {
   public async getRoomsMessages(
     authUser: User,
+    roomId: string,
     receiverId: string,
     page: number,
     limit: number,
   ): Promise<GetRoomsMessagesOutput> {
     try {
       // update unread message
+      await this.createQueryBuilder('messages')
+        .update(Message)
+        .set({ isRead: true })
+        .where(
+          'roomId = :roomId AND senderId = :senderId AND receiverId = :receiverId AND isRead = false',
+          {
+            roomId,
+            senderId: receiverId,
+            receiverId: authUser.id,
+          },
+        )
+        .execute();
 
       const query = this.createQueryBuilder('messages')
         .where(

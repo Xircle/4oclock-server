@@ -41,6 +41,7 @@ export class MessageService {
     }
     return this.messageRepository.getRoomsMessages(
       authUser,
+      roomId,
       receiverId,
       page,
       limit,
