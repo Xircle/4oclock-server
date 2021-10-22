@@ -30,6 +30,7 @@ export class GetPlaceByLocationInput {
 }
 export class GetPlacesByLocationOutput extends CoreOutput {
   places?: MainFeedPlace[];
+  eventBannerImageUrl: string;
 }
 
 export class GetPlaceByLocationWhereOptions {

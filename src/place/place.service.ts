@@ -31,6 +31,8 @@ import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CoreOutput } from 'src/common/common.interface';
 import * as _ from 'lodash';
+import { EventService } from 'src/event/event.service';
+import { EventName } from 'src/event/entities/event-banner.entity';
 
 @Injectable()
 export class PlaceService {
@@ -46,6 +48,7 @@ export class PlaceService {
     private placeUtilService: PlaceUtilService,
     private s3Service: S3Service,
     private reservationUtilService: ReservationUtilService,
+    private eventService: EventService,
   ) {}
 
   async getPlacesByLocation(
@@ -162,9 +165,14 @@ export class PlaceService {
         });
       }
 
+      // event banner
+      const eventBannerImageUrl = await this.eventService.getRandomEventBanner(
+        EventName.Halloween,
+      );
       return {
         ok: true,
         places: mainFeedPlaces,
+        eventBannerImageUrl,
       };
     } catch (err) {
       console.log(err);

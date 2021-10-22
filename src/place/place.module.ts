@@ -1,3 +1,4 @@
+import { EventBannerRepository } from './../event/repositories/event-banner.repository';
 import { AuthModule } from './../auth/auth.module';
 import { Review } from 'src/review/entities/review.entity';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
@@ -13,11 +14,19 @@ import { PlaceService } from './place.service';
 import { PlaceController } from './place.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
+import { EventService } from 'src/event/event.service';
 
 @Module({
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([Place, PlaceDetail, Reservation, User, Review]),
+    TypeOrmModule.forFeature([
+      EventBannerRepository,
+      Place,
+      PlaceDetail,
+      Reservation,
+      User,
+      Review,
+    ]),
   ],
   providers: [
     PlaceService,
@@ -26,6 +35,7 @@ import { Reservation } from 'src/reservation/entities/reservation.entity';
     ReservationUtilService,
     CurrentUserInterceptor,
     ConfigService,
+    EventService,
   ],
   controllers: [PlaceController],
 })
