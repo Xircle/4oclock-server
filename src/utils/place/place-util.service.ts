@@ -21,21 +21,30 @@ export class PlaceUtilService {
    * @param eventDate
    * @returns
    */
-  getDeadlineCaption(eventDate: Date): string {
+  getDeadlineCaption(eventDate: Date, isLightning?: boolean): string {
     const current_date = moment().format('YYYY-MM-DD');
     const event_date = moment(eventDate);
-    if (event_date.diff(current_date, 'days') === 0) {
-      return '마감';
-    } else if (event_date.diff(current_date, 'days') === 1) {
-      return '오늘 마감';
-    } else if (event_date.diff(current_date, 'days') === 2) {
-      return 'D-1';
-    } else if (event_date.diff(current_date, 'days') === 3) {
-      return 'D-2';
-    } else if (event_date.diff(current_date, 'days') === 4) {
-      return 'D-3';
+
+    if (isLightning) {
+      if (event_date.diff(current_date, 'days') <= -1) {
+        return '번개 마감';
+      } else {
+        return '번개 ⚡️';
+      }
     } else {
-      return undefined;
+      if (event_date.diff(current_date, 'days') === 0) {
+        return '마감';
+      } else if (event_date.diff(current_date, 'days') === 1) {
+        return '오늘 마감';
+      } else if (event_date.diff(current_date, 'days') === 2) {
+        return 'D-1';
+      } else if (event_date.diff(current_date, 'days') === 3) {
+        return 'D-2';
+      } else if (event_date.diff(current_date, 'days') === 4) {
+        return 'D-3';
+      } else {
+        return undefined;
+      }
     }
   }
 

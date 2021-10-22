@@ -116,7 +116,7 @@ export class PlaceService {
       for (const place of normalPlaces) {
         let isParticipating = false;
         if (anyUser) {
-          // AuthUser 일 때만
+          // AuthUser 일 때만, 익명 유저도 볼 수 있기 때문에
           isParticipating = await this.reservationUtilService.isParticipating(
             anyUser.id,
             place.id,
@@ -129,20 +129,28 @@ export class PlaceService {
               isCanceled: false,
             },
           });
+
         const participants: MainFeedPlaceParticipantsProfile[] =
           await this.reservationUtilService.getParticipantsProfile(place.id);
+
         let deadline = this.placeUtilService.getDeadlineCaption(
           place.startDateAt,
+          place.isLightning,
         );
-        if (place.isLightning) {
-          deadline = '번개';
-        }
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
         );
-        if (!place.isLightning && deadline === '마감') {
-          place.isClosed = true;
-          await this.placeRepository.save(place);
+        // isClosed Update 로직
+        if (place.isLightning) {
+          if (deadline === '번개 마감') {
+            place.isClosed = true;
+            await this.placeRepository.save(place);
+          }
+        } else {
+          if (deadline === '마감') {
+            place.isClosed = true;
+            await this.placeRepository.save(place);
+          }
         }
         mainFeedPlaces.push({
           ...place,
@@ -185,7 +193,6 @@ export class PlaceService {
           'startDateAt',
           'startTime',
           'isClosed',
-          'isLightning',
           'views',
           'reviews',
         ],
