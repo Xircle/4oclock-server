@@ -12,9 +12,9 @@ import { RoomModule } from './room/room.module';
 import { MessageModule } from './message/message.module';
 import { ormconfig } from '../ormconfig';
 import { ReviewModule } from './review/review.module';
-import * as Joi from 'joi';
 import { ChatsModule } from './chats/chats.module';
 import { AdminModule } from './admin/admin.module';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -22,7 +22,10 @@ import { AdminModule } from './admin/admin.module';
       cache: true,
       isGlobal: true,
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod').default('dev').required(),
+        NODE_ENV: Joi.string()
+          .valid('dev', 'prod', 'test')
+          .default('dev')
+          .required(),
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_HOST: Joi.string().required(),
@@ -33,6 +36,7 @@ import { AdminModule } from './admin/admin.module';
         AWS_S3_BUCKET_NAME: Joi.string().required(),
         AWS_ACCESS_KEY: Joi.string().required(),
         AWS_SECRET_KEY: Joi.string().required(),
+        ADMIN_ACCESS_PASSWORD: Joi.string().required(),
       }),
       envFilePath:
         process.env.NODE_ENV === 'dev'
