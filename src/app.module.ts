@@ -14,6 +14,7 @@ import { ormconfig } from '../ormconfig';
 import { ReviewModule } from './review/review.module';
 import { ChatsModule } from './chats/chats.module';
 import { AdminModule } from './admin/admin.module';
+import { EventModule } from './event/event.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -56,6 +57,7 @@ import * as Joi from 'joi';
     ReviewModule,
     ChatsModule,
     AdminModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],
