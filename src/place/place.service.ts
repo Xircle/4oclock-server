@@ -176,6 +176,7 @@ export class PlaceService {
           'name',
           'coverImage',
           'isLightning',
+          'location',
           'recommendation',
           'oneLineIntroText',
           'startDateAt',

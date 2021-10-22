@@ -18,6 +18,7 @@ export class PlaceData {
   participantsCount: number;
   participants: PlaceDataParticipantsProfile[];
   reviews: Review[];
+  location: string;
   participantsInfo: {
     total_count: number;
     male_count: number;
