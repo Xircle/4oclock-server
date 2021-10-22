@@ -7,8 +7,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinTable,
-  RelationId,
 } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 
