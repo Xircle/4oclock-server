@@ -60,6 +60,7 @@ export class UserService {
       return {
         ok: true,
         data: {
+          accountType: authUser.role,
           gender,
           shortBio,
           activities,
