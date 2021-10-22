@@ -26,7 +26,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiConsumes,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
