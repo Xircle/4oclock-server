@@ -137,7 +137,7 @@ export class PlaceService {
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
         );
-        if (deadline === '마감') {
+        if (!place.isLightning && deadline === '마감') {
           place.isClosed = true;
           await this.placeRepository.save(place);
         }
