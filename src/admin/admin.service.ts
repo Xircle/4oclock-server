@@ -6,14 +6,13 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 @Injectable()
 export class AdminService {
   private ADMIN_ACCESS_PASSWORD: string;
-  
+
   constructor(private readonly configService: ConfigService) {
     this.ADMIN_ACCESS_PASSWORD = configService.get('ADMIN_ACCESS_PASSWORD');
   }
 
   async verifyAdmin({ password }: VerifyAdminInput): Promise<CoreOutput> {
     try {
-      console.log('addmin password: ', this.ADMIN_ACCESS_PASSWORD);
       if (password === this.ADMIN_ACCESS_PASSWORD) {
         return {
           ok: true,

@@ -41,7 +41,7 @@ import { EditPlaceInput } from './dtos/edit-place.dto';
 @ApiBearerAuth('jwt')
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('place')
 export class PlaceController {
   constructor(private placeService: PlaceService) {}
@@ -67,6 +67,7 @@ export class PlaceController {
 
   @Post('')
   @ApiOperation({ summary: '장소 생성하기' })
+  @UseGuards(RolesGuard)
   @Roles(['Admin', 'Owner'])
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -94,6 +95,7 @@ export class PlaceController {
 
   @Patch('/:placeId')
   @ApiOperation({ summary: '장소 정보 수정하기 (이미지 제외)' })
+  @UseGuards(RolesGuard)
   @Roles(['Admin', 'Owner'])
   async editPlace(
     @Param('placeId') placeId: string,
@@ -104,6 +106,7 @@ export class PlaceController {
 
   @Patch('/:placeId/review/images')
   @ApiOperation({ summary: '장소 리뷰 사진 변경하기' })
+  @UseGuards(RolesGuard)
   @Roles(['Admin', 'Owner'])
   @UseInterceptors(FilesInterceptor('reviewImages'))
   async editPlaceReviewImages(

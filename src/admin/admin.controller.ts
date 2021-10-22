@@ -8,13 +8,13 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('Admin')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(['Admin'])
 @Controller('admin')
 export class AdminController {
   constructor(private adminService: AdminService) {}
 
   @Post('verify')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin'])
   async verifyAdmin(
     @Body() verifyAdminInput: VerifyAdminInput,
   ): Promise<CoreOutput> {
