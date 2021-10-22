@@ -131,9 +131,12 @@ export class PlaceService {
           });
         const participants: MainFeedPlaceParticipantsProfile[] =
           await this.reservationUtilService.getParticipantsProfile(place.id);
-        const deadline = this.placeUtilService.getDeadlineCaption(
+        let deadline = this.placeUtilService.getDeadlineCaption(
           place.startDateAt,
         );
+        if(place.isLightning) {
+          deadline = '번개'
+        }
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
         );
