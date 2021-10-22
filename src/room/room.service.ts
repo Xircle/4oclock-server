@@ -35,6 +35,7 @@ export class RoomService {
       });
 
       const RoomOrderByRecentSentMessage: IRoom[] = [];
+      let hasAtLeastOneUnreadMessage = false;
       for (let myRoom of me.rooms) {
         const lastMessage = await this.messageRepository.findOne({
           where: {
@@ -45,9 +46,17 @@ export class RoomService {
           },
         });
         if (!lastMessage) continue;
+
+        const hasUnreadMessage =
+          lastMessage.senderId === authUser.id ? false : !lastMessage.isRead;
+        if (!hasAtLeastOneUnreadMessage && hasUnreadMessage) {
+          hasAtLeastOneUnreadMessage = true;
+        }
+
         const receiverEntity = myRoom.users.find(
           (user) => user.id !== authUser.id,
         );
+
         RoomOrderByRecentSentMessage.push({
           id: myRoom.id,
           lastMessage: {
@@ -67,6 +76,7 @@ export class RoomService {
       return {
         ok: true,
         myRooms: RoomOrderByRecentSentMessage,
+        hasUnreadMessage: hasAtLeastOneUnreadMessage,
       };
     } catch (err) {
       console.log(err);
