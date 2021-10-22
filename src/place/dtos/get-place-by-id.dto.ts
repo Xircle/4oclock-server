@@ -10,7 +10,6 @@ export class PlaceData {
   recommendation: string;
   startDateAt: Date;
   startDateFromNow: string;
-  deadline: string;
   coverImage: string;
   isClosed: boolean;
   views: number;

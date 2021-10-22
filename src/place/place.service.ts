@@ -134,8 +134,8 @@ export class PlaceService {
         let deadline = this.placeUtilService.getDeadlineCaption(
           place.startDateAt,
         );
-        if(place.isLightning) {
-          deadline = '번개'
+        if (place.isLightning) {
+          deadline = '번개';
         }
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
@@ -185,6 +185,7 @@ export class PlaceService {
           'startDateAt',
           'startTime',
           'isClosed',
+          'isLightning',
           'views',
           'reviews',
         ],
@@ -207,9 +208,6 @@ export class PlaceService {
 
       // 이벤트 시작 시간
       const startDateFromNow = this.placeUtilService.getEventDateCaption(
-        place.startDateAt,
-      );
-      const deadline = this.placeUtilService.getDeadlineCaption(
         place.startDateAt,
       );
       // 참여 여부
@@ -250,7 +248,6 @@ export class PlaceService {
         isParticipating,
         participantsCount,
         startDateFromNow,
-        deadline,
         participants,
         participantsInfo,
       };
