@@ -5,16 +5,14 @@ import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
 import { User } from 'src/user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { RoomRepository } from 'src/room/repository/room.repository';
 import { ChatsGateway } from 'src/chats/chats.gateway';
+import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()
 export class MessageService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: UserRepository,
     private readonly roomRepository: RoomRepository,
     private readonly messageRepository: MessageRepository,
     private readonly roomService: RoomService,
