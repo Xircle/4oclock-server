@@ -169,6 +169,7 @@ export class PlaceService {
       const eventBannerImageUrl = await this.eventService.getRandomEventBanner(
         EventName.Halloween,
       );
+      
       return {
         ok: true,
         places: mainFeedPlaces,

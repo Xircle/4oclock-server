@@ -13,11 +13,14 @@ export class EventService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async getRandomEventBanner(eventName: EventName) {
+  async getRandomEventBanner(
+    eventName: EventName,
+  ): Promise<string> | undefined {
     try {
       const eventBanner = await this.eventBannerRepo.findRandomEventBanner(
         eventName,
       );
+      if (!eventBanner?.eventImageUrl) return undefined;
       return eventBanner.eventImageUrl;
     } catch (err) {
       console.log(err);
