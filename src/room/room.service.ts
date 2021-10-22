@@ -9,7 +9,6 @@ import { UserRepository } from 'src/user/repositories/user.repository';
 @Injectable()
 export class RoomService {
   constructor(
-    @InjectRepository(User)
     private userRepository: UserRepository,
     private messageRepository: MessageRepository,
     private roomRepository: RoomRepository,
@@ -26,17 +25,20 @@ export class RoomService {
 
   async getRooms(authUser: User): Promise<GetRoomsOutput> {
     try {
-      const me = await this.userRepository.findOne({
-        where: {
-          id: authUser.id,
-        },
-        loadEagerRelations: false,
-        relations: ['rooms', 'rooms.users'],
-      });
+      const { rooms } = await this.userRepository.getRoomsOrderByRecentMessage(
+        authUser,
+      );
+      // const { rooms } = await this.userRepository.findOne({
+      //   where: {
+      //     id: authUser.id,
+      //   },
+      //   loadEagerRelations: false,
+      //   relations: ['rooms', 'rooms.users', 'rooms.messages'],
+      // });
 
       const RoomOrderByRecentSentMessage: IRoom[] = [];
       let hasAtLeastOneUnreadMessage = false;
-      for (let myRoom of me.rooms) {
+      for (let myRoom of rooms) {
         const lastMessage = await this.messageRepository.findOne({
           where: {
             roomId: myRoom.id,
@@ -68,7 +70,7 @@ export class RoomService {
           receiver: {
             id: receiverEntity['id'],
             profileImageUrl: receiverEntity?.profile?.profileImageUrl,
-            username: receiverEntity.profile.username,
+            username: receiverEntity.profile?.username,
           },
           latestMessageAt: lastMessage.sentAt,
         });

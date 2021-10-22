@@ -18,4 +18,18 @@ export class UserRepository extends Repository<User> {
           .getOne()
       : queryBuilder.getOne();
   }
+
+  public async getRoomsOrderByRecentMessage(authUser: User): Promise<User> {
+    const qb = this.createQueryBuilder('User')
+      .leftJoinAndSelect('User.rooms', 'ParticipatingRooms')
+      .leftJoinAndSelect('ParticipatingRooms.users', 'Participants')
+      .leftJoinAndSelect('ParticipatingRooms.messages', 'RoomMessages')
+      .leftJoinAndSelect(`Participants.profile`, 'Participants.profile')
+      .where('User.id = :userId', { userId: authUser.id })
+      .orderBy({
+        'RoomMessages.sentAt': 'DESC',
+      });
+
+    return qb.getOne();
+  }
 }
