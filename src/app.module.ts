@@ -14,6 +14,7 @@ import { ormconfig } from '../ormconfig';
 import { ReviewModule } from './review/review.module';
 import * as Joi from 'joi';
 import { ChatsModule } from './chats/chats.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ChatsModule } from './chats/chats.module';
     MessageModule,
     ReviewModule,
     ChatsModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
