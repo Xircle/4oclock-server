@@ -31,8 +31,8 @@ export class MessageController {
     @GetUser() authUser: User,
     @Param('roomId') roomId: string,
     @Param('receiverId') receiverId: string,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(40), ParseIntPipe) limit: number = 40,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(40), ParseIntPipe) limit: number,
   ): Promise<GetRoomsMessagesOutput> {
     return this.messageService.getRoomsMessages(
       authUser,

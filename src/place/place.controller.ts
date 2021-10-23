@@ -13,6 +13,7 @@ import { PlaceService } from './place.service';
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Get,
   Param,
   ParseIntPipe,
@@ -51,9 +52,15 @@ export class PlaceController {
   async getPlacesByLocation(
     @GetUser() anyUser: User | undefined,
     @Query('location') location: string,
-    @Query('page', ParseIntPipe) page: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
   ): Promise<GetPlacesByLocationOutput> {
-    return this.placeService.getPlacesByLocation(anyUser, location, page);
+    return this.placeService.getPlacesByLocation(
+      anyUser,
+      location,
+      page,
+      limit,
+    );
   }
 
   @Get(':placeId')

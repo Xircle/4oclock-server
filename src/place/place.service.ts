@@ -55,6 +55,7 @@ export class PlaceService {
     anyUser: User | undefined,
     location: string,
     page: number,
+    limit: number,
   ): Promise<GetPlacesByLocationOutput> {
     let whereOptions: GetPlaceByLocationWhereOptions = {};
     if (location !== '전체') {
@@ -106,8 +107,8 @@ export class PlaceService {
           'views',
         ],
         loadEagerRelations: false,
-        take: 5,
-        skip: 5 * (page - 1),
+        take: limit,
+        skip: limit * (page - 1),
       });
       const openPlaceOrderByStartDateAtDESC = _.takeWhile(
         normalPlaces,
@@ -157,7 +158,7 @@ export class PlaceService {
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
         );
-        
+
         // isClosed Update 로직
         if (place.isLightning) {
           if (deadline === '번개 마감' && !place.isClosed) {
