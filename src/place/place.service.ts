@@ -106,17 +106,25 @@ export class PlaceService {
           'views',
         ],
         loadEagerRelations: false,
-        take: 10,
-        skip: 10 * (page - 1),
+        take: 5,
+        skip: 5 * (page - 1),
       });
-      const closedPlace = _.takeWhile(normalPlaces, (place) => place.isClosed);
-      const openPlace = _.difference(normalPlaces, closedPlace);
-      const openPlaceOrderByStartDateAtASC = openPlace.reverse();
+      const openPlaceOrderByStartDateAtDESC = _.takeWhile(
+        normalPlaces,
+        (place) => !place.isClosed,
+      );
+      const closedPlaceOrderByStartDateAtDESC = _.difference(
+        normalPlaces,
+        openPlaceOrderByStartDateAtDESC,
+      );
+
+      const openPlaceOrderByStartDateAtASC =
+        openPlaceOrderByStartDateAtDESC.reverse();
       const openPlaceWithLightning: Place[] = [
         ...lightningPlace,
         ...openPlaceOrderByStartDateAtASC,
       ];
-      openPlaceWithLightning.push(...closedPlace);
+      openPlaceWithLightning.push(...closedPlaceOrderByStartDateAtDESC);
       normalPlaces = openPlaceWithLightning;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
