@@ -152,18 +152,20 @@ export class PlaceService {
         let deadline = this.placeUtilService.getDeadlineCaption(
           place.startDateAt,
           place.isLightning,
+          place.startTime,
         );
         const startDateFromNow = this.placeUtilService.getEventDateCaption(
           place.startDateAt,
         );
+        
         // isClosed Update 로직
         if (place.isLightning) {
-          if (deadline === '번개 마감') {
+          if (deadline === '번개 마감' && !place.isClosed) {
             place.isClosed = true;
             await this.placeRepository.save(place);
           }
         } else {
-          if (deadline === '마감') {
+          if (deadline === '마감' && !place.isClosed) {
             place.isClosed = true;
             await this.placeRepository.save(place);
           }

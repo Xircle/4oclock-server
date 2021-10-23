@@ -21,12 +21,19 @@ export class PlaceUtilService {
    * @param eventDate
    * @returns
    */
-  getDeadlineCaption(eventDate: Date, isLightning?: boolean): string {
-    const current_date = moment().format('YYYY-MM-DD');
+
+  getDeadlineCaption(
+    eventDate: Date,
+    isLightning?: boolean,
+    startTime?: number,
+    // 추후에는 startTime 지우고, startDateAt을 Date -> DateTime으로 통일시켜야함.
+  ): string {
+    const current_date = moment().format('YYYY-MM-DD-HH');
     const event_date = moment(eventDate);
 
     if (isLightning) {
-      if (event_date.diff(current_date, 'days') <= -1) {
+      // 항상 번개의 시작날짜는 오늘이다.
+      if (startTime - new Date().getHours() <= 1) {
         return '번개 마감';
       } else {
         return '번개 ⚡️';
