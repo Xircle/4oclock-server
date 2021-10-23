@@ -24,11 +24,11 @@ export class PlaceUtilService {
 
   getDeadlineCaption(
     eventDate: Date,
-    isLightning?: boolean,
-    startTime?: number,
+    isLightning: boolean,
+    startTime: number,
     // 추후에는 startTime 지우고, startDateAt을 Date -> DateTime으로 통일시켜야함.
   ): string {
-    const current_date = moment().format('YYYY-MM-DD-HH');
+    const current_date = moment().format('YYYY-MM-DD');
     const event_date = moment(eventDate);
 
     if (isLightning) {
