@@ -63,6 +63,7 @@ export class PlaceService {
       };
     }
     try {
+      // 번개는 '열려있는' '최신순으로' 모임 3개만 가져오기
       let lightningPlace = await this.placeRepository.find({
         where: {
           isLightning: true,
@@ -79,6 +80,9 @@ export class PlaceService {
           'oneLineIntroText',
           'views',
         ],
+        order: {
+          startDateAt: 'ASC',
+        },
         take: 3,
         loadEagerRelations: false,
       });
@@ -88,7 +92,7 @@ export class PlaceService {
           isLightning: false,
         },
         order: {
-          startDateAt: 'ASC',
+          startDateAt: 'DESC',
         },
         select: [
           'id',
@@ -102,15 +106,16 @@ export class PlaceService {
           'views',
         ],
         loadEagerRelations: false,
-        take: 15,
+        take: 10,
         skip: 10 * (page - 1),
       });
-      const closedPlace = _.takeWhile(
-        normalPlaces,
-        (place) => place.isClosed,
-      ).reverse();
+      const closedPlace = _.takeWhile(normalPlaces, (place) => place.isClosed);
       const openPlace = _.difference(normalPlaces, closedPlace);
-      const openPlaceWithLightning: Place[] = [...lightningPlace, ...openPlace];
+      const openPlaceOrderByStartDateAtASC = openPlace.reverse();
+      const openPlaceWithLightning: Place[] = [
+        ...lightningPlace,
+        ...openPlaceOrderByStartDateAtASC,
+      ];
       openPlaceWithLightning.push(...closedPlace);
       normalPlaces = openPlaceWithLightning;
 
@@ -169,7 +174,7 @@ export class PlaceService {
       const eventBannerImageUrl = await this.eventService.getRandomEventBanner(
         EventName.Halloween,
       );
-      
+
       return {
         ok: true,
         places: mainFeedPlaces,

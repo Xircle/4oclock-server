@@ -28,13 +28,6 @@ export class RoomService {
       const { rooms } = await this.userRepository.getRoomsOrderByRecentMessage(
         authUser,
       );
-      // const { rooms } = await this.userRepository.findOne({
-      //   where: {
-      //     id: authUser.id,
-      //   },
-      //   loadEagerRelations: false,
-      //   relations: ['rooms', 'rooms.users', 'rooms.messages'],
-      // });
 
       const RoomOrderByRecentSentMessage: IRoom[] = [];
       let hasAtLeastOneUnreadMessage = false;
