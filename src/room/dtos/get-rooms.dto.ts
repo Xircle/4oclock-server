@@ -17,5 +17,5 @@ export interface IRoom {
 
 export class GetRoomsOutput extends CoreOutput {
   myRooms?: IRoom[];
-  hasUnreadMessage: boolean;
+  hasUnreadMessage?: boolean;
 }

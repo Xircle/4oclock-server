@@ -52,6 +52,8 @@ export class RoomService {
           (user) => user.id !== authUser.id,
         );
 
+        if (!receiverEntity) continue;
+
         RoomOrderByRecentSentMessage.push({
           id: myRoom.id,
           lastMessage: {
