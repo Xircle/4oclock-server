@@ -1,4 +1,4 @@
-import { ReviewPayload } from './dtos/edit-place-review-image.dto';
+import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { Review } from 'src/review/entities/review.entity';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
@@ -313,7 +313,7 @@ export class PlaceService {
       categories,
       detailAddress,
       detailLink,
-      reviewDescriptions,
+      reviewDescription,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
@@ -351,18 +351,14 @@ export class PlaceService {
         });
         await transactionalEntityManager.save(place);
 
-        //  Create reviews
-        let reviews: Review[] = [];
-        for (let [index, reviewImageUrl] of reviewImagesS3Url.entries()) {
-          const review = this.reviewRepository.create({
-            imageUrl: reviewImageUrl,
-            description: reviewDescriptions[index],
-            place,
-            user: authUser,
-          });
-          reviews.push(review);
-        }
-        await transactionalEntityManager.save(reviews);
+        //  Create review (사진이 여러개인 리뷰 하나)
+        const review = this.reviewRepository.create({
+          imageUrls: reviewImagesS3Url,
+          description: reviewDescription,
+          place,
+          user: authUser,
+        });
+        await transactionalEntityManager.save(review);
 
         //   Create place detail
         const placeDetail = this.placeDetailRepository.create({
@@ -469,37 +465,50 @@ export class PlaceService {
 
   async editPlaceReviewImages(
     placeId: string,
-    reviewImages: Express.Multer.File[],
-    reviewPayload: ReviewPayload[],
+    reviewId: string,
+    reviewImageFiles: Express.Multer.File[],
+    editPlaceReviewImagesInput: EditPlaceReviewImagesInput,
   ): Promise<CoreOutput> {
     try {
-      const exist = await this.placeRepository.findOne({
+      const placeExist = await this.placeRepository.findOne({
         where: {
           id: placeId,
         },
       });
-      if (!exist) {
+      const reviewExist = await this.reviewRepository.findOne({
+        where: {
+          id: reviewId,
+        },
+      });
+
+      if (!placeExist || !reviewExist) {
         return {
           ok: false,
-          error: '존재하지 않는 장소입니다.',
+          error: '존재하지 않는 장소 및 리뷰입니다.',
         };
       }
 
+      let updatedReviewImageUrls: string[] = [];
+      for (let reviewImageFile of reviewImageFiles) {
+        const s3_url = await this.s3Service.uploadToS3(
+          reviewImageFile,
+          placeId,
+        );
+        updatedReviewImageUrls.push(s3_url);
+      }
       // Transaction start
+      //  추후에 변경된 imageUrl, description만 UPDATE 하는걸로 리팩토링
       await getManager().transaction(async (transactionalEntityManager) => {
-        for (let [index, reviewImage] of reviewImages.entries()) {
-          const s3_url = await this.s3Service.uploadToS3(reviewImage, placeId);
-          await transactionalEntityManager.update(
-            Review,
-            {
-              id: reviewPayload[index].id,
-            },
-            {
-              imageUrl: s3_url,
-              description: reviewPayload[index].description,
-            },
-          );
-        }
+        await transactionalEntityManager.update(
+          Review,
+          {
+            id: reviewId,
+          },
+          {
+            imageUrls: updatedReviewImageUrls,
+            description: editPlaceReviewImagesInput.description,
+          },
+        );
       });
       return {
         ok: true,

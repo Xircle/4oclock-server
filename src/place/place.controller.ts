@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
-import { ReviewPayload } from './dtos/edit-place-review-image.dto';
+import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { User } from './../user/entities/user.entity';
 import { GetUser } from '../auth/decorators/get-user.decorator';
@@ -101,7 +101,7 @@ export class PlaceController {
   }
 
   @Patch('/:placeId')
-  @ApiOperation({ summary: '장소 정보 수정하기 (이미지 제외)' })
+  @ApiOperation({ summary: '장소 정보 수정하기 (리뷰 제외)' })
   @UseGuards(RolesGuard)
   @Roles(['Admin', 'Owner'])
   async editPlace(
@@ -111,21 +111,23 @@ export class PlaceController {
     return this.placeService.editPlace(placeId, editPlaceInput);
   }
 
-  @Patch('/:placeId/review/images')
-  @ApiOperation({ summary: '장소 리뷰 사진 변경하기' })
+  @Patch('/:placeId/review/:reviewId')
+  @ApiOperation({ summary: '장소 정보 수정하기 (리뷰 정보 변경하기)' })
   @UseGuards(RolesGuard)
   @Roles(['Admin', 'Owner'])
   @UseInterceptors(FilesInterceptor('reviewImages'))
   async editPlaceReviewImages(
-    @Param('placeId') placeId: string,
+    @Param('placeId', ParseUUIDPipe) placeId: string,
+    @Param('reviewId', ParseUUIDPipe) reviewId: string,
     @UploadedFiles()
     reviewImages: Express.Multer.File[],
-    @Body() reviewPayload: ReviewPayload[],
+    @Body() editPlaceReviewImagesInput: EditPlaceReviewImagesInput,
   ): Promise<CoreOutput> {
     return this.placeService.editPlaceReviewImages(
       placeId,
+      reviewId,
       reviewImages,
-      reviewPayload,
+      editPlaceReviewImagesInput,
     );
   }
 

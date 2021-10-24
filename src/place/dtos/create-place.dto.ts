@@ -121,12 +121,12 @@ export class CreatePlaceInput {
   detailLink: string;
 
   @ApiProperty({
-    example: '["정말 꿀잼인듯!!", "와 이런 장소가 있었다니 또 와야겠네요"]',
-    description: '리뷰 설명 (사진과 순서대로)',
+    example: '와 이런 장소가 있었다니 또 와야겠네요',
+    description: '리뷰 설명 (하나만)',
   })
   @IsString()
   @IsNotEmpty()
-  reviewDescriptions: string[];
+  reviewDescription: string;
 }
 export class PlacePhotoInput {
   coverImage: Express.Multer.File[];

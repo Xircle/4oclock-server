@@ -17,8 +17,8 @@ export class Review {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 512 })
-  imageUrl: string;
+  @Column('varchar', { array: true, nullable: true })
+  imageUrls: string[];
 
   @Column({ length: 255 })
   description: string;
@@ -51,3 +51,24 @@ export class Review {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+
+// const places: Place[] = [];
+// places.map(place => {
+//   <ReviewThumbnail
+//     key={place.id}
+//     placeName={place.name}
+//     review={reviews}
+//   />
+// })
+
+// class Reviews {
+//   id: string;
+//   author: User;
+//   reviewImageUrl: string[]
+// }
+// class Place {
+//   id: string;
+//   startDateAt: Date;
+//   name: string;
+//   reviews: Reviews[]
+// }
