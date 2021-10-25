@@ -12,6 +12,6 @@ export class CreateReviewInput {
     example: 'false',
     description: '모임에 대한 대표이미지인지 아닌지',
   })
-  @Transform((param) => param?.obj.isRepresentative)
+  @Transform((param) => JSON.parse(param?.obj.isRepresentative))
   isRepresentative: boolean;
 }
