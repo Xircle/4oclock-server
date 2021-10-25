@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ReviewController } from './review.controller';
+import { S3Service } from 'src/aws/s3/s3.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Review, Place]), AuthModule],
-  providers: [ReviewService],
+  providers: [ReviewService, S3Service],
   controllers: [ReviewController],
 })
 export class ReviewModule {}

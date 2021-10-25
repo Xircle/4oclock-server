@@ -51,24 +51,3 @@ export class Review {
   @UpdateDateColumn()
   updatedAt: Date;
 }
-
-// const places: Place[] = [];
-// places.map(place => {
-//   <ReviewThumbnail
-//     key={place.id}
-//     placeName={place.name}
-//     review={reviews}
-//   />
-// })
-
-// class Reviews {
-//   id: string;
-//   author: User;
-//   reviewImageUrl: string[]
-// }
-// class Place {
-//   id: string;
-//   startDateAt: Date;
-//   name: string;
-//   reviews: Reviews[]
-// }
