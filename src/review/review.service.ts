@@ -90,6 +90,7 @@ export class ReviewService {
         this.reviewRepository.create({
           imageUrls: reviewImageUrls,
           description: createReviewInput.description,
+          isRepresentative: createReviewInput.isRepresentative,
           place_id: placeId,
           user_id: authUser.id,
         }),
