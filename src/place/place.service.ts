@@ -33,19 +33,19 @@ import { CoreOutput } from 'src/common/common.interface';
 import * as _ from 'lodash';
 import { EventService } from 'src/event/event.service';
 import { EventName } from 'src/event/entities/event-banner.entity';
+import { PlaceRepository } from './repository/place.repository';
+import { ReviewRepository } from 'src/review/repository/review.repository';
+import { PlaceDetailRepository } from './repository/place-detail.repository';
 
 @Injectable()
 export class PlaceService {
   constructor(
-    @InjectRepository(Place)
-    private placeRepository: Repository<Place>,
-    @InjectRepository(PlaceDetail)
-    private placeDetailRepository: Repository<PlaceDetail>,
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
-    @InjectRepository(Review)
-    private reviewRepository: Repository<Review>,
+    private placeRepository: PlaceRepository,
+    private placeDetailRepository: PlaceDetailRepository,
     private placeUtilService: PlaceUtilService,
+    private reviewRepository: ReviewRepository,
     private s3Service: S3Service,
     private reservationUtilService: ReservationUtilService,
     private eventService: EventService,
@@ -65,29 +65,19 @@ export class PlaceService {
     }
     try {
       // 번개는 '열려있는' '최신순으로' 모임 3개만 가져오기
-      let lightningPlace = await this.placeRepository.find({
+      const lightningPlace = await this.placeRepository.findManyPlaces({
         where: {
           isLightning: true,
           isClosed: false,
         },
-        select: [
-          'id',
-          'isLightning',
-          'name',
-          'coverImage',
-          'startDateAt',
-          'startTime',
-          'isClosed',
-          'oneLineIntroText',
-          'views',
-        ],
         order: {
           startDateAt: 'ASC',
         },
         take: 3,
         loadEagerRelations: false,
       });
-      let normalPlaces = await this.placeRepository.find({
+
+      const normalPlaces = await this.placeRepository.findManyPlaces({
         where: {
           ...whereOptions,
           isLightning: false,
@@ -95,21 +85,11 @@ export class PlaceService {
         order: {
           startDateAt: 'DESC',
         },
-        select: [
-          'id',
-          'isLightning',
-          'name',
-          'coverImage',
-          'startDateAt',
-          'startTime',
-          'isClosed',
-          'oneLineIntroText',
-          'views',
-        ],
         loadEagerRelations: false,
         take: limit,
         skip: limit * (page - 1),
       });
+
       const openPlaceOrderByStartDateAtDESC = _.takeWhile(
         normalPlaces,
         (place) => !place.isClosed,
@@ -118,19 +98,21 @@ export class PlaceService {
         normalPlaces,
         openPlaceOrderByStartDateAtDESC,
       );
-
       const openPlaceOrderByStartDateAtASC =
         openPlaceOrderByStartDateAtDESC.reverse();
-      const openPlaceWithLightning: Place[] = [
+
+      const openPlaceOrderByStartDateAtASCWithLightning: Place[] = [
         ...lightningPlace,
         ...openPlaceOrderByStartDateAtASC,
       ];
-      openPlaceWithLightning.push(...closedPlaceOrderByStartDateAtDESC);
-      normalPlaces = openPlaceWithLightning;
+      openPlaceOrderByStartDateAtASCWithLightning.push(
+        ...closedPlaceOrderByStartDateAtDESC,
+      );
+      const finalPlaceEntities = openPlaceOrderByStartDateAtASCWithLightning;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
-      for (const place of normalPlaces) {
+      for (const place of finalPlaceEntities) {
         let isParticipating = false;
         if (anyUser) {
           // AuthUser 일 때만, 익명 유저도 볼 수 있기 때문에
@@ -163,12 +145,12 @@ export class PlaceService {
         if (place.isLightning) {
           if (deadline === '번개 마감' && !place.isClosed) {
             place.isClosed = true;
-            await this.placeRepository.save(place);
+            await this.placeRepository.savePlace(place);
           }
         } else {
           if (deadline === '마감' && !place.isClosed) {
             place.isClosed = true;
-            await this.placeRepository.save(place);
+            await this.placeRepository.savePlace(place);
           }
         }
         mainFeedPlaces.push({
@@ -202,34 +184,12 @@ export class PlaceService {
     placeId: string,
   ): Promise<GetPlaceByIdOutput> {
     try {
-      const place = await this.placeRepository.findOne({
-        where: {
-          id: placeId,
-        },
-        relations: ['reviews'],
-        select: [
-          'id',
-          'name',
-          'coverImage',
-          'isLightning',
-          'location',
-          'recommendation',
-          'oneLineIntroText',
-          'startDateAt',
-          'startTime',
-          'isClosed',
-          'views',
-          'reviews',
-        ],
-      });
-      if (!place) {
-        return {
-          ok: false,
-          error: '모임이 존재하지 않습니다.',
-        };
-      }
+      const place = await this.placeRepository.findPlaceByIdAndCheckException(
+        placeId,
+      );
+
       // 조회수 업데이트
-      await this.placeRepository.update(
+      await this.placeRepository.updatePlace(
         {
           id: placeId,
         },
@@ -316,7 +276,6 @@ export class PlaceService {
       reviewDescription,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
-
     try {
       // Upload to S3 (url 생성)
       if (!coverImage || !reviewImages)
@@ -339,39 +298,44 @@ export class PlaceService {
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
-        const place = this.placeRepository.create({
-          isLightning,
-          name,
-          coverImage: coverImageS3Url,
-          location,
-          recommendation,
-          oneLineIntroText,
-          startDateAt,
-          startTime,
-        });
-        await transactionalEntityManager.save(place);
-
+        const place = await this.placeRepository.createAndSavePlace(
+          {
+            isLightning,
+            name,
+            coverImage: coverImageS3Url,
+            location,
+            recommendation,
+            oneLineIntroText,
+            startDateAt,
+            startTime,
+          },
+          transactionalEntityManager,
+        );
         //  Create review (사진이 여러개인 리뷰 하나)
-        const review = this.reviewRepository.create({
-          imageUrls: reviewImagesS3Url,
-          description: reviewDescription,
-          place,
-          user: authUser,
-        });
-        await transactionalEntityManager.save(review);
-
+        await this.reviewRepository.createAndSaveReview(
+          {
+            imageUrls: reviewImagesS3Url,
+            description: reviewDescription,
+            isRepresentative: true,
+            place,
+            user: authUser,
+          },
+          transactionalEntityManager,
+        );
         //   Create place detail
-        const placeDetail = this.placeDetailRepository.create({
-          title,
-          description,
-          maxParticipantsNumber,
-          categories: JSON.stringify(categories),
-          place,
-          participationFee: +participationFee,
-          detailAddress,
-          detailLink,
-        });
-        await transactionalEntityManager.save(placeDetail);
+        await this.placeDetailRepository.createAndSavePlaceDetail(
+          {
+            title,
+            description,
+            maxParticipantsNumber,
+            categories: JSON.stringify(categories),
+            place,
+            participationFee: +participationFee,
+            detailAddress,
+            detailLink,
+          },
+          transactionalEntityManager,
+        );
       });
 
       return {

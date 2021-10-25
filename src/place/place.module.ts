@@ -1,3 +1,4 @@
+import { PlaceDetailRepository } from './repository/place-detail.repository';
 import { EventBannerRepository } from './../event/repositories/event-banner.repository';
 import { AuthModule } from './../auth/auth.module';
 import { Review } from 'src/review/entities/review.entity';
@@ -7,25 +8,25 @@ import { CurrentUserInterceptor } from './interceptors/current-user.interceptor'
 import { User } from './../user/entities/user.entity';
 import { PlaceUtilService } from './../utils/place/place-util.service';
 import { S3Service } from 'src/aws/s3/s3.service';
-import { PlaceDetail } from './entities/place-detail.entity';
-import { Place } from './entities/place.entity';
 import { Module } from '@nestjs/common';
 import { PlaceService } from './place.service';
 import { PlaceController } from './place.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { EventService } from 'src/event/event.service';
+import { PlaceRepository } from './repository/place.repository';
+import { ReviewRepository } from 'src/review/repository/review.repository';
 
 @Module({
   imports: [
     AuthModule,
     TypeOrmModule.forFeature([
+      PlaceRepository,
+      ReviewRepository,
       EventBannerRepository,
-      Place,
-      PlaceDetail,
+      PlaceDetailRepository,
       Reservation,
       User,
-      Review,
     ]),
   ],
   providers: [

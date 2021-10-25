@@ -84,7 +84,7 @@ export class PlaceController {
       },
       {
         name: 'reviewImages',
-        maxCount: 12,
+        maxCount: 10,
       },
     ]),
   )

@@ -7,5 +7,4 @@ export class CreateReviewInput {
     description: '후기 설명',
   })
   description: string;
-  placeId: string;
 }
