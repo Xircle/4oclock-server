@@ -6,7 +6,6 @@ import { ReservationUtilService } from './../utils/reservation/reservation-util.
 import { ConfigService } from '@nestjs/config';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { User } from './../user/entities/user.entity';
-import { PlaceUtilService } from './../utils/place/place-util.service';
 import { S3Service } from 'src/aws/s3/s3.service';
 import { Module } from '@nestjs/common';
 import { PlaceService } from './place.service';
@@ -31,7 +30,6 @@ import { ReviewRepository } from 'src/review/repository/review.repository';
   ],
   providers: [
     PlaceService,
-    PlaceUtilService,
     S3Service,
     ReservationUtilService,
     CurrentUserInterceptor,

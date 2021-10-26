@@ -26,7 +26,6 @@ export class CurrentUserInterceptor implements NestInterceptor {
         token,
         this.configService.get('JWT_SECRET_KEY'),
       );
-      console.log('payload : ', payload);
       const user = await this.userRepository.findOne({
         where: {
           id: payload['id'],

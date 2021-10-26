@@ -2,7 +2,6 @@ import { S3Service } from './../aws/s3/s3.service';
 import { EditProfileInput } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { UserRepository } from './repositories/user.repository';
-import { PlaceUtilService } from './../utils/place/place-util.service';
 import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
 import { Reservation } from './../reservation/entities/reservation.entity';
 import { MeOutput } from './dtos/me.dto';
@@ -20,7 +19,6 @@ export class UserService {
   constructor(
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
-    private placeUtilRepository: PlaceUtilService,
     private users: UserRepository,
     private readonly s3Service: S3Service,
   ) {}
@@ -203,9 +201,7 @@ export class UserService {
 
       const historyPlaces: MyXircle[] = [];
       for (let reservation of reservations) {
-        const startDateFromNow = this.placeUtilRepository.getEventDateCaption(
-          reservation.place.startDateAt,
-        );
+        const startDateFromNow = reservation.place.getStartDateFromNow();
         const participantsCount: number =
           await this.reservationRepository.count({
             where: {
