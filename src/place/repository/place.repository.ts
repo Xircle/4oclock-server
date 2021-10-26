@@ -1,11 +1,9 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import {
   DeepPartial,
   EntityManager,
   EntityRepository,
   FindConditions,
   FindManyOptions,
-  FindOneOptions,
   Repository,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -13,23 +11,23 @@ import { Place } from '../entities/place.entity';
 
 @EntityRepository(Place)
 export class PlaceRepository extends Repository<Place> {
+  public async findOneByPlaceId(placeId: string): Promise<Place> {
+    return await this.findOne({ id: placeId });
+  }
+
   public async findManyPlaces(
     options: FindManyOptions<Place>,
   ): Promise<Place[]> {
-    const places = await this.find({
+    return this.find({
       ...options,
     });
-    return places;
   }
 
   /**
    *
    * @description placeId로 Place entity를 찾고 없을 경우 HttpException을 throw한다.
    */
-  public async findPlaceByIdAndCheckException(
-    placeId: string,
-    options?: FindOneOptions<Place>,
-  ): Promise<Place> {
+  public async findDetailPlaceByPlaceId(placeId: string): Promise<Place> {
     const qb = this.createQueryBuilder('places')
       .where('places.id = :placeId', { placeId })
       .leftJoinAndSelect(
@@ -39,16 +37,7 @@ export class PlaceRepository extends Repository<Place> {
       )
       .leftJoinAndSelect('places.placeDetail', 'placeDetail');
 
-    const place = await qb.getOne();
-    return place;
-    // const place = await this.findOne({
-    //   where: {
-    //     id: placeId,
-    //   },
-    //   ...options,
-    // });
-    // this.checkPlaceException(place);
-    // return place;
+    return qb.getOne();
   }
 
   /**
@@ -79,14 +68,5 @@ export class PlaceRepository extends Repository<Place> {
     partialEntity: QueryDeepPartialEntity<Place>,
   ) {
     return this.update(criteria, partialEntity);
-  }
-
-  public checkPlaceException(entity: Place) {
-    if (!entity) {
-      throw new HttpException(
-        '존재하지 않는 장소입니다.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
   }
 }
