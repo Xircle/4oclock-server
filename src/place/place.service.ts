@@ -431,17 +431,13 @@ export class PlaceService {
   ): Promise<CoreOutput> {
     try {
       const placeExist = await this.placeRepository.findOneByPlaceId(placeId);
-      const reviewExist = await this.reviewRepository.findOne({
-        where: {
-          id: reviewId,
-        },
-      });
+      const reviewExist = await this.reviewRepository.findReviewById(reviewId);
 
       if (!placeExist || !reviewExist) {
-        return {
-          ok: false,
-          error: '존재하지 않는 장소 및 리뷰입니다.',
-        };
+        throw new HttpException(
+          '존재하지 않는 장소 및 리뷰입니다.',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       let updatedReviewImageUrls: string[] = [];
@@ -452,20 +448,13 @@ export class PlaceService {
         );
         updatedReviewImageUrls.push(s3_url);
       }
-      // Transaction start
-      //  추후에 변경된 imageUrl, description만 UPDATE 하는걸로 리팩토링
-      await getManager().transaction(async (transactionalEntityManager) => {
-        await transactionalEntityManager.update(
-          Review,
-          {
-            id: reviewId,
-          },
-          {
-            imageUrls: updatedReviewImageUrls,
-            description: editPlaceReviewImagesInput.description,
-          },
-        );
+
+      // Update review
+      await this.reviewRepository.updateReview(reviewId, {
+        imageUrls: updatedReviewImageUrls,
+        description: editPlaceReviewImagesInput.description,
       });
+
       return {
         ok: true,
       };

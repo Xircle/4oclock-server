@@ -5,6 +5,7 @@ import {
   FindOneOptions,
   Repository,
 } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Review } from '../entities/review.entity';
 
 @EntityRepository(Review)
@@ -13,13 +14,12 @@ export class ReviewRepository extends Repository<Review> {
     id: string,
     options?: FindOneOptions<Review>,
   ): Promise<Review> {
-    const review = await this.findOne({
+    return await this.findOne({
       where: {
         id,
       },
       ...options,
     });
-    return review;
   }
 
   /**
@@ -39,5 +39,12 @@ export class ReviewRepository extends Repository<Review> {
       await this.save(review);
     }
     return review;
+  }
+
+  public async updateReview(
+    reviewId: string,
+    partialEntity: QueryDeepPartialEntity<Review>,
+  ) {
+    return await this.update({ id: reviewId }, partialEntity);
   }
 }
