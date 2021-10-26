@@ -97,6 +97,12 @@ export class PlaceController {
       reviewImages: Express.Multer.File[];
     },
   ): Promise<CreatePlaceOutput> {
+    const { coverImage, reviewImages } = files;
+    if (!coverImage || !reviewImages)
+      return {
+        ok: false,
+        error: '대표 이미지, 매장 이미지를 업로드 해주세요.',
+      };
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }
 
