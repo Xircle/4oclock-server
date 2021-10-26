@@ -3,7 +3,6 @@ import { User } from 'src/user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetRoomsOutput, IRoom } from './dtos/get-rooms.dto';
 import { MessageRepository } from 'src/message/repository/message.repository';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()

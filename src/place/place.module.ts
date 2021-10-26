@@ -37,5 +37,6 @@ import { ReviewRepository } from 'src/review/repository/review.repository';
     EventService,
   ],
   controllers: [PlaceController],
+  exports: [PlaceService],
 })
 export class PlaceModule {}

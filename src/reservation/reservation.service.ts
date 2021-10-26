@@ -1,6 +1,6 @@
+import { PlaceService } from './../place/place.service';
 import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
 import { User } from './../user/entities/user.entity';
-import { Place } from './../place/entities/place.entity';
 import {
   MakeReservationDto,
   MakeReservationOutput,
@@ -17,8 +17,7 @@ export class ReservationService {
   constructor(
     @InjectRepository(Reservation)
     private reservationRepository: Repository<Reservation>,
-    @InjectRepository(Place)
-    private placeRepository: Repository<Place>,
+    private placeService: PlaceService,
   ) {}
 
   async makeReservation(
@@ -28,17 +27,9 @@ export class ReservationService {
     const { isVaccinated, placeId } = makeReservation;
     console.log(makeReservation);
     try {
-      const targetPlace = await this.placeRepository.findOne({
-        where: {
-          id: placeId,
-        },
-      });
-      if (!targetPlace) {
-        return {
-          ok: false,
-          error: '존재하지 않는 써클입니다.',
-        };
-      }
+      const targetPlace =
+        await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
+
       if (targetPlace.isClosed) {
         return {
           ok: false,
@@ -99,17 +90,7 @@ export class ReservationService {
     placeId: string,
   ): Promise<GetReservationParticipantNumberOutput> {
     try {
-      const place = await this.placeRepository.findOne({
-        where: {
-          id: placeId,
-        },
-      });
-      if (!place) {
-        return {
-          ok: false,
-          error: '존재하지 않는 써클입니다.',
-        };
-      }
+      await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
 
       const number_reservations = await this.reservationRepository.count({
         where: {
@@ -134,17 +115,7 @@ export class ReservationService {
     patchReservationInput: PatchReservationInput,
   ): Promise<DeleteReservationOutput> {
     try {
-      const exists = await this.placeRepository.findOne({
-        where: {
-          id: placeId,
-        },
-      });
-      if (!exists) {
-        return {
-          ok: false,
-          error: '존재하지 않는 장소입니다.',
-        };
-      }
+      await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
 
       // 예약 취소하고, 사유 업데이트 하기
       const { cancelReason, detailReason } = patchReservationInput;
