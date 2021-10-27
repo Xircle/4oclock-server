@@ -1,5 +1,4 @@
 import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
-import { Review } from 'src/review/entities/review.entity';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
@@ -54,13 +53,19 @@ export class PlaceService {
     private eventService: EventService,
   ) {}
 
-  async checkPlaceException(entity: Place) {
+  checkPlaceException(entity: Place): void {
     if (!entity) {
       throw new HttpException(
         '존재하지 않는 장소입니다.',
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async GetPlaceByIdAndcheckPlaceException(placeId: string) {
+    const place = await this.placeRepository.findOneByPlaceId(placeId);
+    this.checkPlaceException(place);
+    return place;
   }
 
   async getPlacesByLocation(
@@ -189,10 +194,7 @@ export class PlaceService {
     placeId: string,
   ): Promise<GetPlaceByIdOutput> {
     try {
-      const place = await this.placeRepository.findDetailPlaceByPlaceId(
-        placeId,
-      );
-      if (!place) this.checkPlaceException(place);
+      const place = await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
       // 조회수 업데이트
       await this.placeRepository.updatePlace(
@@ -283,11 +285,6 @@ export class PlaceService {
     const { coverImage, reviewImages } = placePhotoInput;
     try {
       // Upload to S3 (url 생성)
-      if (!coverImage || !reviewImages)
-        return {
-          ok: false,
-          error: '대표 이미지, 매장 이미지를 업로드 해주세요.',
-        };
       const coverImageS3Url = await this.s3Service.uploadToS3(
         coverImage[0],
         authUser.id,
@@ -354,15 +351,7 @@ export class PlaceService {
 
   async deletePlace(placeId: string): Promise<DeletePlaceOutput> {
     try {
-      const exists = await this.placeRepository.findOne({
-        id: placeId,
-      });
-      if (!exists) {
-        return {
-          ok: false,
-          error: '존재하지 않는 공간입니다.',
-        };
-      }
+      await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
       await this.placeRepository.delete({
         id: placeId,
@@ -382,8 +371,7 @@ export class PlaceService {
   ): Promise<CoreOutput> {
     const { editedPlace, editedPlaceDetail } = editPlaceInput;
     try {
-      const place = await this.placeRepository.findOneByPlaceId(placeId);
-      this.checkPlaceException(place);
+      await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
       if (_.isEqual(editPlaceInput, {})) {
         return {
@@ -468,8 +456,7 @@ export class PlaceService {
     placeId: string,
   ): Promise<GetPlaceParticipantListOutput> {
     try {
-      const place = await this.placeRepository.findOneByPlaceId(placeId);
-      this.checkPlaceException(place);
+      await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
       // 참가자들 간략한 프로필 정보
       const participantListProfiles: PlaceDataParticipantsProfile[] =

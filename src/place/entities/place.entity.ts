@@ -75,16 +75,6 @@ export class Place {
   updatedAt: Date;
 
   /**
-   * Returns boolean whether a given event date is closed or not.
-   */
-  issClosed(eventDate: Date): boolean {
-    const current_date = moment();
-    const event_date = moment(eventDate);
-    if (event_date.diff(current_date, 'hours') < -1) return true;
-    else return false;
-  }
-
-  /**
    * Returns deadline caption, according to event's date
    */
   getDeadlineCaption(): string {
