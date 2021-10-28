@@ -82,17 +82,20 @@ export class PlaceService {
     }
     try {
       // 번개는 '열려있는' '최신순으로' 모임 3개만 가져오기
-      const lightningPlace = await this.placeRepository.findManyPlaces({
-        where: {
-          isLightning: true,
-          isClosed: false,
-        },
-        order: {
-          startDateAt: 'ASC',
-        },
-        take: 3,
-        loadEagerRelations: false,
-      });
+      let lightningPlace: Place[] = [];
+      if (page === 1) {
+        lightningPlace = await this.placeRepository.findManyPlaces({
+          where: {
+            isLightning: true,
+            isClosed: false,
+          },
+          order: {
+            startDateAt: 'ASC',
+          },
+          take: 3,
+          loadEagerRelations: false,
+        });
+      }
 
       const normalPlaces = await this.placeRepository.findManyPlaces({
         where: {

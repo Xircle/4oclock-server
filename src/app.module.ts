@@ -1,7 +1,5 @@
 import { S3Module } from './aws/s3/s3.module';
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
@@ -59,7 +57,5 @@ import * as Joi from 'joi';
     AdminModule,
     EventModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
