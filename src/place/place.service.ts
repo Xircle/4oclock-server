@@ -197,7 +197,15 @@ export class PlaceService {
     placeId: string,
   ): Promise<GetPlaceByIdOutput> {
     try {
-      const place = await this.GetPlaceByIdAndcheckPlaceException(placeId);
+      const place = await this.placeRepository.findDetailPlaceByPlaceId(
+        placeId,
+      );
+      if (!place) {
+        return {
+          ok: false,
+          error: '존재하지 않는 장소입니다.',
+        };
+      }
 
       // 조회수 업데이트
       await this.placeRepository.updatePlace(
