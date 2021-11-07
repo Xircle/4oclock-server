@@ -6,6 +6,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { RolesGuard } from './../auth/guard/roles.guard';
 import {
   FileFieldsInterceptor,
+  FileInterceptor,
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
@@ -21,6 +22,7 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -110,11 +112,13 @@ export class PlaceController {
   @ApiOperation({ summary: '장소 정보 수정하기 (리뷰 제외)' })
   @UseGuards(RolesGuard)
   @Roles(['Admin', 'Owner'])
+  @UseInterceptors(FileInterceptor('coverImage'))
   async editPlace(
     @Param('placeId') placeId: string,
     @Body() editPlaceInput: EditPlaceInput,
+    @UploadedFile() coverImage: Express.Multer.File,
   ): Promise<CoreOutput> {
-    return this.placeService.editPlace(placeId, editPlaceInput);
+    return this.placeService.editPlace(placeId, editPlaceInput, coverImage);
   }
 
   @Patch('/:placeId/review/:reviewId')

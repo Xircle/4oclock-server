@@ -7,7 +7,7 @@ export class EditPlaceInput {
     example: '{ name: 매운탕집!, isClosed: true}',
     description: 'Place 테이블에서 변경할 사항',
   })
-  editedPlace: Partial<Place>;
+  editedPlace: Partial<Omit<Place, 'coverImage'>>;
 
   @ApiProperty({
     example: '{ title: 잊을수가 없다!, categories: [맥주, 호프]}',

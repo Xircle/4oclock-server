@@ -17,7 +17,6 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
-
 @ApiTags('Message')
 @ApiBearerAuth('jwt')
 @UseGuards(JwtAuthGuard)

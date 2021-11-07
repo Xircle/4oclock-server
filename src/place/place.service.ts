@@ -379,10 +379,23 @@ export class PlaceService {
   async editPlace(
     placeId: string,
     editPlaceInput: EditPlaceInput,
+    coverImage: Express.Multer.File,
   ): Promise<CoreOutput> {
     const { editedPlace, editedPlaceDetail } = editPlaceInput;
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
+
+      if (coverImage) {
+        const s3_url = await this.s3Service.uploadToS3(coverImage, placeId);
+        await this.placeRepository.updatePlace(
+          {
+            id: placeId,
+          },
+          {
+            coverImage: s3_url,
+          },
+        );
+      }
 
       if (_.isEqual(editPlaceInput, {})) {
         return {
