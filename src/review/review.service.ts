@@ -25,6 +25,9 @@ export class ReviewService {
         order: {
           createdAt: 'DESC',
         },
+        where: {
+          isRepresentative: false,
+        },
         take: limit,
         skip: limit * (page - 1),
       });
