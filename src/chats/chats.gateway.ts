@@ -1,5 +1,4 @@
-import { config } from 'dotenv';
-config();
+import 'src/env';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsEnteringData } from './dtos/is-entering.dto';
 import { RoomGuard } from './guards/room.guard';

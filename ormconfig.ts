@@ -1,15 +1,7 @@
-import * as dotenv from 'dotenv';
+import 'src/env';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-dotenv.config({
-  path:
-    process.env.NODE_ENV === 'dev'
-      ? '.env.dev'
-      : process.env.NODE_ENV === 'test'
-      ? '.env.test'
-      : '.env.prod',
-});
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
   username: process.env.DB_USERNAME,
