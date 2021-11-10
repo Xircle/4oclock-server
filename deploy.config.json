@@ -1,0 +1,21 @@
+{
+  "apps": [
+    {
+      "name": "xircle-server",
+      "script": "./dist/src/main.js",
+      "instances": 1,
+      "exec_mode": "cluster",
+      "wait_ready": true,
+      "env": {
+        "NODE_PATH": "src",
+        "NODE_ENV": "dev"
+      },
+      "env_production": {
+        "NODE_ENV": "prod"
+      },
+      "env_test": {
+        "NODE_ENV": "test"
+      }
+    }
+  ]
+}
