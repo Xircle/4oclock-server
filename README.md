@@ -33,7 +33,7 @@ Following items are core backend technologies used in this project:
 ## Challenge
 
 - [x] CloudFront on S3 image origin
-- [x] Thumbnail image resizing with Lambda function
+- [x] Thumbnail image resizing with Lambda@Edge 
 - [ ] Docker compose for production
 - [ ] AWS ECS fargate for container-based infra
 - [ ] Microservice NestJs server
