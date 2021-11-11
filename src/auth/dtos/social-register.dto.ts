@@ -64,7 +64,7 @@ export class SocialRegisterInput {
     description: '대학 졸업 유무',
   })
   @IsNotEmpty()
-  @Transform((param) => JSON.parse(param.obj?.drinkingStyle))
+  @Transform((param) => JSON.parse(param.obj?.isGraduate))
   isGraduate: boolean;
 
   @ApiProperty({

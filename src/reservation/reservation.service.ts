@@ -33,7 +33,7 @@ export class ReservationService {
       if (targetPlace.isClosed) {
         return {
           ok: false,
-          error: '이미 마감된 써클입니다.',
+          error: '이미 마감된 모임입니다.',
         };
       }
       const exists = await this.reservationRepository.findOne({
