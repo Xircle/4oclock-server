@@ -13,6 +13,7 @@ import { ReviewModule } from './review/review.module';
 import { ChatsModule } from './chats/chats.module';
 import { AdminModule } from './admin/admin.module';
 import { EventModule } from './event/event.module';
+import { HealthModule } from './health/health.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -56,6 +57,7 @@ import * as Joi from 'joi';
     ChatsModule,
     AdminModule,
     EventModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
