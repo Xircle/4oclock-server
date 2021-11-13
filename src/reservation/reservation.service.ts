@@ -5,18 +5,15 @@ import {
   MakeReservationDto,
   MakeReservationOutput,
 } from './dtos/make-reservation.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Reservation } from './entities/reservation.entity';
-import { Repository } from 'typeorm';
 import { DeleteReservationOutput } from 'src/user/dtos/delete-reservation.dto';
 import { PatchReservationInput } from './dtos/patch-reservation.dto';
+import { ReservationRepository } from './repository/reservation.repository';
 
 @Injectable()
 export class ReservationService {
   constructor(
-    @InjectRepository(Reservation)
-    private reservationRepository: Repository<Reservation>,
+    private reservationRepository: ReservationRepository,
     private placeService: PlaceService,
   ) {}
 
@@ -25,7 +22,6 @@ export class ReservationService {
     makeReservation: MakeReservationDto,
   ): Promise<MakeReservationOutput> {
     const { isVaccinated, placeId } = makeReservation;
-    console.log(makeReservation);
     try {
       const targetPlace =
         await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);

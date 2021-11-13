@@ -5,9 +5,10 @@ import { ReservationService } from './reservation.service';
 import { ReservationController } from './reservation.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaceModule } from 'src/place/place.module';
+import { ReservationRepository } from './repository/reservation.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reservation]), AuthModule, PlaceModule],
+  imports: [TypeOrmModule.forFeature([ReservationRepository]), AuthModule, PlaceModule],
   providers: [ReservationService],
   controllers: [ReservationController],
   exports: [ReservationService],

@@ -1,6 +1,5 @@
 import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
-import { ReservationUtilService } from './../utils/reservation/reservation-util.service';
 import {
   GetPlaceByLocationWhereOptions,
   MainFeedPlace,
@@ -23,33 +22,30 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { getManager, Repository } from 'typeorm';
+import { getManager } from 'typeorm';
 import {
   GetPlaceByIdOutput,
   PlaceData,
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
-import { Reservation } from 'src/reservation/entities/reservation.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CoreOutput } from 'src/common/common.interface';
-import * as _ from 'lodash';
 import { EventService } from 'src/event/event.service';
 import { EventName } from 'src/event/entities/event-banner.entity';
 import { PlaceRepository } from './repository/place.repository';
 import { ReviewRepository } from 'src/review/repository/review.repository';
 import { PlaceDetailRepository } from './repository/place-detail.repository';
+import { ReservationRepository } from 'src/reservation/repository/reservation.repository';
+import * as _ from 'lodash';
 
 @Injectable()
 export class PlaceService {
   constructor(
-    @InjectRepository(Reservation)
-    private reservationRepository: Repository<Reservation>,
+    private reservationRepository: ReservationRepository,
     private placeRepository: PlaceRepository,
     private placeDetailRepository: PlaceDetailRepository,
     private reviewRepository: ReviewRepository,
     private s3Service: S3Service,
-    private reservationUtilService: ReservationUtilService,
     private eventService: EventService,
   ) {}
 
@@ -136,7 +132,7 @@ export class PlaceService {
         let isParticipating = false;
         if (anyUser) {
           // AuthUser 일 때만, 익명 유저도 볼 수 있기 때문에
-          isParticipating = await this.reservationUtilService.isParticipating(
+          isParticipating = await this.reservationRepository.isParticipating(
             anyUser.id,
             place.id,
           );
@@ -150,7 +146,7 @@ export class PlaceService {
           });
 
         const participants: MainFeedPlaceParticipantsProfile[] =
-          await this.reservationUtilService.getParticipantsProfile(place.id);
+          await this.reservationRepository.getParticipantsProfile(place.id);
 
         const deadline = place.getDeadlineCaption();
         // isClosed Update 로직
@@ -220,7 +216,7 @@ export class PlaceService {
       // 참여 여부
       let isParticipating = false;
       if (anyUser) {
-        isParticipating = await this.reservationUtilService.isParticipating(
+        isParticipating = await this.reservationRepository.isParticipating(
           anyUser.id,
           placeId,
         );
@@ -234,7 +230,7 @@ export class PlaceService {
 
       // 참여자 성비, 평균 나이 추가
       const participants: PlaceDataParticipantsProfile[] =
-        await this.reservationUtilService.getParticipantsProfile(placeId);
+        await this.reservationRepository.getParticipantsProfile(placeId);
 
       let total_count = participants.length;
       let male_count = 0;
@@ -484,7 +480,7 @@ export class PlaceService {
 
       // 참가자들 간략한 프로필 정보
       const participantListProfiles: PlaceDataParticipantsProfile[] =
-        await this.reservationUtilService.getParticipantsProfile(placeId);
+        await this.reservationRepository.getParticipantsProfile(placeId);
 
       // 참여자 성비, 평균 나이 추가
       let total_count = participantListProfiles.length;
