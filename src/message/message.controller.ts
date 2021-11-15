@@ -1,9 +1,3 @@
-import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
-import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
-import { SendMessageInput } from './dtos/send-message.dto';
-import { CoreOutput } from './../common/common.interface';
-import { User } from 'src/user/entities/user.entity';
-import { MessageService } from './message.service';
 import {
   Controller,
   Get,
@@ -16,7 +10,14 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from '@user/entities/user.entity';
+import { GetUser } from '@auth/decorators/get-user.decorator';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
+import { CoreOutput } from '@common/common.interface';
+import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
+import { SendMessageInput } from './dtos/send-message.dto';
+import { MessageService } from './message.service';
+
 @ApiTags('Message')
 @ApiBearerAuth('jwt')
 @UseGuards(JwtAuthGuard)

@@ -1,5 +1,5 @@
-import { Gender } from 'src/user/entities/user-profile.entity';
-import { CoreOutput } from 'src/common/common.interface';
+import { CoreOutput } from '@common/common.interface';
+import { Gender } from '@user/entities/user-profile.entity';
 
 export class MainFeedPlaceParticipantsProfile {
   userId: string;

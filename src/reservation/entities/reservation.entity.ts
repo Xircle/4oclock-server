@@ -1,5 +1,3 @@
-import { Place } from './../../place/entities/place.entity';
-import { User } from './../../user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Place } from '@place/entities/place.entity';
+import { User } from '@user/entities/user.entity';
 
 @Index(['place_id', 'user_id'], { unique: true })
 @Entity({ name: 'reservations' })

@@ -1,10 +1,10 @@
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateEventBannerInput } from './dtos/create-event-banner.dto';
-import { S3Service } from 'src/aws/s3/s3.service';
-import { User } from 'src/user/entities/user.entity';
-import { CoreOutput } from 'src/common/common.interface';
 import { EventBannerRepository } from './repositories/event-banner.repository';
 import { EventName } from './entities/event-banner.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { S3Service } from '@aws/s3/s3.service';
+import { User } from '@user/entities/user.entity';
+import { CoreOutput } from '@common/common.interface';
 
 @Injectable()
 export class EventService {

@@ -1,10 +1,3 @@
-import { CreateEventBannerInput } from './dtos/create-event-banner.dto';
-import { User } from 'src/user/entities/user.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { CoreOutput } from 'src/common/common.interface';
-import { RolesGuard } from './../auth/guard/roles.guard';
-import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
-import { EventService } from './event.service';
 import {
   Body,
   Controller,
@@ -13,9 +6,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Roles } from 'src/auth/roles.decorator';
 import { ApiOperation } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateEventBannerInput } from './dtos/create-event-banner.dto';
+import { EventService } from './event.service';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
+import { RolesGuard } from '@auth/guard/roles.guard';
+import { Roles } from '@auth/roles.decorator';
+import { GetUser } from '@auth/decorators/get-user.decorator';
+import { User } from '@user/entities/user.entity';
+import { CoreOutput } from '@common/common.interface';
 
 @Controller('event')
 export class EventController {

@@ -1,4 +1,4 @@
-import { CoreOutput } from 'src/common/common.interface';
+import { CoreOutput } from '@common/common.interface';
 
 export class MyXircle {
   id: string;

@@ -1,5 +1,4 @@
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
-import { User } from 'src/user/entities/user.entity';
 import { CreateReviewInput } from './dtos/create-review.dto';
 import { ReviewService } from './review.service';
 import {
@@ -23,9 +22,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { GetReviewById } from './dtos/get-review-by-id.dto';
+import { GetUser } from '@auth/decorators/get-user.decorator';
+import { User } from '@user/entities/user.entity';
 
 @ApiTags('Review')
 @ApiBearerAuth('jwt')

@@ -1,4 +1,5 @@
-import { Message } from './../../message/entities/message.entity';
+import { Message } from '@message/entities/message.entity';
+import { User } from '@user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -8,7 +9,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
 
 @Entity({ name: 'rooms' })
 export class Room {

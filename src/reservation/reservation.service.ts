@@ -1,12 +1,12 @@
-import { PlaceService } from './../place/place.service';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PlaceService } from '@place/place.service';
+import { DeleteReservationOutput } from '@user/dtos/delete-reservation.dto';
+import { User } from '@user/entities/user.entity';
 import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
-import { User } from './../user/entities/user.entity';
 import {
   MakeReservationDto,
   MakeReservationOutput,
 } from './dtos/make-reservation.dto';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DeleteReservationOutput } from 'src/user/dtos/delete-reservation.dto';
 import { PatchReservationInput } from './dtos/patch-reservation.dto';
 import { ReservationRepository } from './repository/reservation.repository';
 

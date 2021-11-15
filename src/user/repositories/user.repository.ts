@@ -1,7 +1,5 @@
-import { InternalServerErrorException } from '@nestjs/common';
-import { User } from './../entities/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { IRoom } from 'src/room/dtos/get-rooms.dto';
+import { User } from './../entities/user.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {

@@ -1,4 +1,4 @@
-import { CoreOutput, MetaTag } from './../../common/common.interface';
+import { CoreOutput, MetaTag } from '@common/common.interface';
 
 export class IMessage {
   content: string;

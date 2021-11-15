@@ -1,11 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class S3Service {
   private s3: AWS.S3;
-  private readonly FILE_LIMIT_SIZE = 300 * 1000 * 1000; // 300MB
 
   constructor(private readonly configService: ConfigService) {}
 

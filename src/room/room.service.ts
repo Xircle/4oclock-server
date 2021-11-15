@@ -1,9 +1,9 @@
 import { RoomRepository } from './repository/room.repository';
-import { User } from 'src/user/entities/user.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetRoomsOutput, IRoom } from './dtos/get-rooms.dto';
-import { MessageRepository } from 'src/message/repository/message.repository';
-import { UserRepository } from 'src/user/repositories/user.repository';
+import { UserRepository } from '@user/repositories/user.repository';
+import { MessageRepository } from '@message/repository/message.repository';
+import { User } from '@user/entities/user.entity';
 
 @Injectable()
 export class RoomService {

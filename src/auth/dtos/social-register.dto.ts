@@ -1,5 +1,3 @@
-import { CoreOutput } from 'src/common/common.interface';
-import { Gender } from 'src/user/entities/user-profile.entity';
 import {
   IsEmail,
   IsEnum,
@@ -10,6 +8,8 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Gender } from '@user/entities/user-profile.entity';
+import { CoreOutput } from '@common/common.interface';
 
 export class SocialRegisterInput {
   @ApiProperty({

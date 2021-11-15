@@ -1,13 +1,12 @@
-import { Message } from './entities/message.entity';
-import { RoomService } from './../room/room.service';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { UserRepository } from '@user/repositories/user.repository';
+import { RoomRepository } from '@room/repository/room.repository';
+import { ChatsGateway } from '@chats/chats.gateway';
+import { RoomService } from '@room/room.service';
+import { User } from '@user/entities/user.entity';
 import { MessageRepository } from './repository/message.repository';
 import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
-import { User } from 'src/user/entities/user.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { RoomRepository } from 'src/room/repository/room.repository';
-import { ChatsGateway } from 'src/chats/chats.gateway';
-import { UserRepository } from 'src/user/repositories/user.repository';
 
 @Injectable()
 export class MessageService {

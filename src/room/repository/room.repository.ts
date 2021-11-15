@@ -1,6 +1,6 @@
-import { User } from 'src/user/entities/user.entity';
-import { Room } from './../entities/room.entity';
 import { EntityRepository, Repository } from 'typeorm';
+import { User } from '@user/entities/user.entity';
+import { Room } from '@room/entities/room.entity';
 
 @EntityRepository(Room)
 export class RoomRepository extends Repository<Room> {

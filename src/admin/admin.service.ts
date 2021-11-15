@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-import { CoreOutput } from 'src/common/common.interface';
-import { VerifyAdminInput } from './dtos/verify-admin.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { VerifyAdminInput } from './dtos/verify-admin.dto';
+import { CoreOutput } from '@common/common.interface';
 
 @Injectable()
 export class AdminService {

@@ -1,6 +1,3 @@
-import { Review } from 'src/review/entities/review.entity';
-import { Reservation } from './../../reservation/entities/reservation.entity';
-import { PlaceDetail } from './place-detail.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,6 +10,9 @@ import {
 } from 'typeorm';
 import * as moment from 'moment';
 import 'moment/locale/ko';
+import { PlaceDetail } from './place-detail.entity';
+import { Review } from '@review/entities/review.entity';
+import { Reservation } from '@reservation/entities/reservation.entity';
 
 @Entity({ name: 'places' })
 export class Place {

@@ -1,3 +1,4 @@
+import { CoreOutput } from '@common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
@@ -7,7 +8,6 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { CoreOutput } from 'src/common/common.interface';
 
 export class CreatePlaceInput {
   @ApiProperty({

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsPhoneNumber, IsString, Length } from 'class-validator';
-import { CoreOutput } from './../../common/common.interface';
+import { IsString, Length } from 'class-validator';
+import { CoreOutput } from '@common/common.interface';
 
 export class CreateUserInput {
   @ApiProperty({

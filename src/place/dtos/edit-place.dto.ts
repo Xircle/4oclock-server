@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Place } from 'src/place/entities/place.entity';
+import { Place } from '@place/entities/place.entity';
 import { PlaceDetail } from './../entities/place-detail.entity';
 
 export class EditPlaceInput {

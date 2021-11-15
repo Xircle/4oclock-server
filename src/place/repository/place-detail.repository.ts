@@ -1,10 +1,10 @@
-import { PlaceDetail } from './../entities/place-detail.entity';
 import {
   DeepPartial,
   EntityManager,
   EntityRepository,
   Repository,
 } from 'typeorm';
+import { PlaceDetail } from './../entities/place-detail.entity';
 
 @EntityRepository(PlaceDetail)
 export class PlaceDetailRepository extends Repository<PlaceDetail> {

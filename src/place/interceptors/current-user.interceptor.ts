@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { User } from './../../user/entities/user.entity';
 import {
   NestInterceptor,
   ExecutionContext,
@@ -9,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import jwt from 'jsonwebtoken';
+import { User } from '@user/entities/user.entity';
 
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {

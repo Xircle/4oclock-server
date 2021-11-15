@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { CoreOutput } from 'src/common/common.interface';
+import { CoreOutput } from '@common/common.interface';
 
 export class MakeReservationDto {
   @ApiProperty({

@@ -1,6 +1,6 @@
-import { Reservation } from './../entities/reservation.entity';
+import { MainFeedPlaceParticipantsProfile } from '@place/dtos/get-place-by-location.dto';
 import { EntityRepository, Repository } from 'typeorm';
-import { MainFeedPlaceParticipantsProfile } from 'src/place/dtos/get-place-by-location.dto';
+import { Reservation } from './../entities/reservation.entity';
 
 @EntityRepository(Reservation)
 export class ReservationRepository extends Repository<Reservation> {

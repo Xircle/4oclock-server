@@ -1,20 +1,20 @@
-import { S3Module } from './aws/s3/s3.module';
+import * as Joi from 'joi';
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PlaceModule } from './place/place.module';
-import { ReservationModule } from './reservation/reservation.module';
-import { RoomModule } from './room/room.module';
-import { MessageModule } from './message/message.module';
 import { ormconfig } from '../ormconfig';
-import { ReviewModule } from './review/review.module';
-import { ChatsModule } from './chats/chats.module';
-import { AdminModule } from './admin/admin.module';
-import { EventModule } from './event/event.module';
-import { HealthModule } from './health/health.module';
-import * as Joi from 'joi';
+import { UserModule } from '@user/user.module';
+import { AuthModule } from '@auth/auth.module';
+import { S3Module } from '@aws/s3/s3.module';
+import { PlaceModule } from '@place/place.module';
+import { ReservationModule } from '@reservation/reservation.module';
+import { RoomModule } from '@room/room.module';
+import { MessageModule } from '@message/message.module';
+import { ReviewModule } from '@review/review.module';
+import { ChatsModule } from '@chats/chats.module';
+import { AdminModule } from '@admin/admin.module';
+import { EventModule } from '@event/event.module';
+import { HealthModule } from '@health/health.module';
 
 @Module({
   imports: [

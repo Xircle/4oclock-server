@@ -1,4 +1,3 @@
-import { UserService } from './../../user/user.service';
 import {
   Injectable,
   ExecutionContext,
@@ -7,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from '@user/user.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

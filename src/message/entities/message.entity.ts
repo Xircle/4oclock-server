@@ -1,5 +1,3 @@
-import { User } from 'src/user/entities/user.entity';
-import { Room } from './../../room/entities/room.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Room } from '@room/entities/room.entity';
+import { User } from '@user/entities/user.entity';
 
 @Entity({ name: 'messages' })
 export class Message {

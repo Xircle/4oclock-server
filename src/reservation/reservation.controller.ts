@@ -1,11 +1,10 @@
-import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
-import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
-import { User } from './../user/entities/user.entity';
 import {
-  MakeReservationDto,
-  MakeReservationOutput,
-} from './dtos/make-reservation.dto';
-import { ReservationService } from './reservation.service';
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiUnauthorizedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -15,15 +14,16 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { GetReservationParticipantNumberOutput } from './dtos/get-reservation-number.dto';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiUnauthorizedResponse,
-  ApiOkResponse,
-} from '@nestjs/swagger';
+  MakeReservationDto,
+  MakeReservationOutput,
+} from './dtos/make-reservation.dto';
+import { ReservationService } from './reservation.service';
 import { PatchReservationInput } from './dtos/patch-reservation.dto';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
+import { GetUser } from '@auth/decorators/get-user.decorator';
+import { User } from '@user/entities/user.entity';
 
 @ApiTags('Reservation')
 @ApiBearerAuth('jwt')

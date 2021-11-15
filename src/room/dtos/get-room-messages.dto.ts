@@ -1,5 +1,5 @@
-import { Message } from './../../message/entities/message.entity';
-import { CoreOutput } from 'src/common/common.interface';
+import { CoreOutput } from '@common/common.interface';
+import { Message } from '@message/entities/message.entity';
 
 export class GetRoomMessagesOutput extends CoreOutput {
   messages?: Message[];

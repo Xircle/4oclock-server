@@ -1,7 +1,7 @@
-import { CoreOutput } from './../../common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDate, IsBoolean } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsString, IsDate } from 'class-validator';
+import { CoreOutput } from '@common/common.interface';
 
 export class SendMessageInput {
   @ApiProperty({

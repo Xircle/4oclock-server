@@ -1,8 +1,3 @@
-import { Review } from 'src/review/entities/review.entity';
-import { Message } from './../../message/entities/message.entity';
-import { Room } from './../../room/entities/room.entity';
-import { Reservation } from './../../reservation/entities/reservation.entity';
-import { UserProfile } from './user-profile.entity';
 import {
   Column,
   CreateDateColumn,
@@ -13,12 +8,16 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsEnum, IsString, Length } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { IsEnum, IsString, Length } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Room } from '@room/entities/room.entity';
+import { Reservation } from '@reservation/entities/reservation.entity';
+import { Message } from '@message/entities/message.entity';
+import { Review } from '@review/entities/review.entity';
+import { UserProfile } from './user-profile.entity';
 
 export enum UserRole {
   Client = 'Client',

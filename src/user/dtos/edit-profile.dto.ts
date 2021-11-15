@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { SocialRegisterInput } from 'src/auth/dtos/social-register.dto';
+import { SocialRegisterInput } from '@auth/dtos/social-register.dto';
 
 export class EditProfileInput extends PartialType(SocialRegisterInput) {
   @ApiProperty({

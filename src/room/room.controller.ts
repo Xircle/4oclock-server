@@ -1,6 +1,4 @@
-import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { RoomService } from './room.service';
-import { User } from 'src/user/entities/user.entity';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -9,8 +7,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { GetRoomsOutput } from './dtos/get-rooms.dto';
+import { GetUser } from '@auth/decorators/get-user.decorator';
+import { User } from '@user/entities/user.entity';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 
 @ApiTags('Room')
 @ApiBearerAuth('jwt')

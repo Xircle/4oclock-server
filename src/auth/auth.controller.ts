@@ -1,16 +1,3 @@
-import { ParsePipe } from './../common/pipe/parse.pipe';
-import {
-  SocialRedirectOutput,
-  SocialRegisterInput,
-  SocialRegisterOutput,
-} from './dtos/social-register.dto';
-import {
-  CreateUserInput,
-  LoginUserInput,
-  CreateUserOutput,
-  LoginUserOutput,
-} from './dtos/create-user.dto';
-import { AuthService, SocialAuthService } from './auth.service';
 import {
   Body,
   Controller,
@@ -29,6 +16,19 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ParsePipe } from './../common/pipe/parse.pipe';
+import {
+  SocialRedirectOutput,
+  SocialRegisterInput,
+  SocialRegisterOutput,
+} from './dtos/social-register.dto';
+import {
+  CreateUserInput,
+  LoginUserInput,
+  CreateUserOutput,
+  LoginUserOutput,
+} from './dtos/create-user.dto';
+import { AuthService, SocialAuthService } from './auth.service';
 
 @ApiTags('Auth')
 @ApiOkResponse()

@@ -1,6 +1,6 @@
-import { CoreOutput } from 'src/common/common.interface';
+import { CoreOutput } from '@common/common.interface';
 
-export class UserProfile {
+export class RandomUserProfile {
   id: string;
   profileImageUrl: string;
   location: string;
@@ -18,5 +18,5 @@ export class UserProfile {
 }
 
 export class SeeRandomProfileOutput extends CoreOutput {
-  randomProfile?: UserProfile;
+  randomProfile?: RandomUserProfile;
 }

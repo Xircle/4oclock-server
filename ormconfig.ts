@@ -1,6 +1,6 @@
-import 'src/env';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import 'env';
 
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',

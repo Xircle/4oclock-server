@@ -1,9 +1,3 @@
-import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
-import { EditProfileInput } from './dtos/edit-profile.dto';
-import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
-import { GetMyPlaceOutput } from './dtos/get-place-history.dto';
-import { UserService } from './user.service';
-import { User } from './entities/user.entity';
 import {
   Body,
   CacheInterceptor,
@@ -18,10 +12,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
-import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
-import { CoreOutput } from 'src/common/common.interface';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -30,6 +20,16 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { EditProfileInput } from './dtos/edit-profile.dto';
+import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
+import { GetMyPlaceOutput } from './dtos/get-place-history.dto';
+import { UserService } from './user.service';
+import { User } from './entities/user.entity';
+import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
+import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
+import { GetUser } from '@auth/decorators/get-user.decorator';
+import { CoreOutput } from '@common/common.interface';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')

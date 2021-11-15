@@ -1,19 +1,18 @@
-import { PlaceDetailRepository } from './repository/place-detail.repository';
-import { EventBannerRepository } from './../event/repositories/event-banner.repository';
-import { AuthModule } from './../auth/auth.module';
 import { ConfigService } from '@nestjs/config';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
-import { User } from './../user/entities/user.entity';
-import { S3Service } from 'src/aws/s3/s3.service';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ReviewRepository } from '@review/repository/review.repository';
+import { ReservationRepository } from '@reservation/repository/reservation.repository';
+import { S3Service } from '@aws/s3/s3.service';
+import { EventService } from '@event/event.service';
+import { AuthModule } from '@auth/auth.module';
+import { EventBannerRepository } from '@event/repositories/event-banner.repository';
+import { User } from '@user/entities/user.entity';
+import { PlaceDetailRepository } from './repository/place-detail.repository';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { PlaceRepository } from './repository/place.repository';
 import { PlaceService } from './place.service';
 import { PlaceController } from './place.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventService } from 'src/event/event.service';
-import { PlaceRepository } from './repository/place.repository';
-import { ReviewRepository } from 'src/review/repository/review.repository';
-import { ReservationRepository } from 'src/reservation/repository/reservation.repository';
-
 @Module({
   imports: [
     AuthModule,

@@ -1,4 +1,12 @@
-import { UserProfile } from '../user/entities/user-profile.entity';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { getManager, Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { User, UserRole } from '@user/entities/user.entity';
+import { SocialAccount } from '@user/entities/social-account.entity';
+import { S3Service } from '@aws/s3/s3.service';
+import { UserRepository } from '@user/repositories/user.repository';
+import { UserProfile } from '@user/entities/user-profile.entity';
 import {
   AuthDataToFront,
   SocialRedirectOutput,
@@ -11,19 +19,11 @@ import {
   LoginUserInput,
   LoginUserOutput,
 } from './dtos/create-user.dto';
-import { User, UserRole } from './../user/entities/user.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { getManager, Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
-import { S3Service } from 'src/aws/s3/s3.service';
-import { SocialAccount } from 'src/user/entities/social-account.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -104,12 +104,11 @@ export class AuthService {
 @Injectable()
 export class SocialAuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     @InjectRepository(UserProfile)
     private readonly userProfileRepository: Repository<UserProfile>,
     @InjectRepository(SocialAccount)
     private readonly socialAccountRepository: Repository<SocialAccount>,
+    private readonly userRepository: UserRepository,
     private readonly s3Service: S3Service,
     private readonly jwtService: JwtService,
   ) {}
@@ -176,7 +175,6 @@ export class SocialAuthService {
         // Create profile
         const profile = this.userProfileRepository.create({
           username,
-          phoneNumber,
           university,
           isGraduate,
           age,

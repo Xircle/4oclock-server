@@ -1,12 +1,12 @@
-import { UserService } from './../../user/user.service';
-import { JwtService } from '@nestjs/jwt';
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Socket } from 'socket.io';
+import { UserService } from '@user/user.service';
 
 @Injectable()
 export class ChatsGuard implements CanActivate {

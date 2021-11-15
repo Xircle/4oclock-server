@@ -1,8 +1,5 @@
-import 'src/env';
+import { Server, Socket } from 'socket.io';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { IsEnteringData } from './dtos/is-entering.dto';
-import { RoomGuard } from './guards/room.guard';
-import { ChatsGuard } from './guards/chats.guard';
 import { Logger, UseGuards } from '@nestjs/common';
 import {
   MessageBody,
@@ -14,9 +11,12 @@ import {
   WebSocketServer,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
 import { SendMessageData } from './dtos/send-message.dto';
 import { JoinRoomData } from './dtos/join-room.dto';
+import { RoomGuard } from './guards/room.guard';
+import { ChatsGuard } from './guards/chats.guard';
+import { IsEnteringData } from './dtos/is-entering.dto';
+import 'env';
 
 @ApiTags('ChatGateway')
 @WebSocketGateway({

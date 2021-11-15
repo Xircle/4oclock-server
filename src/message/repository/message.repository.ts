@@ -1,10 +1,10 @@
+import { InternalServerErrorException } from '@nestjs/common';
+import { EntityRepository, Repository } from 'typeorm';
+import { User } from '@user/entities/user.entity';
 import {
   GetRoomsMessagesOutput,
   IMessage,
 } from './../dtos/get-rooms-messages.dto';
-import { User } from 'src/user/entities/user.entity';
-import { InternalServerErrorException } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
 import { Message } from '../entities/message.entity';
 
 @EntityRepository(Message)

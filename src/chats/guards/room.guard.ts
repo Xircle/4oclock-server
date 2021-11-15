@@ -1,6 +1,6 @@
-import { RoomService } from './../../room/room.service';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { RoomGuardDto } from '../dtos/room-guard.dto';
+import { RoomGuardDto } from '@chats/dtos/room-guard.dto';
+import { RoomService } from '@room/room.service';
 
 @Injectable()
 export class RoomGuard implements CanActivate {

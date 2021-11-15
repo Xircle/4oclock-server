@@ -1,5 +1,3 @@
-import { User } from 'src/user/entities/user.entity';
-import { Place } from 'src/place/entities/place.entity';
 import {
   Column,
   Entity,
@@ -10,7 +8,8 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
-
+import { Place } from '@place/entities/place.entity';
+import { User } from '@user/entities/user.entity';
 @Index(['place_id', 'user_id'])
 @Entity()
 export class Review {
@@ -31,7 +30,7 @@ export class Review {
 
   @Column({ default: false })
   isRepresentative: boolean;
-  
+
   @Column('uuid')
   place_id: string;
 

@@ -1,4 +1,3 @@
-import { Place } from './place.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Place } from './place.entity';
 
 @Entity()
 export class PlaceDetail {

@@ -1,12 +1,12 @@
 import { PlaceService } from './../place/place.service';
-import { S3Service } from 'src/aws/s3/s3.service';
-import { CoreOutput } from 'src/common/common.interface';
-import { User } from 'src/user/entities/user.entity';
 import { CreateReviewInput } from './dtos/create-review.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetAllReviewsOutput } from './dtos/get-all-reviews.dto';
 import { GetReviewById } from './dtos/get-review-by-id.dto';
 import { ReviewRepository } from './repository/review.repository';
+import { S3Service } from '@aws/s3/s3.service';
+import { User } from '@user/entities/user.entity';
+import { CoreOutput } from '@common/common.interface';
 
 @Injectable()
 export class ReviewService {

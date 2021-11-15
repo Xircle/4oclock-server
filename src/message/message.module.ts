@@ -1,14 +1,13 @@
-import { ChatsGateway } from 'src/chats/chats.gateway';
-import { MessageRepository } from './repository/message.repository';
-import { AuthModule } from './../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
+import { MessageRepository } from './repository/message.repository';
 import { MessageService } from './message.service';
 import { MessageController } from './message.controller';
-import { RoomService } from 'src/room/room.service';
-import { RoomRepository } from 'src/room/repository/room.repository';
-import { ChatsModule } from 'src/chats/chats.module';
-import { UserRepository } from 'src/user/repositories/user.repository';
+import { UserRepository } from '@user/repositories/user.repository';
+import { RoomRepository } from '@room/repository/room.repository';
+import { AuthModule } from '@auth/auth.module';
+import { ChatsModule } from '@chats/chats.module';
+import { RoomService } from '@room/room.service';
 
 @Module({
   imports: [
