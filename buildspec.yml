@@ -13,8 +13,8 @@ phases:
       - docker build -t 2donny/4oclock-server ./4oclock-server
       - docker build -t 2donny/4oclock-nginx ./4oclock-nginx
 
-      - docker push 2donny/4oclock-server ./4oclock-server
-      - docker push 2donny/4oclock-nginx ./4oclock-nginx
+      - docker push 2donny/4oclock-server
+      - docker push 2donny/4oclock-nginx
 
 artifacts:
   files:
