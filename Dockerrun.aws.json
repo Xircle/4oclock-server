@@ -64,7 +64,7 @@
       "name": "nginx",
       "image": "2donny/4oclock-nginx",
       "hostname": "nginx",
-      "essential": false,
+      "essential": true,
       "portMappings": [
         {
           "hostPort": 80,
