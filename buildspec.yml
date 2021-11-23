@@ -9,6 +9,7 @@ phases:
     commands:
       - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
 
+      - docker-compose down -v
       - docker build -t 2donny/4oclock-server ./4oclock-server
       - docker build -t 2donny/4oclock-nginx ./4oclock-nginx
 
