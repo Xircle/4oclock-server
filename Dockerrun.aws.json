@@ -6,7 +6,7 @@
       "image": "2donny/4oclock-backend",
       "hostname": "backend",
       "essential": false,
-      "memory": 128
+      "memory": 1024
     },
     {
       "name": "nginx",
@@ -20,7 +20,7 @@
         }
       ],
       "links": ["backend"],
-      "memory": 128
+      "memory": 512
     }
   ]
 }
