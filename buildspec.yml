@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+      nodejs: 10
+  build:
+    commands:
+      - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+
+      - docker build -t 2donny/4oclock-server ./4oclock-server
+      - docker build -t 2donny/4oclock-nginx ./4oclock-nginx
+
+      - docker push 2donny/4oclock-server ./4oclock-server
+      - docker push 2donny/4oclock-nginx ./4oclock-nginx
+
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: no
+  base-directory: ./
