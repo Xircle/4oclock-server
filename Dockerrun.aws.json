@@ -12,52 +12,6 @@
           "hostPort": 3080,
           "containerPort": 3080
         }
-      ],
-      "environment": [
-        {
-          "name": "NODE_ENV",
-          "value": "prod"
-        },
-        {
-          "name": "DB_USERNAME",
-          "value": "abobbxqrwmgkig"
-        },
-        {
-          "name": "DB_PASSWORD",
-          "value": "71061337dbbebbef258fd137de300b6009d3ea026985a20cd42bce36efbc88ef"
-        },
-        {
-          "name": "DB_HOST",
-          "value": "ec2-52-23-87-65.compute-1.amazonaws.com"
-        },
-        {
-          "name": "DB_NAME",
-          "value": "d3j71f1v21p6hm"
-        },
-        {
-          "name": "KAKAO_ID",
-          "value": "ce57446db441156eeb32b853d2b41871"
-        },
-        {
-          "name": "JWT_SECRET_KEY",
-          "value": "123dsakmckdjcoikewhjdkjsnajoa"
-        },
-        {
-          "name": "AWS_S3_BUCKET_NAME",
-          "value": "xircle-profile-upload"
-        },
-        {
-          "name": "AWS_ACCESS_KEY",
-          "value": "AKIAW3KT6WOFN4Q2K7EF"
-        },
-        {
-          "name": "AWS_SECRET_KEY",
-          "value": "KiEz2hLljbUwqFP7maWbHyhaHXNvkxm4xiwdWl0j"
-        },
-        {
-          "name": "ADMIN_ACCESS_PASSWORD",
-          "value": "xircle-ykring-admin-1234"
-        }
       ]
     },
     {
