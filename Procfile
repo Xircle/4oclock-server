@@ -1,1 +1,1 @@
-web: npm i nest -g
+web: node main.js
