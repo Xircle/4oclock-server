@@ -13,5 +13,6 @@ COPY package.json /usr/src/app/
 RUN npm install
 COPY . .
 COPY --from=dev /usr/src/app/dist /usr/src/app/
+ENV NODE_ENV=prod
 EXPOSE 3080
 CMD ["npm", "run", "start:prod"]
