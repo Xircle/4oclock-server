@@ -4,6 +4,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./4oclock-server
+    ports:
+      - 3080:3080
 
   nginx:
     restart: always
