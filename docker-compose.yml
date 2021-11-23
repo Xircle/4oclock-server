@@ -1,0 +1,17 @@
+version: "3"
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: ./4oclock-server
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./4oclock-nginx
+    ports:
+      - "80:80"
