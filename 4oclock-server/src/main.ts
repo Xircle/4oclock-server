@@ -6,7 +6,7 @@ import 'env';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   applyMiddleware(app);
-  await app.listen(process.env.PORT || 3080, () => {
+  await app.listen(3080, () => {
     process.send?.('ready');
   });
 
