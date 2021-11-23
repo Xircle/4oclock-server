@@ -1,3 +1,0 @@
-#!/bin/bash
-export CLIENT_HOST=4oclock.kr
-export API_HOST=api.4oclock.kr

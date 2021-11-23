@@ -1,2 +1,0 @@
-export const CONFIG_OPTIONS = 'CONFIG_OPTIONS';
-export const ENV_VARIABLES = 'ENV_VARIABLES';
