@@ -13,6 +13,7 @@
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:test": "cross-env NODE_ENV=test nest start --watch",
     "start:prod": "cross-env NODE_ENV=prod node dist/src/main.js",
+    "deploy": "npm ci && npm run build && npm run start:prod",
     "start:mock-prod": "cross-env NODE_ENV=prod nest start --watch",
     "docker-start:prod": "cross-env NODE_ENV=prod node ./dist/src/main.js --env prod",
     "start:debug": "nest start --debug --watch",
