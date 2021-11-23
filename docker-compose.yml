@@ -4,9 +4,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./4oclock-server
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
 
   nginx:
     restart: always
