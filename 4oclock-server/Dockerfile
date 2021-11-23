@@ -5,6 +5,7 @@ WORKDIR /usr/src/app/
 COPY package.json /usr/src/app/
 RUN npm install
 COPY . /usr/src/app
+RUN npm run build
 
 FROM node:13 as prod
 WORKDIR /usr/src/app/
