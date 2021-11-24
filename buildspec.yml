@@ -3,7 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - npm install
+      - npm install nest -g
   build:
     commands:
       - npm run deploy
