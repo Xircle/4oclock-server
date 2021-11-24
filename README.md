@@ -29,7 +29,7 @@ Following items are core backend technologies used in this project:
 
 ### Infra
 
-- AWS Beanstalk for NodeJs application server
+- AWS Beanstalk for NodeJs application server deployment
 - AWS ACM for HTTPS SSL
 - AWS S3 for static image
 - AWS Cloudfront for S3 origin
