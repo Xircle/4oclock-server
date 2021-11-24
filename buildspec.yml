@@ -4,6 +4,7 @@ phases:
   pre_build:
     commands:
       - npm install -g @nestjs/cli
+      - npm install
   build:
     commands:
       - npm run deploy
