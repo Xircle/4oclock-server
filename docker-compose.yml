@@ -1,0 +1,26 @@
+version: "3"
+services:
+  backend:
+    image: 2donny/4oclock-backend
+    container_name: app_backend
+    environment:
+      - DB_USERNAME=abobbxqrwmgkig
+      - DB_PASSWORD=71061337dbbebbef258fd137de300b6009d3ea026985a20cd42bce36efbc88ef
+      - DB_HOST=ec2-52-23-87-65.compute-1.amazonaws.com
+      - DB_NAME=d3j71f1v21p6hm
+      - KAKAO_ID=ce57446db441156eeb32b853d2b41871
+      - JWT_SECRET_KEY=123dsakmckdjcoikewhjdkjsnajoa
+      - AWS_S3_BUCKET_NAME=xircle-profile-upload
+      - AWS_ACCESS_KEY=AKIAW3KT6WOFN4Q2K7EF
+      - AWS_SECRET_KEY=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
+      - ADMIN_ACCESS_PASSWORD=xircle-ykring-admin-1234
+    mem_limit: 128m
+
+  nginx:
+    restart: always
+    image: 2donny/4oclock-nginx
+    ports:
+      - "80:80"
+    mem_limit: 128m
+    links:
+      - backend
