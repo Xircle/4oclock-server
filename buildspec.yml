@@ -3,7 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - npm install nest -g
+      - npm install -g @nestjs/cli
   build:
     commands:
       - npm run deploy
