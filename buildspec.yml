@@ -7,7 +7,7 @@ phases:
       - npm install
   build:
     commands:
-      - npm run deploy
+      - npm run build
 
 artifacts:
   files:
