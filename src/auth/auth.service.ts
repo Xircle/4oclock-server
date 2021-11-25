@@ -177,6 +177,7 @@ export class SocialAuthService {
           username,
           university,
           isGraduate,
+          phoneNumber,
           age,
           gender,
           job,
