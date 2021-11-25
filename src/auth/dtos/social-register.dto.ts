@@ -75,6 +75,7 @@ export class SocialRegisterInput {
   age: number;
 
   @ApiProperty({
+    example: 'Male',
     description: '성별',
   })
   @IsEnum(Gender)
