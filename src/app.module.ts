@@ -1,5 +1,5 @@
-import { AppController } from './app.controller';
 import * as Joi from 'joi';
+import { AppController } from './app.controller';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -27,11 +27,11 @@ import { HealthModule } from '@health/health.module';
           .valid('dev', 'prod', 'test')
           .default('dev')
           .required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.number(),
-        DB_NAME: Joi.string().required(),
+        RDS_HOSTNAME: Joi.string().required(),
+        RDS_DB_NAME: Joi.string().required(),
+        RDS_USERNAME: Joi.string().required(),
+        RDS_PASSWORD: Joi.string().required(),
+        RDS_PORT: Joi.number(),
         KAKAO_ID: Joi.string().required(),
         JWT_SECRET_KEY: Joi.string().required(),
         AWS_S3_BUCKET_NAME: Joi.string().required(),
