@@ -30,9 +30,11 @@ Following items are core backend technologies used in this project:
 ### Infra
 
 - AWS Beanstalk for NodeJs application server deployment
+- AWS RDS for Database
 - AWS ACM for HTTPS SSL
 - AWS S3 for static image
 - AWS Cloudfront for S3 origin
+- AWS Route53 for sub-domain
 
 ## Upcoming Feature
 
@@ -46,3 +48,4 @@ Following items are core backend technologies used in this project:
 - [x] AWS Bean stalk
 - [ ] Microservice NestJs server
 - [ ] Test code (50% coverage)
+
