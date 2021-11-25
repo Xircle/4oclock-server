@@ -16,10 +16,10 @@ export class Review {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('varchar', { array: true, nullable: true })
+  @Column('varchar', { array: true, nullable: true, length: 511 })
   imageUrls: string[];
 
-  @Column({ length: 255 })
+  @Column({ length: 511 })
   description: string;
 
   @Column({ nullable: true })
