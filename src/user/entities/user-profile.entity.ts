@@ -40,6 +40,7 @@ export class UserProfile {
   @Column({
     type: 'enum',
     enum: Gender,
+    default: Gender.Male,
   })
   gender: Gender;
 
