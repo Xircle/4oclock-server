@@ -20,13 +20,6 @@ export class CreatePlaceInput {
   name: string;
 
   @ApiProperty({
-    example: 'true',
-    description: '장소 타입이 번개 모임',
-  })
-  @Transform((param) => JSON.parse(param?.obj.isLightning))
-  isLightning: boolean;
-
-  @ApiProperty({
     example: '4',
     description: '모임 인원수',
   })

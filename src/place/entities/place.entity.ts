@@ -48,9 +48,6 @@ export class Place {
   @Column({ default: false })
   isClosed: boolean;
 
-  @Column({ default: false })
-  isLightning: boolean;
-
   @Column({ default: 0 })
   views: number;
 
@@ -80,27 +77,19 @@ export class Place {
   getDeadlineCaption(): string {
     const current_date = moment().format('YYYY-MM-DD');
     const event_date = moment(this.startDateAt);
-    if (this.isLightning) {
-      // 항상 번개의 시작날짜는 오늘이다.
-      if (this.startTime - new Date().getHours() <= 1) {
-        return '번개 마감';
-      } else {
-        return '번개 ⚡️';
-      }
+
+    if (event_date.diff(current_date, 'days') === 0) {
+      return '마감';
+    } else if (event_date.diff(current_date, 'days') === 1) {
+      return '오늘 마감';
+    } else if (event_date.diff(current_date, 'days') === 2) {
+      return 'D-1';
+    } else if (event_date.diff(current_date, 'days') === 3) {
+      return 'D-2';
+    } else if (event_date.diff(current_date, 'days') === 4) {
+      return 'D-3';
     } else {
-      if (event_date.diff(current_date, 'days') === 0) {
-        return '마감';
-      } else if (event_date.diff(current_date, 'days') === 1) {
-        return '오늘 마감';
-      } else if (event_date.diff(current_date, 'days') === 2) {
-        return 'D-1';
-      } else if (event_date.diff(current_date, 'days') === 3) {
-        return 'D-2';
-      } else if (event_date.diff(current_date, 'days') === 4) {
-        return 'D-3';
-      } else {
-        return undefined;
-      }
+      return undefined;
     }
   }
 

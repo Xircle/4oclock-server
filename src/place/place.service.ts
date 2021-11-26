@@ -21,7 +21,6 @@ import {
 import {
   GetPlaceByLocationWhereOptions,
   MainFeedPlace,
-  MainFeedPlaceParticipantsProfile,
 } from './dtos/get-place-by-location.dto';
 import {
   CreatePlaceInput,
@@ -65,7 +64,6 @@ export class PlaceService {
   }
 
   async getPlacesByLocation(
-    anyUser: User | undefined,
     location: string,
     page: number,
     limit: number,
@@ -76,27 +74,11 @@ export class PlaceService {
         location,
       };
     }
-    try {
-      // 번개는 '열려있는' '최신순으로' 모임 3개만 가져오기
-      let lightningPlace: Place[] = [];
-      if (page === 1) {
-        lightningPlace = await this.placeRepository.findManyPlaces({
-          where: {
-            isLightning: true,
-            isClosed: false,
-          },
-          order: {
-            startDateAt: 'ASC',
-          },
-          take: 3,
-          loadEagerRelations: false,
-        });
-      }
 
-      const normalPlaces = await this.placeRepository.findManyPlaces({
+    try {
+      const places = await this.placeRepository.findManyPlaces({
         where: {
           ...whereOptions,
-          isLightning: false,
         },
         order: {
           startDateAt: 'DESC',
@@ -107,36 +89,23 @@ export class PlaceService {
       });
 
       const openPlaceOrderByStartDateAtDESC = _.takeWhile(
-        normalPlaces,
+        places,
         (place) => !place.isClosed,
       );
       const closedPlaceOrderByStartDateAtDESC = _.difference(
-        normalPlaces,
+        places,
         openPlaceOrderByStartDateAtDESC,
       );
       const openPlaceOrderByStartDateAtASC =
         openPlaceOrderByStartDateAtDESC.reverse();
 
-      const openPlaceOrderByStartDateAtASCWithLightning: Place[] = [
-        ...lightningPlace,
-        ...openPlaceOrderByStartDateAtASC,
-      ];
-      openPlaceOrderByStartDateAtASCWithLightning.push(
-        ...closedPlaceOrderByStartDateAtDESC,
-      );
-      const finalPlaceEntities = openPlaceOrderByStartDateAtASCWithLightning;
+      openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
+
+      const finalPlaceEntities = openPlaceOrderByStartDateAtASC;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
       for (const place of finalPlaceEntities) {
-        let isParticipating = false;
-        if (anyUser) {
-          // AuthUser 일 때만, 익명 유저도 볼 수 있기 때문에
-          isParticipating = await this.reservationRepository.isParticipating(
-            anyUser.id,
-            place.id,
-          );
-        }
         const participantsCount: number =
           await this.reservationRepository.count({
             where: {
@@ -145,28 +114,18 @@ export class PlaceService {
             },
           });
 
-        const participants: MainFeedPlaceParticipantsProfile[] =
-          await this.reservationRepository.getParticipantsProfile(place.id);
-
         const deadline = place.getDeadlineCaption();
+
         // isClosed Update 로직
-        if (place.isLightning) {
-          if (deadline === '번개 마감' && !place.isClosed) {
-            place.isClosed = true;
-            await this.placeRepository.savePlace(place);
-          }
-        } else {
-          if (deadline === '마감' && !place.isClosed) {
-            place.isClosed = true;
-            await this.placeRepository.savePlace(place);
-          }
+        if (deadline === '마감' && !place.isClosed) {
+          place.isClosed = true;
+          await this.placeRepository.savePlace(place);
         }
+
         const startDateFromNow = place.getStartDateFromNow();
         mainFeedPlaces.push({
           ...place,
-          isParticipating,
           participantsCount,
-          participants,
           deadline,
           startDateFromNow,
         });
@@ -213,49 +172,34 @@ export class PlaceService {
         },
       );
 
-      // 참여 여부
-      let isParticipating = false;
-      if (anyUser) {
-        isParticipating = await this.reservationRepository.isParticipating(
-          anyUser.id,
-          placeId,
-        );
-      }
-      const participantsCount = await this.reservationRepository.count({
-        where: {
-          place_id: place.id,
-          isCanceled: false,
-        },
-      });
+      const NotCanceledReservations =
+        await this.reservationRepository.getNotCanceledReservations(placeId);
 
-      // 참여자 성비, 평균 나이 추가
-      const participants: PlaceDataParticipantsProfile[] =
-        await this.reservationRepository.getParticipantsProfile(placeId);
+      const participantsUsername: string[] = NotCanceledReservations.map(
+        (reservation) => reservation.participant.profile?.username,
+      );
 
-      let total_count = participants.length;
-      let male_count = 0;
-      let sum_age = 0;
-      participants.map((participant) => {
-        if (participant.gender === 'Male') male_count++;
-        sum_age += participant.age;
-      });
-
-      const participantsInfo = {
-        total_count,
-        male_count,
-        average_age: Math.floor(sum_age / total_count) || 0,
-      };
+      // 참여 중인 크루원 수
+      const participantsCount = NotCanceledReservations.length;
+      // 남은 크루원 자리 수
+      const leftParticipantsCount =
+        place.placeDetail.maxParticipantsNumber - participantsCount;
 
       // 이벤트 시작 시간
       const startDateFromNow = place.getStartDateFromNow();
+      // 참여 여부
+      const isParticipating = await this.reservationRepository.isParticipating(
+        anyUser.id,
+        placeId,
+      );
       const placeData: PlaceData = {
         ...place,
         reviews: place.reviews,
-        isParticipating,
         participantsCount,
+        leftParticipantsCount,
+        participantsUsername,
         startDateFromNow,
-        participants,
-        participantsInfo,
+        isParticipating,
       };
       return {
         ok: true,
@@ -273,7 +217,6 @@ export class PlaceService {
     placePhotoInput: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
     const {
-      isLightning,
       maxParticipantsNumber,
       name,
       location,
@@ -290,28 +233,31 @@ export class PlaceService {
       reviewDescription,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
+
     try {
-      // Upload to S3 (url 생성)
+      // Upload coverImage to S3 (url 생성)
       const coverImageS3Url = await this.s3Service.uploadToS3(
         coverImage[0],
         authUser.id,
       );
-      const reviewImagesS3Url: string[] = [];
+
+      // Upload Review Images to S3 (url 생성)
+      const reviewImageS3Urls: string[] = [];
       for (const reviewImage of reviewImages) {
         const s3_url = await this.s3Service.uploadToS3(
           reviewImage,
           authUser.id,
         );
-        reviewImagesS3Url.push(s3_url);
+        reviewImageS3Urls.push(s3_url);
       }
+
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
         const place = await this.placeRepository.createAndSavePlace(
           {
-            isLightning,
-            name,
             coverImage: coverImageS3Url,
+            name,
             location,
             recommendation,
             oneLineIntroText,
@@ -323,23 +269,23 @@ export class PlaceService {
         //  Create review (사진이 여러개인 리뷰 하나)
         await this.reviewRepository.createAndSaveReview(
           {
-            imageUrls: reviewImagesS3Url,
+            user: authUser,
+            imageUrls: reviewImageS3Urls,
             description: reviewDescription,
             isRepresentative: true,
             place,
-            user: authUser,
           },
           transactionalEntityManager,
         );
         //   Create place detail
         await this.placeDetailRepository.createAndSavePlaceDetail(
           {
+            categories: JSON.stringify(categories),
+            participationFee: +participationFee,
             title,
             description,
             maxParticipantsNumber,
-            categories: JSON.stringify(categories),
             place,
-            participationFee: +participationFee,
             detailAddress,
             detailLink,
           },

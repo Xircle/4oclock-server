@@ -24,7 +24,7 @@ export class PlaceDetail {
   categories: string;
 
   @Column({ default: 4 })
-  maxParticipantsNumber?: number;
+  maxParticipantsNumber: number;
 
   @Column({ length: 255 })
   detailAddress: string;
