@@ -16,6 +16,7 @@ import { ChatsModule } from '@chats/chats.module';
 import { AdminModule } from '@admin/admin.module';
 import { EventModule } from '@event/event.module';
 import { HealthModule } from '@health/health.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -38,6 +39,9 @@ import { HealthModule } from '@health/health.module';
         AWS_ACCESS_KEY: Joi.string().required(),
         AWS_SECRET_KEY: Joi.string().required(),
         ADMIN_ACCESS_PASSWORD: Joi.string().required(),
+        TWILIO_ACCOUNT_SID: Joi.string().required(),
+        TWILIO_AUTH_TOKEN: Joi.string().required(),
+        TWILIO_VERIFICATION_SERVICE_SID: Joi.string().required(),
       }),
       envFilePath:
         process.env.NODE_ENV === 'dev'
@@ -59,6 +63,7 @@ import { HealthModule } from '@health/health.module';
     AdminModule,
     EventModule,
     HealthModule,
+    SmsModule,
   ],
   controllers: [AppController],
 })
