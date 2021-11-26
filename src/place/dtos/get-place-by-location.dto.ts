@@ -18,8 +18,6 @@ export class MainFeedPlace {
   startDateFromNow: string;
   oneLineIntroText: string;
   views: number;
-  participants: MainFeedPlaceParticipantsProfile[];
-  isParticipating: boolean;
   participantsCount: number;
   isClosed: boolean;
 }
