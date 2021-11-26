@@ -10,7 +10,7 @@ export enum EventName {
   Halloween = 'Halloween',
 }
 
-@Entity({ name: 'eventBanners' })
+@Entity({ name: 'event_banners' })
 export class EventBanner {
   @PrimaryGeneratedColumn('uuid')
   id: string;
