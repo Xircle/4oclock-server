@@ -1,3 +1,4 @@
+import { PlaceMetaData } from '@place/interface/places-with-meta';
 import {
   DeepPartial,
   EntityManager,
@@ -21,6 +22,24 @@ export class PlaceRepository extends Repository<Place> {
     return this.find({
       ...options,
     });
+  }
+
+  public async getPlaceMetaData(
+    page: number,
+    limit: number,
+  ): Promise<PlaceMetaData> {
+    const totalItems = await this.count();
+    const totalPages = Math.floor(totalItems / limit) + 1;
+    return {
+      totalPages,
+      page,
+    };
+  }
+
+  public async findManyPlacesWithMetaData(options: FindManyOptions<Place>) {
+    const query = this.createQueryBuilder('places');
+    const totalItems = await query.getCount();
+    // const totalPages = Math.floor(totalItems / options) + 1;
   }
 
   /**

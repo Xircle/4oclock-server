@@ -1,4 +1,5 @@
 import { CoreOutput } from '@common/common.interface';
+import { PlaceMetaData } from '@place/interface/places-with-meta';
 import { Gender } from '@user/entities/user-profile.entity';
 
 export class MainFeedPlaceParticipantsProfile {
@@ -28,6 +29,7 @@ export class GetPlaceByLocationInput {
 }
 export class GetPlacesByLocationOutput extends CoreOutput {
   places?: MainFeedPlace[];
+  meta: PlaceMetaData;
   eventBannerImageUrl: string;
 }
 

@@ -131,6 +131,12 @@ export class PlaceService {
         });
       }
 
+      // Make place Metadata
+      const placeMetadata = await this.placeRepository.getPlaceMetaData(
+        page,
+        limit,
+      );
+
       // event banner
       const eventBannerImageUrl = await this.eventService.getRandomEventBanner(
         EventName.Halloween,
@@ -139,6 +145,7 @@ export class PlaceService {
       return {
         ok: true,
         places: mainFeedPlaces,
+        meta: placeMetadata,
         eventBannerImageUrl,
       };
     } catch (err) {
@@ -162,7 +169,6 @@ export class PlaceService {
         };
       }
 
-      // 조회수 업데이트
       await this.placeRepository.updatePlace(
         {
           id: placeId,
