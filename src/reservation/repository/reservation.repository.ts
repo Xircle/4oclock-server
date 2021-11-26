@@ -45,4 +45,17 @@ export class ReservationRepository extends Repository<Reservation> {
     });
     return mainFeedPlacePartiProfile;
   }
+
+  async getNotCanceledReservations(placeId: string): Promise<Reservation[]> {
+    const participants = await this.find({
+      where: {
+        place_id: placeId,
+        isCanceled: false,
+      },
+      loadEagerRelations: true,
+      relations: ['participant'],
+    });
+    if (participants.length === 0) return [];
+    return participants;
+  }
 }
