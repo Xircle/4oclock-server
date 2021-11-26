@@ -27,14 +27,15 @@ Following items are core backend technologies used in this project:
   - CloudFront
   - Route 53
 
-### Infra
+### AWS Infra
 
-- AWS Beanstalk for NodeJs application server deployment
-- AWS RDS for Database
-- AWS ACM for HTTPS SSL
-- AWS S3 for static image
-- AWS Cloudfront for S3 origin
-- AWS Route53 for sub-domain
+- Beanstalk for NodeJs application server deployment
+- RDS for Database
+- Lambda for Image resizing
+- S3 for static image
+- Cloudfront CDN for S3 origin
+- Route 53 for sub-domain
+- ACM for SSL certificate 
 
 ## Upcoming Feature
 
@@ -46,6 +47,7 @@ Following items are core backend technologies used in this project:
 - [x] CloudFront on S3 image origin
 - [x] Thumbnail image resizing with Lambda@Edge
 - [x] AWS Bean stalk
-- [ ] Microservice NestJs server
+- [x] AWS Migration from Heroku server
 - [ ] Test code (50% coverage)
-
+- [ ] Code refactoring with DDD
+- [ ] Microservice NestJs server
