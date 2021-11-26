@@ -1,15 +1,15 @@
 version: '3'
 services:
-  backend:
-    image: 2donny/4oclock-backend
-    container_name: app_backend
-    mem_limit: 128m
-
-  nginx:
-    restart: always
-    image: 2donny/4oclock-nginx
+  redis:
+    image: redis:alpine
     ports:
-      - '80:80'
-    mem_limit: 128m
-    links:
-      - backend
+      - 6379:6379
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - '8081:8081'
+    depends_on:
+      - redis
