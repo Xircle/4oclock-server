@@ -15,21 +15,17 @@ export class PlaceData {
   views: number;
   isParticipating: boolean;
   participantsCount: number;
-  participants: PlaceDataParticipantsProfile[];
+  leftParticipantsCount: number;
+  participantsUsername: string[];
   reviews: Review[];
   location: string;
-  participantsInfo: {
-    total_count: number;
-    male_count: number;
-    average_age: number;
-  };
   placeDetail: {
     title: string;
     description: string;
     categories: string;
     detailAddress: string;
     participationFee: number;
-    maxParticipantsNumber?: number;
+    maxParticipantsNumber: number;
   };
 }
 
