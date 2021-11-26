@@ -52,17 +52,11 @@ export class PlaceController {
   @Get('')
   @ApiOperation({ summary: '위치별 생성된 장소 보기' })
   async getPlacesByLocation(
-    @GetUser() anyUser: User | undefined,
     @Query('location') location: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
   ): Promise<GetPlacesByLocationOutput> {
-    return this.placeService.getPlacesByLocation(
-      anyUser,
-      location,
-      page,
-      limit,
-    );
+    return this.placeService.getPlacesByLocation(location, page, limit);
   }
 
   @Get(':placeId')
