@@ -59,8 +59,10 @@ export class User {
   @JoinTable()
   rooms: Room[];
 
-  @ManyToMany((type) => Message, (message) => message.sender)
-  messages: Message[];
+  @ManyToMany((type) => Message, (message) => message.sender, {
+    nullable: true,
+  })
+  messages?: Message[];
 
   @OneToMany((type) => Review, (review) => review.user)
   reviews: Review[];

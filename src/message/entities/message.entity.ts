@@ -37,11 +37,11 @@ export class Message {
   @JoinColumn({ name: 'room_id' })
   room: Room;
 
-  @ManyToOne((type) => User, (user) => user.messages)
+  @ManyToOne((type) => User, (user) => user.messages, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'receiver_id' })
   receiver: User;
 
-  @ManyToOne((type) => User, (user) => user.messages)
+  @ManyToOne((type) => User, (user) => user.messages, { onDelete: 'SET NULL' })
   sender: User;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
