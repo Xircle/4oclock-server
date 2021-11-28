@@ -1,7 +1,7 @@
+import { Twilio } from 'twilio';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CoreOutput } from '@common/common.interface';
-import { Twilio } from 'twilio';
 import { SendVerificationDto } from './dtos/send-verification.dto';
 import { ConfirmPhoneNumberDto } from './dtos/confirm-phoneNumber-dto';
 

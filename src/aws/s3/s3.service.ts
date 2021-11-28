@@ -4,8 +4,6 @@ import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class S3Service {
-  private s3: AWS.S3;
-
   constructor(private readonly configService: ConfigService) {}
 
   async uploadToS3(

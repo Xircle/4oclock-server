@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { User, UserRole } from '@user/entities/user.entity';
+import { UserRole } from '@user/entities/user.entity';
 import { SocialAccount } from '@user/entities/social-account.entity';
 import { S3Service } from '@aws/s3/s3.service';
 import { UserRepository } from '@user/repositories/user.repository';
