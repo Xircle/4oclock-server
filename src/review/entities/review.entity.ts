@@ -28,9 +28,6 @@ export class Review {
   @Column({ default: 0 })
   likesNumber: number;
 
-  @Column({ default: false })
-  isRepresentative: boolean;
-
   @Column('uuid')
   place_id: string;
 

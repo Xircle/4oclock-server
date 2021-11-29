@@ -43,11 +43,6 @@ export class PlaceRepository extends Repository<Place> {
   public async findDetailPlaceByPlaceId(placeId: string): Promise<Place> {
     const qb = this.createQueryBuilder('places')
       .where('places.id = :placeId', { placeId })
-      .leftJoinAndSelect(
-        'places.reviews',
-        'reviews',
-        'reviews.isRepresentative = true',
-      )
       .leftJoinAndSelect('places.placeDetail', 'placeDetail');
 
     return qb.getOne();
