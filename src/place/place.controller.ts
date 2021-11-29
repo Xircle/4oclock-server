@@ -97,7 +97,7 @@ export class PlaceController {
     if (!coverImage || !reviewImages)
       return {
         ok: false,
-        error: '대표 이미지, 매장 이미지를 업로드 해주세요.',
+        error: '대표 음식 사진 혹은, 음식 사진들을 업로드 해주세요.',
       };
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }

@@ -36,12 +36,6 @@ export class PlaceRepository extends Repository<Place> {
     };
   }
 
-  public async findManyPlacesWithMetaData(options: FindManyOptions<Place>) {
-    const query = this.createQueryBuilder('places');
-    const totalItems = await query.getCount();
-    // const totalPages = Math.floor(totalItems / options) + 1;
-  }
-
   /**
    *
    * @description placeId로 Place entity를 찾고 없을 경우 HttpException을 throw한다.

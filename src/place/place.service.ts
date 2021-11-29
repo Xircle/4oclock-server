@@ -33,7 +33,7 @@ import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
-import { Place } from './entities/place.entity';
+import { DeadlineIndicator, Place } from './entities/place.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { PlaceDetail } from './entities/place-detail.entity';
 
@@ -113,13 +113,17 @@ export class PlaceService {
               isCanceled: false,
             },
           });
-
         const deadline = place.getDeadlineCaption();
 
-        // isClosed Update 로직
-        if (deadline === '마감' && !place.isClosed) {
-          place.isClosed = true;
-          await this.placeRepository.savePlace(place);
+        // isClosed Update 로직 (참가자 수가 최대 인원일 때, 3시간 전)
+        if (!place.isClosed) {
+          if (
+            participantsCount === place.placeDetail.maxParticipantsNumber ||
+            deadline === DeadlineIndicator.Done
+          ) {
+            place.isClosed = true;
+            await this.placeRepository.savePlace(place);
+          }
         }
 
         const startDateFromNow = place.getStartDateFromNow();
@@ -223,20 +227,12 @@ export class PlaceService {
     placePhotoInput: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
     const {
-      maxParticipantsNumber,
       name,
-      location,
-      recommendation,
-      startDateAt,
-      startTime,
-      title,
-      oneLineIntroText,
-      participationFee,
       description,
-      categories,
+      maxParticipantsNumber,
+      startDateAt,
+      participationFee,
       detailAddress,
-      detailLink,
-      reviewDescription,
     } = createPlaceInput;
     const { coverImage, reviewImages } = placePhotoInput;
 
@@ -264,11 +260,7 @@ export class PlaceService {
           {
             coverImage: coverImageS3Url,
             name,
-            location,
-            recommendation,
-            oneLineIntroText,
             startDateAt,
-            startTime,
           },
           transactionalEntityManager,
         );
@@ -277,7 +269,6 @@ export class PlaceService {
           {
             user: authUser,
             imageUrls: reviewImageS3Urls,
-            description: reviewDescription,
             isRepresentative: true,
             place,
           },
@@ -286,14 +277,11 @@ export class PlaceService {
         //   Create place detail
         await this.placeDetailRepository.createAndSavePlaceDetail(
           {
-            categories: JSON.stringify(categories),
             participationFee: +participationFee,
-            title,
             description,
             maxParticipantsNumber,
             place,
             detailAddress,
-            detailLink,
           },
           transactionalEntityManager,
         );
