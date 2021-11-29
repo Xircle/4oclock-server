@@ -14,9 +14,11 @@ export class PlaceData {
   isClosed: boolean;
   views: number;
   isParticipating: boolean;
-  participantsCount: number;
-  leftParticipantsCount: number;
-  participantsUsername: string[];
+  participantsData: {
+    participantsCount: number;
+    leftParticipantsCount: number;
+    participantsUsername: string[];
+  };
   reviews: Review[];
   location?: string;
   placeDetail: {

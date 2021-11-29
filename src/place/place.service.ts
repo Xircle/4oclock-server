@@ -205,11 +205,13 @@ export class PlaceService {
       const placeData: PlaceData = {
         ...place,
         reviews: place.reviews,
-        participantsCount,
-        leftParticipantsCount,
-        participantsUsername,
-        startDateFromNow,
         isParticipating,
+        participantsData: {
+          participantsCount,
+          leftParticipantsCount,
+          participantsUsername,
+        },
+        startDateFromNow,
       };
       return {
         ok: true,
