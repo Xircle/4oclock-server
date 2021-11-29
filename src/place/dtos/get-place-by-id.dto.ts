@@ -6,8 +6,8 @@ export class PlaceDataParticipantsProfile extends MainFeedPlaceParticipantsProfi
 
 export class PlaceData {
   name: string;
-  oneLineIntroText: string;
-  recommendation: string;
+  oneLineIntroText?: string;
+  recommendation?: string;
   startDateAt: Date;
   startDateFromNow: string;
   coverImage: string;
@@ -18,11 +18,8 @@ export class PlaceData {
   leftParticipantsCount: number;
   participantsUsername: string[];
   reviews: Review[];
-  location: string;
+  location?: string;
   placeDetail: {
-    title: string;
-    description: string;
-    categories: string;
     detailAddress: string;
     participationFee: number;
     maxParticipantsNumber: number;

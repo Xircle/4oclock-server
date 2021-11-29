@@ -14,14 +14,14 @@ export class PlaceDetail {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 255 })
-  title: string;
+  @Column({ length: 255, nullable: true })
+  title?: string;
 
   @Column({ length: 255 })
-  description!: string;
+  description: string;
 
-  @Column({ type: 'json' })
-  categories: string;
+  @Column({ type: 'json', nullable: true })
+  categories?: string;
 
   @Column({ default: 4 })
   maxParticipantsNumber: number;
@@ -29,8 +29,8 @@ export class PlaceDetail {
   @Column({ length: 255 })
   detailAddress: string;
 
-  @Column({ length: 512, default: '' })
-  detailLink: string;
+  @Column({ length: 512, nullable: true })
+  detailLink?: string;
 
   @Column({ default: 0 })
   participationFee: number;

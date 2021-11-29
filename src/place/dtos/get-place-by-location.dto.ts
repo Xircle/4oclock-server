@@ -17,7 +17,7 @@ export class MainFeedPlace {
   coverImage: string;
   deadline?: string | undefined;
   startDateFromNow: string;
-  oneLineIntroText: string;
+  oneLineIntroText?: string;
   views: number;
   participantsCount: number;
   isClosed: boolean;

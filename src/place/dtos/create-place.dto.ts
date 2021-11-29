@@ -20,66 +20,11 @@ export class CreatePlaceInput {
   name: string;
 
   @ApiProperty({
-    example: '4',
-    description: '모임 인원수',
-  })
-  @Transform((param) => JSON.parse(param?.obj?.maxParticipantsNumber))
-  @IsOptional()
-  maxParticipantsNumber?: number;
-
-  @ApiProperty({
-    example: '안암',
-    description: '장소의 대학가 주변 위치',
-  })
-  @IsString()
-  @IsNotEmpty()
-  location: string;
-
-  @ApiProperty({
-    example: '안암에 이런 집은 없었다.',
-    description: '장소 한줄소개',
-  })
-  @IsString()
-  @IsNotEmpty()
-  oneLineIntroText: string;
-
-  @ApiProperty({
-    example: '3000',
-    description: '참가비',
-  })
-  @Transform((param) => JSON.parse(param?.obj.participationFee))
-  participationFee: number;
-
-  @ApiProperty({
-    example: '나이 20 ~ 25 중간',
-    description: '연령대 권장사항',
-  })
-  @IsString()
-  @IsNotEmpty()
-  recommendation: string;
-
-  @ApiProperty({
-    example: '2021-09-13',
-    description: '미팅 시작 날짜',
-  })
-  @IsDate()
-  @IsNotEmpty()
-  startDateAt: Date;
-
-  @ApiProperty({
-    example: '16',
-    description: '미팅 시작 시각 ',
-  })
-  @IsNotEmpty()
-  @Transform((param) => JSON.parse(param?.obj.startTime))
-  startTime: number;
-
-  @ApiProperty({
     example: '고대에서 가장 시원한 맥주집!',
     description: '장소 설명 제목',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   title: string;
 
   @ApiProperty({
@@ -91,10 +36,67 @@ export class CreatePlaceInput {
   description: string;
 
   @ApiProperty({
+    example: '4',
+    description: '모임 인원수',
+  })
+  @Transform((param) => JSON.parse(param?.obj?.maxParticipantsNumber))
+  maxParticipantsNumber: number;
+
+  @ApiProperty({
+    example: '안암',
+    description: '장소의 대학가 주변 위치',
+  })
+  @IsString()
+  @IsOptional()
+  location: string;
+
+  @ApiProperty({
+    example: '안암에 이런 집은 없었다.',
+    description: '장소 한줄소개',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  oneLineIntroText: string;
+
+  @ApiProperty({
+    example: '3000',
+    description: '참가비',
+  })
+  @Transform((param) => JSON.parse(param?.obj.participationFee))
+  @IsNotEmpty()
+  participationFee: number;
+
+  @ApiProperty({
+    example: '나이 20 ~ 25 중간',
+    description: '연령대 권장사항',
+  })
+  @IsString()
+  @IsOptional()
+  recommendation: string;
+
+  @ApiProperty({
+    example: '2021-11-29T05:35:14.757Z',
+    description: '미팅 시작 날짜',
+  })
+  @IsDate()
+  @IsNotEmpty()
+  startDateAt: Date;
+
+  // @ApiProperty({
+  //   example: '16',
+  //   description: '미팅 시작 시각 ',
+  // })
+  // @IsNotEmpty()
+  // @Transform((param) => JSON.parse(param?.obj.startTime))
+  // startTime: number;
+
+  @ApiProperty({
     example: '"[맥주, 호프]"',
     description: '장소 해시태그',
   })
   @Transform((param) => JSON.parse(param?.obj.categories))
+  @IsOptional()
   categories: string[];
 
   @ApiProperty({
@@ -110,7 +112,7 @@ export class CreatePlaceInput {
     description: '맛집 정보 더보기',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   detailLink: string;
 
   @ApiProperty({
@@ -118,7 +120,7 @@ export class CreatePlaceInput {
     description: '리뷰 설명 (하나만)',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   reviewDescription: string;
 }
 export class PlacePhotoInput {
