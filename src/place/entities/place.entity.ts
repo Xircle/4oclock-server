@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import {
   Column,
   CreateDateColumn,
@@ -8,11 +9,18 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as moment from 'moment';
 import 'moment/locale/ko';
-import { PlaceDetail } from './place-detail.entity';
 import { Review } from '@review/entities/review.entity';
 import { Reservation } from '@reservation/entities/reservation.entity';
+import { PlaceDetail } from './place-detail.entity';
+
+export enum DeadlineIndicator {
+  'Done' = 'Done',
+  'Today' = 'Today',
+  'D-1' = 'D-1',
+  'D-2' = 'D-2',
+  'D-3' = 'D-3',
+}
 
 @Entity({ name: 'places' })
 export class Place {
@@ -25,25 +33,18 @@ export class Place {
   @Column({ length: 255 })
   coverImage: string;
 
-  @Column({ length: 255, default: '' })
-  oneLineIntroText: string;
+  @Column({ length: 255, nullable: true })
+  oneLineIntroText?: string;
 
   @Index()
-  @Column({ length: 255 })
-  location: string;
+  @Column({ length: 255, nullable: true })
+  location?: string;
 
-  @Column({ length: 255 })
-  recommendation: string;
+  @Column({ length: 255, nullable: true })
+  recommendation?: string;
 
-  @Index()
-  @Column({
-    type: 'date',
-    nullable: true,
-  })
+  @Column('timestamptz')
   startDateAt: Date;
-
-  @Column({ default: 18 })
-  startTime: number;
 
   @Column({ default: false })
   isClosed: boolean;
@@ -79,15 +80,15 @@ export class Place {
     const event_date = moment(this.startDateAt);
 
     if (event_date.diff(current_date, 'days') === 0) {
-      return '마감';
+      return DeadlineIndicator.Done; // 마감
     } else if (event_date.diff(current_date, 'days') === 1) {
-      return '오늘 마감';
+      return DeadlineIndicator.Today; // 오늘 마감
     } else if (event_date.diff(current_date, 'days') === 2) {
-      return 'D-1';
+      return DeadlineIndicator['D-1'];
     } else if (event_date.diff(current_date, 'days') === 3) {
-      return 'D-2';
+      return DeadlineIndicator['D-2'];
     } else if (event_date.diff(current_date, 'days') === 4) {
-      return 'D-3';
+      return DeadlineIndicator['D-3'];
     } else {
       return undefined;
     }
