@@ -125,7 +125,7 @@ export class CreatePlaceInput {
 }
 export class PlacePhotoInput {
   coverImage: Express.Multer.File[];
-  reviewImages: Express.Multer.File[];
+  subImages: Express.Multer.File[];
 }
 
 export class CreatePlaceOutput extends CoreOutput {}

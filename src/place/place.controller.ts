@@ -79,8 +79,8 @@ export class PlaceController {
         maxCount: 1,
       },
       {
-        name: 'reviewImages',
-        maxCount: 10,
+        name: 'subImages',
+        maxCount: 8,
       },
     ]),
   )
@@ -90,14 +90,14 @@ export class PlaceController {
     @UploadedFiles()
     files: {
       coverImage: Express.Multer.File[];
-      reviewImages: Express.Multer.File[];
+      subImages: Express.Multer.File[];
     },
   ): Promise<CreatePlaceOutput> {
-    const { coverImage, reviewImages } = files;
-    if (!coverImage || !reviewImages)
+    const { coverImage, subImages } = files;
+    if (!coverImage || !subImages)
       return {
         ok: false,
-        error: '대표 음식 사진 혹은, 음식 사진들을 업로드 해주세요.',
+        error: '대표 음식사진 혹은, 서브 음식사진들을 업로드 해주세요.',
       };
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }
@@ -115,6 +115,7 @@ export class PlaceController {
     return this.placeService.editPlace(placeId, editPlaceInput, coverImage);
   }
 
+  // TODO: 리뷰 사진이 아니라 SubImage, coverImage Edit API 만들기
   @Patch('/:placeId/review/:reviewId')
   @ApiOperation({ summary: '장소 정보 수정하기 (리뷰 정보 변경하기)' })
   @UseGuards(RolesGuard)

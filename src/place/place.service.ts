@@ -11,8 +11,8 @@ import { ReviewRepository } from '@review/repository/review.repository';
 import { S3Service } from '@aws/s3/s3.service';
 import { EventService } from '@event/event.service';
 import { EventName } from '@event/entities/event-banner.entity';
-import { CoreOutput } from '@common/common.interface';
 import { User } from '@user/entities/user.entity';
+import { CoreOutput } from '@common/common.interface';
 import {
   GetPlaceByIdOutput,
   PlaceData,
@@ -68,14 +68,13 @@ export class PlaceService {
     page: number,
     limit: number,
   ): Promise<GetPlacesByLocationOutput> {
-    let whereOptions: GetPlaceByLocationWhereOptions = {};
-    if (location !== '전체') {
-      whereOptions = {
-        location,
-      };
-    }
-
     try {
+      let whereOptions: GetPlaceByLocationWhereOptions = {};
+      if (location !== '전체') {
+        whereOptions = {
+          location,
+        };
+      }
       const places = await this.placeRepository.findManyPlaces({
         where: {
           ...whereOptions,
@@ -83,11 +82,10 @@ export class PlaceService {
         order: {
           startDateAt: 'DESC',
         },
-        loadEagerRelations: false,
+        loadEagerRelations: true,
         take: limit,
         skip: limit * (page - 1),
       });
-
       const openPlaceOrderByStartDateAtDESC = _.takeWhile(
         places,
         (place) => !place.isClosed,
@@ -106,6 +104,8 @@ export class PlaceService {
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
       for (const place of finalPlaceEntities) {
+        const startDateFromNow = place.getStartDateFromNow();
+        const deadline = place.getDeadlineCaption();
         const participantsCount: number =
           await this.reservationRepository.count({
             where: {
@@ -113,25 +113,25 @@ export class PlaceService {
               isCanceled: false,
             },
           });
-        const deadline = place.getDeadlineCaption();
-
+        const leftParticipantsCount: number =
+          place.placeDetail.maxParticipantsNumber - participantsCount;
         // isClosed Update 로직 (참가자 수가 최대 인원일 때, 3시간 전)
         if (!place.isClosed) {
           if (
-            participantsCount === place.placeDetail.maxParticipantsNumber ||
-            deadline === DeadlineIndicator.Done
+            deadline === DeadlineIndicator.Done ||
+            participantsCount === place.placeDetail.maxParticipantsNumber
           ) {
             place.isClosed = true;
             await this.placeRepository.savePlace(place);
           }
         }
 
-        const startDateFromNow = place.getStartDateFromNow();
         mainFeedPlaces.push({
           ...place,
-          participantsCount,
-          deadline,
           startDateFromNow,
+          deadline,
+          leftParticipantsCount,
+          participantsCount,
         });
       }
 
@@ -236,23 +236,18 @@ export class PlaceService {
       participationFee,
       detailAddress,
     } = createPlaceInput;
-    const { coverImage, reviewImages } = placePhotoInput;
+    const { coverImage, subImages } = placePhotoInput;
 
     try {
-      // Upload coverImage to S3 (url 생성)
+      // Upload coverImage, subImages to S3 (url 생성)
       const coverImageS3Url = await this.s3Service.uploadToS3(
         coverImage[0],
         authUser.id,
       );
-
-      // Upload Review Images to S3 (url 생성)
-      const reviewImageS3Urls: string[] = [];
-      for (const reviewImage of reviewImages) {
-        const s3_url = await this.s3Service.uploadToS3(
-          reviewImage,
-          authUser.id,
-        );
-        reviewImageS3Urls.push(s3_url);
+      const subImageS3Urls: string[] = [];
+      for (const subImage of subImages) {
+        const s3_url = await this.s3Service.uploadToS3(subImage, authUser.id);
+        subImageS3Urls.push(s3_url);
       }
 
       //   Transction start
@@ -261,18 +256,9 @@ export class PlaceService {
         const place = await this.placeRepository.createAndSavePlace(
           {
             coverImage: coverImageS3Url,
+            subImages: subImageS3Urls,
             name,
             startDateAt,
-          },
-          transactionalEntityManager,
-        );
-        //  Create review (사진이 여러개인 리뷰 하나)
-        await this.reviewRepository.createAndSaveReview(
-          {
-            user: authUser,
-            imageUrls: reviewImageS3Urls,
-            isRepresentative: true,
-            place,
           },
           transactionalEntityManager,
         );
