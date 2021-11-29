@@ -33,6 +33,9 @@ export class Place {
   @Column({ length: 255 })
   coverImage: string;
 
+  @Column('varchar', { array: true, nullable: true, length: 511 })
+  subImages: string[];
+
   @Column({ length: 255, nullable: true })
   oneLineIntroText?: string;
 
