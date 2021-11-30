@@ -17,9 +17,9 @@ import { PlaceDetail } from './place-detail.entity';
 export enum DeadlineIndicator {
   'Done' = '마감',
   'Today' = '오늘 마감',
-  'D-1' = 'D-1',
-  'D-2' = 'D-2',
-  'D-3' = 'D-3',
+  'D-1' = 'D-1 마감',
+  'D-2' = 'D-2 마감',
+  'D-3' = 'D-3 마감',
 }
 
 @Entity({ name: 'places' })
@@ -174,17 +174,23 @@ export class Place {
    */
   getDeadlineCaption(): string {
     const current_date = moment().format('YYYY-MM-DD');
-    const event_date = moment(this.startDateAt);
+    const start_date = moment(this.startDateAt);
 
-    if (event_date.diff(current_date, 'days') === 0) {
-      return DeadlineIndicator.Done; // 마감
-    } else if (event_date.diff(current_date, 'days') === 1) {
+    if (start_date.diff(current_date, 'days') === 0) {
+      const deadlineDate = start_date.subtract(3, 'hours');
+      const duration = moment.duration(deadlineDate.diff(moment()));
+
+      if (duration.asSeconds() <= 0) {
+        return DeadlineIndicator.Done; // 3 시간 전에 마감
+      }
       return DeadlineIndicator.Today; // 오늘 마감
-    } else if (event_date.diff(current_date, 'days') === 2) {
+    } else if (start_date.diff(current_date, 'days') === 1) {
+      return DeadlineIndicator.Today; // 오늘 마감
+    } else if (start_date.diff(current_date, 'days') === 2) {
       return DeadlineIndicator['D-1'];
-    } else if (event_date.diff(current_date, 'days') === 3) {
+    } else if (start_date.diff(current_date, 'days') === 3) {
       return DeadlineIndicator['D-2'];
-    } else if (event_date.diff(current_date, 'days') === 4) {
+    } else if (start_date.diff(current_date, 'days') === 4) {
       return DeadlineIndicator['D-3'];
     } else {
       return undefined;

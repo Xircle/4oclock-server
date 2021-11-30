@@ -125,7 +125,6 @@ export class PlaceService {
             await this.placeRepository.savePlace(place);
           }
         }
-
         mainFeedPlaces.push({
           ...place,
           startDateFromNow,
