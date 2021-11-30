@@ -20,6 +20,8 @@ export class MainFeedPlace {
   oneLineIntroText?: string;
   views: number;
   participantsCount: number;
+  leftParticipantsCount: number;
+  // participants: MainFeedPlaceParticipantsProfile[];
   isClosed: boolean;
 }
 
