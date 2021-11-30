@@ -22,10 +22,11 @@ export class CreatePlaceInput {
   @ApiProperty({
     example: '고대에서 가장 시원한 맥주집!',
     description: '장소 설명 제목',
+    nullable: true,
   })
   @IsString()
   @IsOptional()
-  title: string;
+  title?: string;
 
   @ApiProperty({
     example: '준비물은 청춘과 체력! 같이 이런저런 얘기 나눠요~~',
@@ -44,20 +45,22 @@ export class CreatePlaceInput {
 
   @ApiProperty({
     example: '안암',
+    nullable: true,
     description: '장소의 대학가 주변 위치',
   })
   @IsString()
   @IsOptional()
-  location: string;
+  location?: string;
 
   @ApiProperty({
     example: '안암에 이런 집은 없었다.',
+    nullable: true,
     description: '장소 한줄소개',
   })
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  oneLineIntroText: string;
+  oneLineIntroText?: string;
 
   @ApiProperty({
     example: '3000',
@@ -70,10 +73,11 @@ export class CreatePlaceInput {
   @ApiProperty({
     example: '나이 20 ~ 25 중간',
     description: '연령대 권장사항',
+    nullable: true,
   })
   @IsString()
   @IsOptional()
-  recommendation: string;
+  recommendation?: string;
 
   @ApiProperty({
     example: '2021-11-29T05:35:14.757Z',
@@ -83,21 +87,14 @@ export class CreatePlaceInput {
   @IsNotEmpty()
   startDateAt: Date;
 
-  // @ApiProperty({
-  //   example: '16',
-  //   description: '미팅 시작 시각 ',
-  // })
-  // @IsNotEmpty()
-  // @Transform((param) => JSON.parse(param?.obj.startTime))
-  // startTime: number;
-
   @ApiProperty({
     example: '"[맥주, 호프]"',
+    nullable: true,
     description: '장소 해시태그',
   })
   @Transform((param) => JSON.parse(param?.obj.categories))
   @IsOptional()
-  categories: string[];
+  categories?: string[];
 
   @ApiProperty({
     example: '서울 강남구 강남대로 152길 42 2층',
@@ -109,19 +106,12 @@ export class CreatePlaceInput {
 
   @ApiProperty({
     example: 'https://map.naver.com',
+    nullable: true,
     description: '맛집 정보 더보기',
   })
   @IsString()
   @IsOptional()
-  detailLink: string;
-
-  @ApiProperty({
-    example: '와 이런 장소가 있었다니 또 와야겠네요',
-    description: '리뷰 설명 (하나만)',
-  })
-  @IsString()
-  @IsOptional()
-  reviewDescription: string;
+  detailLink?: string;
 }
 export class PlacePhotoInput {
   coverImage: Express.Multer.File[];

@@ -34,7 +34,7 @@ export class Place {
   coverImage: string;
 
   @Column('varchar', { array: true, nullable: true, length: 511 })
-  subImages: string[];
+  subImages?: string[];
 
   @Column({ length: 255, nullable: true })
   oneLineIntroText?: string;
@@ -179,7 +179,6 @@ export class Place {
     if (start_date.diff(current_date, 'days') === 0) {
       const deadlineDate = start_date.subtract(3, 'hours');
       const duration = moment.duration(deadlineDate.diff(moment()));
-
       if (duration.asSeconds() <= 0) {
         return DeadlineIndicator.Done; // 3 시간 전에 마감
       }
