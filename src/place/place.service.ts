@@ -204,14 +204,13 @@ export class PlaceService {
       );
       const placeData: PlaceData = {
         ...place,
-        reviews: place.reviews,
+        startDateFromNow,
         isParticipating,
         participantsData: {
           participantsCount,
           leftParticipantsCount,
           participantsUsername,
         },
-        startDateFromNow,
       };
       return {
         ok: true,

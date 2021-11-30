@@ -19,7 +19,6 @@ export class PlaceData {
     leftParticipantsCount: number;
     participantsUsername: string[];
   };
-  reviews: Review[];
   location?: string;
   placeDetail: {
     detailAddress: string;

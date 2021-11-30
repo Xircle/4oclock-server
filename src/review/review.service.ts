@@ -25,9 +25,6 @@ export class ReviewService {
         order: {
           createdAt: 'DESC',
         },
-        where: {
-          isRepresentative: false,
-        },
         take: limit,
         skip: limit * (page - 1),
       });
@@ -65,25 +62,24 @@ export class ReviewService {
   public async createReview(
     authUser: User,
     placeId: string,
-    createReviewInput: CreateReviewInput,
+    { description }: CreateReviewInput,
     files: Express.Multer.File[],
   ): Promise<CoreOutput> {
     try {
       await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
 
-      const reviewImageUrls: string[] = [];
+      const imageUrls: string[] = [];
       for (let file of files) {
         const s3_url = await this.s3Service.uploadToS3(file, placeId);
-        reviewImageUrls.push(s3_url);
+        imageUrls.push(s3_url);
       }
 
       await this.reviewRepository.save(
         this.reviewRepository.create({
-          imageUrls: reviewImageUrls,
-          description: createReviewInput.description,
-          isRepresentative: createReviewInput.isRepresentative,
           place_id: placeId,
           user_id: authUser.id,
+          imageUrls,
+          description,
         }),
       );
       return {
