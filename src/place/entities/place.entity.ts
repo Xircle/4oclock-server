@@ -15,8 +15,8 @@ import { Reservation } from '@reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
 
 export enum DeadlineIndicator {
-  'Done' = 'Done',
-  'Today' = 'Today',
+  'Done' = '마감',
+  'Today' = '오늘 마감',
   'D-1' = 'D-1',
   'D-2' = 'D-2',
   'D-3' = 'D-3',
@@ -40,10 +40,10 @@ export class Place {
   oneLineIntroText?: string;
 
   @Index()
-  @Column({ length: 255, nullable: true })
+  @Column({ length: 255, default: '전체' })
   location?: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ length: 255, default: '모든' })
   recommendation?: string;
 
   @Column('timestamptz')
@@ -75,6 +75,100 @@ export class Place {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  isToday(): boolean {
+    if (moment(this.startDateAt).isSame(moment(), 'day')) {
+      return true;
+    }
+    return false;
+  }
+
+  isAfterToday(): boolean {
+    if (moment(this.startDateAt).isAfter(moment(), 'day')) {
+      return true;
+    }
+    return false;
+  }
+
+  isThisWeek(): boolean {
+    const thisMonday = moment().startOf('isoWeek');
+    const thisSunday = moment().endOf('isoWeek');
+    if (
+      moment(this.startDateAt).isBetween(
+        thisMonday,
+        thisSunday,
+        undefined,
+        '[]',
+      )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  isNextWeek(): boolean {
+    const thisMonday = moment().startOf('isoWeek');
+    const thisSunday = moment().startOf('isoWeek');
+    const nextMonday = moment(thisMonday).add(7, 'days');
+    const nextSunday = moment(thisSunday).add(7, 'days');
+    if (
+      moment(this.startDateAt).isBetween(
+        nextMonday,
+        nextSunday,
+        undefined,
+        '[]',
+      )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  getStartHours(): number {
+    return this.startDateAt.getHours();
+  }
+
+  getStartDateCaption() {
+    const current_date = moment().format('YYYY-MM-DD');
+    if (moment(this.startDateAt).diff(current_date, 'days') === 1) {
+      return '내일';
+    } else if (moment(this.startDateAt).diff(current_date, 'days') === 2) {
+      return '모래';
+    } else {
+      return `이번주 ${moment(this.startDateAt).format('dddd')}`;
+    }
+  }
+
+  /**
+   * Returns event's date with custom caption.
+   * @example 마감, 오늘, 내일, 모래 이번주 *요일, 다음주 *요일, 10월 31일
+   */
+  getStartDateFromNow() {
+    const isToday = this.isToday();
+    if (isToday) {
+      const startHours = this.getStartHours();
+      return `오늘 ${startHours}`;
+    }
+
+    const isAfterToday = this.isAfterToday();
+    if (!isAfterToday) {
+      return '마감';
+    }
+
+    const isThisWeek = this.isThisWeek();
+    if (isThisWeek) {
+      const dateCaption = this.getStartDateCaption();
+      const hours = this.getStartHours();
+      return `${dateCaption} ${hours}`;
+    }
+
+    const isNextWeek = this.isNextWeek();
+    if (isNextWeek) {
+      return `다음주 ${moment(this.startDateAt).format('dddd')}`;
+    }
+
+    return `${moment(this.startDateAt).format('M월 DD일')}`;
+  }
+
   /**
    * Returns deadline caption, according to event's date
    */
@@ -95,55 +189,5 @@ export class Place {
     } else {
       return undefined;
     }
-  }
-
-  /**
-   * Returns event's date with custom caption.
-   * @example 마감, 오늘, 내일, 모래 이번주 *요일, 다음주 *요일, 10월 31일
-   */
-  getStartDateFromNow() {
-    const eventDate = this.startDateAt;
-    let event_date_caption: string[] = [];
-    if (moment(eventDate).isSame(moment(), 'day')) {
-      event_date_caption.push('오늘');
-    } else {
-      if (moment(eventDate).isAfter(moment(), 'day')) {
-        // 적어도 내일 이상
-        const this_monday = moment().startOf('isoWeek');
-        const this_sunday = moment().endOf('isoWeek');
-        const current_date = moment().format('YYYY-MM-DD');
-        const event_date = moment(eventDate);
-        if (
-          moment(eventDate).isBetween(this_monday, this_sunday, undefined, '[]')
-        ) {
-          // console.log(event_date, current_date);
-          if (event_date.diff(current_date, 'days') === 1) {
-            event_date_caption.push('내일');
-          } else {
-            event_date_caption.push('이번주', moment(eventDate).format('dddd'));
-          }
-        } else {
-          // 다음주 이상
-          const next_monday = moment(this_monday).add(7, 'days');
-          const next_sunday = moment(this_sunday).add(7, 'days');
-          if (
-            moment(eventDate).isBetween(
-              next_monday,
-              next_sunday,
-              undefined,
-              '[]',
-            )
-          ) {
-            event_date_caption.push('다음주', moment(eventDate).format('dddd'));
-          } else {
-            event_date_caption.push(moment(eventDate).format('M월DD일'));
-          }
-        }
-      } else {
-        event_date_caption.push('마감');
-      }
-    }
-
-    return event_date_caption.join(' ');
   }
 }
