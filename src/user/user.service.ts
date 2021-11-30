@@ -196,6 +196,9 @@ export class UserService {
           user_id: authUser.id,
           isCanceled: false,
         },
+        order: {
+          createdAt: 'DESC',
+        },
         relations: ['place'],
       });
 
@@ -214,6 +217,7 @@ export class UserService {
           coverImage: reservation.place.coverImage,
           name: reservation.place.name,
           oneLineIntroText: reservation.place.oneLineIntroText,
+          description: reservation.place.placeDetail.description,
           participantsCount,
           isClosed: reservation.place.isClosed,
           startDateFromNow,
