@@ -39,7 +39,6 @@ export class Place {
   @Column({ length: 255, nullable: true })
   oneLineIntroText?: string;
 
-  @Index()
   @Column({ length: 255, default: '전체' })
   location?: string;
 
@@ -166,7 +165,9 @@ export class Place {
       return `다음주 ${moment(this.startDateAt).format('dddd')}`;
     }
 
-    return `${moment(this.startDateAt).format('M월 DD일')}`;
+    return `${moment(this.startDateAt).format(
+      'M월 DD일',
+    )} ${this.getStartHours()}`;
   }
 
   /**
