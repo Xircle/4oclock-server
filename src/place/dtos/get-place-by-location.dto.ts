@@ -21,7 +21,6 @@ export class MainFeedPlace {
   views: number;
   participantsCount: number;
   leftParticipantsCount: number;
-  // participants: MainFeedPlaceParticipantsProfile[];
   isClosed: boolean;
 }
 

@@ -5,6 +5,7 @@ export class MyXircle {
   coverImage: string;
   name: string;
   oneLineIntroText: string;
+  description: string;
   startDateFromNow: string;
   isClosed: boolean;
   participantsCount: number;
