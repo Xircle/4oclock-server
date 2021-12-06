@@ -23,7 +23,8 @@
       "@reservation/*": ["reservation/*"],
       "@review/*": ["review/*"],
       "@room/*": ["room/*"],
-      "@user/*": ["user/*"]
+      "@user/*": ["user/*"],
+      "@sms/*": ["sms/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
