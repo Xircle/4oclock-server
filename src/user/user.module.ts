@@ -7,13 +7,18 @@ import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { UserRepository } from './repositories/user.repository';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
+import { ReservationRepository } from '@reservation/repository/reservation.repository';
 
 @Global()
 @Module({
   imports: [
     CacheModule.register(),
     AuthModule,
-    TypeOrmModule.forFeature([UserRepository, Reservation]),
+    TypeOrmModule.forFeature([
+      ReservationRepository,
+      UserRepository,
+      Reservation,
+    ]),
   ],
   providers: [JwtAuthGuard, UserService, S3Service],
   controllers: [UserController],

@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { getManager, Repository } from 'typeorm';
+import { getManager } from 'typeorm';
 import { UserProfile } from './entities/user-profile.entity';
 import { EditProfileInput } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
@@ -10,16 +9,15 @@ import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { User } from './entities/user.entity';
 import { MeOutput } from './dtos/me.dto';
-import { Reservation } from '@reservation/entities/reservation.entity';
 import { S3Service } from '@aws/s3/s3.service';
 import { CoreOutput } from '@common/common.interface';
+import { ReservationRepository } from '@reservation/repository/reservation.repository';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Reservation)
-    private reservationRepository: Repository<Reservation>,
-    private users: UserRepository,
+    private readonly reservationRepository: ReservationRepository,
+    private readonly users: UserRepository,
     private readonly s3Service: S3Service,
   ) {}
 
