@@ -1,5 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import {
   HealthCheck,
   HealthCheckService,
   TypeOrmHealthIndicator,
@@ -7,6 +13,10 @@ import {
   DiskHealthIndicator,
 } from '@nestjs/terminus';
 
+@ApiTags('Health Check')
+@ApiBearerAuth('jwt')
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
 @Controller('health')
 export class HealthController {
   constructor(

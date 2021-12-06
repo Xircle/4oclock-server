@@ -9,7 +9,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-@ApiTags('Place')
+@ApiTags('SMS')
 @ApiBearerAuth('jwt')
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
