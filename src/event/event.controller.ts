@@ -6,7 +6,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateEventBannerInput } from './dtos/create-event-banner.dto';
 import { EventService } from './event.service';
@@ -17,6 +22,9 @@ import { GetUser } from '@auth/decorators/get-user.decorator';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from '@common/common.interface';
 
+@ApiTags('Event')
+@ApiOkResponse()
+@ApiUnauthorizedResponse()
 @Controller('event')
 export class EventController {
   constructor(private eventService: EventService) {}
