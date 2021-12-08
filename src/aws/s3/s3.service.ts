@@ -29,7 +29,7 @@ export class S3Service {
     }
   }
 
-  getS3() {
+  private getS3() {
     return new AWS.S3({
       credentials: {
         accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
