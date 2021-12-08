@@ -104,7 +104,7 @@ export class SocialRegisterInput {
   })
   @IsString()
   @IsOptional()
-  activities: string;
+  activities?: string;
 
   @ApiProperty({
     example: '친해지면 말 많아요 / 드립력 상 / 조용하고 성실함',
@@ -112,7 +112,7 @@ export class SocialRegisterInput {
   })
   @IsString()
   @IsOptional()
-  personality: string;
+  personality?: string;
 
   @ApiProperty({
     example: 'ESFP, ENPJ',
@@ -120,7 +120,7 @@ export class SocialRegisterInput {
   })
   @IsString()
   @IsOptional()
-  MBTI: string;
+  MBTI?: string;
 
   @ApiProperty({
     example: '0',
