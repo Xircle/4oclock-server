@@ -7,4 +7,10 @@ module.exports = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/src/',
   }),
+  coveragePathIgnorePatterns: [
+    "node_modules",
+    ".entity.ts",
+    ".constants.ts",
+    ".interface.ts",
+  ]
 };
