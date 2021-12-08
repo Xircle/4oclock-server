@@ -1,9 +1,10 @@
 import * as typeorm from 'typeorm';
+import { InternalServerErrorException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { S3Service } from '@aws/s3/s3.service';
-import { SocialAuthService } from './auth.service';
+import { AuthService, SocialAuthService } from './auth.service';
 import { User } from '@user/entities/user.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { Gender, UserProfile } from '@user/entities/user-profile.entity';
@@ -24,12 +25,141 @@ const mockS3Service = {
 const mockConfigService = {
   get: jest.fn(),
 };
-const mockJwtService = {
-  sign: jest.fn(),
-};
+const mockJwtService = () => ({
+  sign: jest.fn(() => 'Jwt-secret-token-baby'),
+});
 type MockRepository<T = any> = Partial<
   Record<keyof typeorm.Repository<T>, jest.Mock>
 >;
+
+describe('AuthService', () => {
+  let authService: AuthService;
+  let userRepository: MockRepository<User>;
+  let jwtService: JwtService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        {
+          provide: UserRepository,
+          useValue: mockUserRepository,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService(),
+        },
+      ],
+    }).compile();
+
+    authService = module.get(AuthService);
+    userRepository = module.get(UserRepository);
+    jwtService = module.get(JwtService);
+  });
+
+  it('should be defined', () => {
+    expect(authService).toBeDefined();
+  });
+
+  describe('createUser', () => {
+    const userArgs = {
+      email: 'she_lock@naver.com',
+      password: 'test123',
+    };
+    it('should fail, if user exist', async () => {
+      userRepository.findOne.mockResolvedValue({ email: 'she_lock@naver.com' });
+      const result = await authService.createUser(userArgs);
+      expect(result).toMatchObject({
+        ok: false,
+        error: '이미 존재하는 계정입니다.',
+      });
+    });
+
+    it('should create a new user', async () => {
+      userRepository.findOne.mockResolvedValue(undefined);
+      userRepository.create.mockReturnValue(userArgs);
+      userRepository.save.mockResolvedValue(undefined);
+      const result = await authService.createUser(userArgs);
+      expect(userRepository.create).toHaveBeenCalledTimes(1);
+      expect(userRepository.create).toHaveBeenCalledWith(userArgs);
+      expect(userRepository.save).toHaveBeenCalledTimes(1);
+      expect(userRepository.save).toHaveBeenCalledWith(userArgs);
+      expect(result).toMatchObject({ ok: true });
+    });
+
+    it('should return InternelServerException', async () => {
+      userRepository.findOne.mockRejectedValue(new Error());
+      userRepository.create.mockRejectedValue(new Error());
+      userRepository.save.mockRejectedValue(new Error());
+
+      const result = await authService.createUser(userArgs);
+      expect(result).toMatchObject({
+        ok: false,
+        error: 'Internal server error',
+      });
+    });
+  });
+
+  describe('loginUser', () => {
+    it('should fail, if user does exist', async () => {
+      const userArgs = {
+        email: 'she_lock@naver.com',
+        password: 'test123',
+      };
+      userRepository.findOne.mockResolvedValue(undefined);
+      const result = await authService.loginUser(userArgs);
+      expect(result).toMatchObject({
+        ok: false,
+        error: '존재하지 않는 아이디입니다.',
+      });
+    });
+
+    it('should fail, if password does not correct', async () => {
+      const userArgs = {
+        email: 'she_lock@naver.com',
+        password: 'test123',
+        checkPassword: jest.fn(() => Promise.resolve(false)),
+      };
+      userRepository.findOne.mockResolvedValue(userArgs);
+      const result = await authService.loginUser(userArgs);
+      expect(result).toMatchObject({
+        ok: false,
+        error: '비밀번호가 일치하지 않습니다.',
+      });
+    });
+
+    it('should return accessToken, if password is correct', async () => {
+      const userArgs = {
+        id: '64',
+        email: 'she_lock@naver.com',
+        password: 'test123',
+        checkPassword: jest.fn(() => Promise.resolve(true)),
+      };
+      userRepository.findOne.mockResolvedValue(userArgs);
+      const result = await authService.loginUser(userArgs);
+      expect(jwtService.sign).toHaveBeenCalledTimes(1);
+      expect(jwtService.sign).toHaveBeenCalledWith({ id: userArgs.id });
+      expect(result).toMatchObject({
+        ok: true,
+        accessToken: 'Jwt-secret-token-baby',
+      });
+    });
+
+    it('should return InternelServerException', async () => {
+      const userArgs = {
+        email: 'she_lock@naver.com',
+        password: 'test123',
+        checkPassword: jest.fn(() => Promise.resolve(true)),
+      };
+      userRepository.findOne.mockRejectedValue(new Error());
+      const result = await authService.loginUser(userArgs);
+      expect(result).toMatchObject({
+        ok: false,
+        error: 'Internal server error',
+      });
+    });
+  });
+});
 
 describe('SocialAuthService', () => {
   let socialAuthService: SocialAuthService;
@@ -66,7 +196,7 @@ describe('SocialAuthService', () => {
         },
         {
           provide: JwtService,
-          useValue: mockJwtService,
+          useValue: mockJwtService(),
         },
       ],
     }).compile();
@@ -151,11 +281,55 @@ describe('SocialAuthService', () => {
   });
 
   describe('socialRedirect', () => {
-    it('should return code 200, if user exists', () => {
-      userRepository.findOne.mockResolvedValue({});
+    it('should return code 200, if user exists', async () => {
+      userRepository.findOne.mockResolvedValue({
+        id: expect.any(String),
+        email: expect.any(String),
+        profile: {
+          id: expect.any(String),
+          username: expect.any(String),
+          profileImageUrl: expect.any(String),
+        },
+      });
+      const result = await socialAuthService.socialRedirect(
+        'she_lock@naver.com',
+      );
+      expect(jwtService.sign).toHaveBeenCalledTimes(1);
+      expect(jwtService.sign).toHaveBeenCalledWith({ id: expect.any(String) });
+      expect(result).toMatchObject({
+        ok: true,
+        code: 200,
+        data: {
+          token: 'Jwt-secret-token-baby',
+          uid: expect.any(String),
+          username: expect.any(String),
+          email: expect.any(String),
+          profile: {
+            id: expect.any(String),
+            thumbnail: expect.any(String),
+          },
+        },
+      });
+    });
+
+    it('should return code 401, if user does not exists', async () => {
+      userRepository.findOne.mockResolvedValue(undefined);
+      const result = await socialAuthService.socialRedirect(
+        'she_lock@naver.com',
+      );
+      expect(result).toMatchObject({
+        ok: true,
+        code: 401,
+      });
+    });
+
+    it('should return InternelServerException', async () => {
+      userRepository.findOne.mockRejectedValue(new Error());
+      await expect(
+        socialAuthService.socialRedirect('she_lock@naver.com'),
+      ).rejects.toThrow(InternalServerErrorException);
     });
   });
 
   it.todo('socialRegister.transaction');
-  it.todo('socialRedirect');
 });
