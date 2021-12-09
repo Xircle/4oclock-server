@@ -128,12 +128,13 @@ export class PlaceController {
     reviewImages: Express.Multer.File[],
     @Body() editPlaceReviewImagesInput: EditPlaceReviewImagesInput,
   ): Promise<CoreOutput> {
-    return this.placeService.editPlaceReviewImages(
-      placeId,
-      reviewId,
-      reviewImages,
-      editPlaceReviewImagesInput,
-    );
+    return { ok: true };
+    // return this.placeService.editPlaceReviewImages(
+    //   placeId,
+    //   reviewId,
+    //   reviewImages,
+    //   editPlaceReviewImagesInput,
+    // );
   }
 
   @Get('/:placeId/participants')

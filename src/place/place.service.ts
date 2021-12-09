@@ -7,10 +7,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
-import { ReviewRepository } from '@review/repository/review.repository';
 import { S3Service } from '@aws/s3/s3.service';
-import { EventService } from '@event/event.service';
-import { EventName } from '@event/entities/event-banner.entity';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from '@common/common.interface';
 import {
@@ -29,7 +26,6 @@ import {
 } from './dtos/create-place.dto';
 import { PlaceRepository } from './repository/place.repository';
 import { PlaceDetailRepository } from './repository/place-detail.repository';
-import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
@@ -43,12 +39,10 @@ export class PlaceService {
     private reservationRepository: ReservationRepository,
     private placeRepository: PlaceRepository,
     private placeDetailRepository: PlaceDetailRepository,
-    private reviewRepository: ReviewRepository,
     private s3Service: S3Service,
-    private eventService: EventService,
   ) {}
 
-  checkPlaceException(entity: Place): void {
+  private checkPlaceException(entity: Place): void {
     if (!entity) {
       throw new HttpException(
         '존재하지 않는 장소입니다.',
@@ -139,20 +133,12 @@ export class PlaceService {
         page,
         limit,
       );
-
-      // event banner
-      const eventBannerImageUrl = await this.eventService.getRandomEventBanner(
-        EventName.Halloween,
-      );
-
       return {
         ok: true,
         places: mainFeedPlaces,
         meta: placeMetadata,
-        eventBannerImageUrl,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -346,47 +332,6 @@ export class PlaceService {
             ...editedPlaceDetail,
           },
         );
-      });
-
-      return {
-        ok: true,
-      };
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async editPlaceReviewImages(
-    placeId: string,
-    reviewId: string,
-    reviewImageFiles: Express.Multer.File[],
-    editPlaceReviewImagesInput: EditPlaceReviewImagesInput,
-  ): Promise<CoreOutput> {
-    try {
-      const placeExist = await this.placeRepository.findOneByPlaceId(placeId);
-      const reviewExist = await this.reviewRepository.findReviewById(reviewId);
-
-      if (!placeExist || !reviewExist) {
-        throw new HttpException(
-          '존재하지 않는 장소 및 리뷰입니다.',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      let updatedReviewImageUrls: string[] = [];
-      for (let reviewImageFile of reviewImageFiles) {
-        const s3_url = await this.s3Service.uploadToS3(
-          reviewImageFile,
-          placeId,
-        );
-        updatedReviewImageUrls.push(s3_url);
-      }
-
-      // Update review
-      await this.reviewRepository.updateReview(reviewId, {
-        imageUrls: updatedReviewImageUrls,
-        description: editPlaceReviewImagesInput.description,
       });
 
       return {
