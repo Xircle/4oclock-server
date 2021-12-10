@@ -1,11 +1,12 @@
 import { Repository } from 'typeorm';
+import { Test } from '@nestjs/testing';
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
 import { PlaceService } from '@place/place.service';
 import { S3Service } from '@aws/s3/s3.service';
-import { Test } from '@nestjs/testing';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
-import { PlaceRepository } from './repository/place.repository';
 import { PlaceDetailRepository } from './repository/place-detail.repository';
-import { HttpException, InternalServerErrorException } from '@nestjs/common';
+import { PlaceRepository } from './repository/place.repository';
+import { UserRole } from '@user/entities/user.entity';
 
 const MockReservationRepository = {
   count: jest.fn(),
@@ -98,7 +99,106 @@ describe('PlaceService', () => {
     });
   });
 
-  describe('getPlaceById', () => {});
+  describe('getPlaceById', () => {
+    const placeId = '67';
+    const authUserArgs = {
+      id: '12',
+      email: 'she_lock@naver.com',
+      role: UserRole.Client,
+    };
+    test('should fail, if place does not exist', async () => {
+      placeRepository.findDetailPlaceByPlaceId.mockResolvedValue(undefined);
+      const result = await placeService.getPlaceById(authUserArgs, placeId);
+      expect(placeRepository.findDetailPlaceByPlaceId).toHaveBeenCalledTimes(1);
+      expect(placeRepository.findDetailPlaceByPlaceId).toHaveBeenCalledWith(
+        placeId,
+      );
+      expect(result).toMatchObject({
+        ok: false,
+        error: '존재하지 않는 장소입니다.',
+      });
+    });
+
+    test('should return placeDatas', async () => {
+      const placeEntity = {
+        placeId,
+        views: 5,
+        placeDetail: {
+          maxParticipantsNumber: 10,
+        },
+        getStartDateFromNow: jest.fn(() => '오늘 14'),
+      };
+
+      const mockNotCanceledReservations = [
+        {
+          id: '12',
+          participant: {
+            profile: {
+              username: '2donny',
+            },
+          },
+        },
+        {
+          id: '13',
+          participant: {
+            profile: {
+              username: '3donny',
+            },
+          },
+        },
+      ];
+
+      placeRepository.findDetailPlaceByPlaceId.mockResolvedValue(placeEntity);
+      placeRepository.updatePlace.mockResolvedValue(undefined);
+      placeEntity.views++;
+      reservationRepository.getNotCanceledReservations.mockResolvedValue(
+        mockNotCanceledReservations,
+      );
+      reservationRepository.isParticipating.mockResolvedValue(true);
+
+      const result = await placeService.getPlaceById(authUserArgs, placeId);
+      expect(placeRepository.updatePlace).toHaveBeenCalledTimes(1);
+      expect(placeRepository.updatePlace).toHaveBeenCalledWith(
+        {
+          id: placeEntity.placeId,
+        },
+        {
+          views: placeEntity.views + 1,
+        },
+      );
+
+      expect(
+        reservationRepository.getNotCanceledReservations,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        reservationRepository.getNotCanceledReservations,
+      ).toHaveBeenCalledWith(placeId);
+
+      expect(reservationRepository.isParticipating).toHaveBeenCalledTimes(1);
+      expect(reservationRepository.isParticipating).toHaveBeenCalledWith(
+        authUserArgs.id,
+        placeId,
+      );
+      expect(result).toMatchObject({
+        ok: true,
+        placeData: {
+          views: 6,
+          participantsData: {
+            leftParticipantsCount: 8,
+            participantsCount: 2,
+            participantsUsername: ['2donny', '3donny'],
+          },
+        },
+      });
+    });
+
+    test('should fail, on exception', async () => {
+      placeRepository.updatePlace.mockRejectedValue(new Error());
+      expect(placeService.getPlaceById(authUserArgs, placeId)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
+  });
 
   it.todo('getPlacesByLocation');
   it.todo('getPlaceById');
