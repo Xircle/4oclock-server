@@ -31,7 +31,7 @@ describe('UserService', () => {
   let service: UserService;
   let userRepository: MockRepository<User>;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         UserService,
