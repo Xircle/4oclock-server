@@ -77,7 +77,6 @@ export class ReservationService {
         };
       }
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -94,13 +93,11 @@ export class ReservationService {
           isCanceled: false,
         },
       });
-
       return {
         ok: true,
         participantsNumber: number_reservations,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -130,7 +127,6 @@ export class ReservationService {
         ok: true,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }

@@ -1,6 +1,6 @@
+import { getManager, Repository } from 'typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getManager, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@user/entities/user.entity';
 import { SocialAccount } from '@user/entities/social-account.entity';
@@ -24,7 +24,7 @@ import {
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async createUser(
@@ -53,7 +53,6 @@ export class AuthService {
         ok: true,
       };
     } catch (e) {
-      console.log(e);
       return {
         ok: false,
         error: 'Internal server error',
@@ -92,7 +91,6 @@ export class AuthService {
         accessToken,
       };
     } catch (e) {
-      console.log(e);
       return {
         ok: false,
         error: 'Internal server error',
@@ -162,6 +160,7 @@ export class SocialAuthService {
       }
 
       let data: AuthDataToFront;
+
       // Transaction Start
       await getManager().transaction(async (transactionalEntityManager) => {
         // Create user
@@ -212,22 +211,16 @@ export class SocialAuthService {
           },
         };
       });
-
-      console.log('Registered User : ', socialRegisterInput);
       return {
         ok: true,
         data,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
 
-  async socialRedirect(
-    provider: string,
-    email: string,
-  ): Promise<SocialRedirectOutput> {
+  async socialRedirect(email: string): Promise<SocialRedirectOutput> {
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -236,7 +229,6 @@ export class SocialAuthService {
         relations: ['profile'],
       });
       if (user) {
-        console.log('Loggedin user : ', user);
         const token = this.jwtService.sign({ id: user.id });
         return {
           ok: true,
@@ -259,7 +251,6 @@ export class SocialAuthService {
         };
       }
     } catch (e) {
-      console.log(e);
       throw new InternalServerErrorException();
     }
   }
