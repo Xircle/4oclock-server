@@ -40,7 +40,7 @@ export class User {
   password?: string;
 
   @Column({ default: false })
-  isVerified: boolean;
+  isVerified?: boolean;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.Client })
   @IsEnum(UserRole)
@@ -50,14 +50,14 @@ export class User {
     eager: true,
     onDelete: 'CASCADE',
   })
-  profile: UserProfile;
+  profile?: UserProfile;
 
   @OneToMany((type) => Reservation, (reservation) => reservation.participant)
-  reservations: Reservation[];
+  reservations?: Reservation[];
 
   @ManyToMany((type) => Room, (room) => room.users)
   @JoinTable()
-  rooms: Room[];
+  rooms?: Room[];
 
   @ManyToMany((type) => Message, (message) => message.sender, {
     nullable: true,
@@ -65,17 +65,17 @@ export class User {
   messages?: Message[];
 
   @OneToMany((type) => Review, (review) => review.user)
-  reviews: Review[];
+  reviews?: Review[];
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @Column('timestamptz', { select: false })
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 
-  async checkPassword(password: string): Promise<boolean> {
+  async checkPassword?(password: string): Promise<boolean> {
     try {
       console.log(password, this.password);
       return bcrypt.compare(password, this.password);

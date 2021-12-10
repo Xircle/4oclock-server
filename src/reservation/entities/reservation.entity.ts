@@ -39,7 +39,7 @@ export class Reservation {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  participant: User;
+  participant?: User;
 
   @ManyToOne((type) => Place, (place) => place.reservations, {
     onDelete: 'CASCADE',
