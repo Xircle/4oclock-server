@@ -7,13 +7,13 @@ import { Repository } from 'typeorm';
 import { Reservation } from './entities/reservation.entity';
 import { InternalServerErrorException } from '@nestjs/common';
 
-const mockReservationRepository = {
+const mockReservationRepository = () => ({
   findOne: jest.fn(),
   create: jest.fn(),
   save: jest.fn(),
   update: jest.fn(),
   count: jest.fn(),
-};
+});
 const mockPlaceService = {
   GetPlaceByIdAndcheckPlaceException: jest.fn(),
 };
@@ -31,7 +31,7 @@ describe('ReservationService', () => {
         ReservationService,
         {
           provide: ReservationRepository,
-          useValue: mockReservationRepository,
+          useValue: mockReservationRepository(),
         },
         {
           provide: PlaceService,
@@ -44,16 +44,17 @@ describe('ReservationService', () => {
     placeService = module.get(PlaceService);
   });
 
+  const placeId = '64';
+  const authUserArgs = {
+    id: '1',
+    email: 'she_lock@naver.com',
+    role: UserRole.Client,
+  };
+  const makeReservationArgs = {
+    placeId: '31',
+    isVaccinated: true,
+  };
   describe('makeReservation', () => {
-    const authUserArgs = {
-      id: '1',
-      email: 'she_lock@naver.com',
-      role: UserRole.Client,
-    };
-    const makeReservationArgs = {
-      placeId: '31',
-      isVaccinated: true,
-    };
     test('should fail, if place is closed', async () => {
       placeService.GetPlaceByIdAndcheckPlaceException.mockResolvedValue({
         id: '31',
@@ -181,6 +182,76 @@ describe('ReservationService', () => {
     });
   });
 
-  test.todo('getReservationParticipantNumber');
-  test.todo('patchReservation');
+  describe('getReservationParticipantNumber', () => {
+    test('should return participants Number', async () => {
+      placeService.GetPlaceByIdAndcheckPlaceException.mockResolvedValue(
+        undefined,
+      );
+
+      reservationRepository.count.mockResolvedValue(1);
+
+      const result = await reservationService.getReservationParticipantNumber(
+        placeId,
+      );
+      expect(reservationRepository.count).toHaveBeenCalledTimes(1);
+      expect(reservationRepository.count).toHaveBeenCalledWith({
+        where: {
+          place_id: placeId,
+          isCanceled: false,
+        },
+      });
+      expect(result).toMatchObject({
+        ok: true,
+        participantsNumber: 1,
+      });
+    });
+
+    test('should fail on exception', async () => {
+      reservationRepository.count.mockRejectedValue(new Error());
+      expect(
+        reservationService.getReservationParticipantNumber(placeId),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+  });
+
+  describe('patchReservation', () => {
+    const patchReservationArgs = {
+      cancelReason: expect.any(String),
+      detailReason: expect.any(String),
+    };
+    test('should edit properly', async () => {
+      reservationRepository.update.mockResolvedValue(undefined);
+      const result = await reservationService.patchReservation(
+        authUserArgs,
+        placeId,
+        patchReservationArgs,
+      );
+      expect(reservationRepository.update).toBeCalledTimes(1);
+      expect(reservationRepository.update).toHaveBeenCalledWith(
+        {
+          place_id: placeId,
+          user_id: authUserArgs.id,
+        },
+        {
+          isCanceled: true,
+          cancelReason: patchReservationArgs.cancelReason,
+          detailReason: patchReservationArgs.detailReason,
+        },
+      );
+      expect(result).toMatchObject({
+        ok: true,
+      });
+    });
+
+    test('should fail on exception', async () => {
+      reservationRepository.update.mockRejectedValue(new Error());
+      expect(
+        reservationService.patchReservation(
+          authUserArgs,
+          placeId,
+          patchReservationArgs,
+        ),
+      ).rejects.toThrow(InternalServerErrorException);
+    });
+  });
 });
