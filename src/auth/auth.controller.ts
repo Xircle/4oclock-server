@@ -82,6 +82,6 @@ export class SocialAuthController {
     @Param('provider') provider: string,
     @Query('email') email: string,
   ): Promise<SocialRedirectOutput> {
-    return this.socialAuthService.socialRedirect(provider, email);
+    return this.socialAuthService.socialRedirect(email);
   }
 }
