@@ -1,7 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoomRepository } from '@room/repository/room.repository';
-import { ChatsGateway } from '@chats/chats.gateway';
 import { RoomService } from '@room/room.service';
 import { User } from '@user/entities/user.entity';
 import { MessageRepository } from './repository/message.repository';
@@ -15,7 +14,6 @@ export class MessageService {
     private readonly roomRepository: RoomRepository,
     private readonly messageRepository: MessageRepository,
     private readonly roomService: RoomService,
-    private readonly chatsGateway: ChatsGateway,
   ) {}
 
   async getRoomsMessages(
@@ -25,24 +23,31 @@ export class MessageService {
     page: number,
     limit: number,
   ): Promise<GetRoomsMessagesOutput> {
-    if (roomId === '0') return { ok: true, messages: [] };
-    const existRoom = await this.roomService.getRoomByIdWithLoadedUser(roomId);
-    if (
-      !existRoom ||
-      !existRoom.users.some((user) => user.id === authUser.id)
-    ) {
-      return {
-        ok: false,
-        error: '권한이 없습니다.',
-      };
+    try {
+      if (roomId === '0') return { ok: true, messages: [] };
+      const existRoom = await this.roomService.getRoomByIdWithLoadedUser(
+        roomId,
+      );
+      if (
+        !existRoom ||
+        !existRoom.users.some((user) => user.id === authUser.id)
+      ) {
+        return {
+          ok: false,
+          error: '권한이 없습니다.',
+        };
+      }
+
+      return this.messageRepository.getRoomsMessages(
+        authUser,
+        roomId,
+        receiverId,
+        page,
+        limit,
+      );
+    } catch {
+      throw new InternalServerErrorException();
     }
-    return this.messageRepository.getRoomsMessages(
-      authUser,
-      roomId,
-      receiverId,
-      page,
-      limit,
-    );
   }
 
   async sendMessage(
@@ -78,8 +83,6 @@ export class MessageService {
         });
         await this.messageRepository.save(message);
 
-        // 소켓에 Join
-        this.chatsGateway.server.socketsJoin(newRoom.id);
         return {
           ok: true,
           createdRoomId: newRoom.id,
