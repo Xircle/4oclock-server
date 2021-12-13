@@ -19,9 +19,11 @@ Following items are core backend technologies used in this project:
 - NestJs
 - TypeScript
 - TypeORM
-- PostgreSQL
+- Jest
 - AWS
   - Bean stalk
+  - RDS(PostgreSQL)
+  - EC2
   - Lambda
   - S3
   - CloudFront
@@ -35,7 +37,7 @@ Following items are core backend technologies used in this project:
 - S3 for static image
 - Cloudfront CDN for S3 origin
 - Route 53 for sub-domain
-- ACM for SSL certificate 
+- ACM for SSL certificate
 
 ## Upcoming Feature
 
@@ -48,6 +50,6 @@ Following items are core backend technologies used in this project:
 - [x] Thumbnail image resizing with Lambda@Edge
 - [x] AWS Bean stalk
 - [x] AWS Migration from Heroku server
-- [ ] Test code (50% coverage)
+- [x] Test code (50% coverage)
 - [ ] Code refactoring with DDD
 - [ ] Microservice NestJs server
