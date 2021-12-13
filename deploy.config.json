@@ -3,7 +3,7 @@
     {
       "name": "4oclock-server",
       "script": "./dist/src/main.js",
-      "instances": 1,
+      "instances": 4,
       "exec_mode": "cluster",
       "wait_ready": true,
       "env": {
