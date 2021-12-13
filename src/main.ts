@@ -9,10 +9,10 @@ async function bootstrap() {
   await app.listen(process.env.PORT || 3080, () => {
     process.send?.('ready');
   });
-
   process.on('SIGINT', () => {
     console.log('process exited');
     process.exit(0);
   });
 }
+
 bootstrap();
