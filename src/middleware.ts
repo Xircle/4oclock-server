@@ -9,7 +9,6 @@ export const applyMiddleware = (app: INestApplication) => {
     origin: [
       'https://www.4oclock.kr',
       'https://4oclock.kr',
-      'https://test.4oclock.kr',
       'http://localhost:3000',
     ],
     credentials: true,
@@ -23,8 +22,8 @@ export const applyMiddleware = (app: INestApplication) => {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('네시모해 API')
-    .setDescription('네시모해 개발을 위한 API 문서입니다.')
+    .setTitle('네시모해(연고이팅) API')
+    .setDescription('연고이팅 개발을 위한 API 문서입니다.')
     .setVersion('1.0')
     .addBearerAuth(
       {
