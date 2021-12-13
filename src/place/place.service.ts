@@ -202,7 +202,6 @@ export class PlaceService {
         placeData,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -263,7 +262,6 @@ export class PlaceService {
         ok: true,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -279,7 +277,6 @@ export class PlaceService {
         ok: true,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -338,7 +335,6 @@ export class PlaceService {
         ok: true,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -376,7 +372,6 @@ export class PlaceService {
         },
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
