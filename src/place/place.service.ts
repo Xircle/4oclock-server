@@ -239,7 +239,7 @@ export class PlaceService {
         //   Create place
         const place = await this.placeRepository.createAndSavePlace(
           {
-            id: placeId,
+            kakaoPlaceId: placeId,
             coverImage: coverImageS3Url,
             subImages: subImageS3Urls,
             name,

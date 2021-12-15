@@ -6,7 +6,9 @@ import {
   Index,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import 'moment/locale/ko';
@@ -26,6 +28,9 @@ export enum DeadlineIndicator {
 export class Place {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ nullable: true, unique: true })
+  kakaoPlaceId?: string;
 
   @Column({ length: 255 })
   name: string;
