@@ -70,8 +70,6 @@ export class PlaceController {
 
   @Post('')
   @ApiOperation({ summary: '장소 생성하기' })
-  @UseGuards(RolesGuard)
-  @Roles(['Admin', 'Owner'])
   @UseInterceptors(
     FileFieldsInterceptor([
       {
