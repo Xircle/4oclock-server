@@ -11,6 +11,14 @@ import {
 
 export class CreatePlaceInput {
   @ApiProperty({
+    example: '1as223asd',
+    description: '카카오 placeId',
+  })
+  @IsString()
+  @IsNotEmpty()
+  placeId: string;
+
+  @ApiProperty({
     example: '춘자 카페',
     description: '장소 이름',
   })

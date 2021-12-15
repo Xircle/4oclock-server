@@ -212,6 +212,7 @@ export class PlaceService {
     placePhotoInput: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
     const {
+      placeId,
       name,
       description,
       maxParticipantsNumber,
@@ -238,6 +239,7 @@ export class PlaceService {
         //   Create place
         const place = await this.placeRepository.createAndSavePlace(
           {
+            id: placeId,
             coverImage: coverImageS3Url,
             subImages: subImageS3Urls,
             name,
