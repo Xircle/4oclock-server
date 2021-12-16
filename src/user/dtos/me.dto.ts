@@ -3,6 +3,7 @@ import { Gender } from '@user/entities/user-profile.entity';
 import { UserRole } from '../entities/user.entity';
 export class MeData {
   accountType: UserRole;
+  sofoCode: string;
   gender: Gender;
   shortBio: string;
   activities: string;

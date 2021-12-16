@@ -37,6 +37,9 @@ export class UserProfile {
   @Column()
   age: number;
 
+  @Column({ nullable: true })
+  sofoCode?: string;
+
   @Column({
     type: 'enum',
     enum: Gender,

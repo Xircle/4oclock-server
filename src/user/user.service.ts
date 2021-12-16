@@ -40,6 +40,7 @@ export class UserService {
       const {
         profileImageUrl,
         age,
+        sofoCode,
         gender,
         shortBio,
         activities,
@@ -58,6 +59,7 @@ export class UserService {
         data: {
           accountType: authUser.role,
           gender,
+          sofoCode,
           shortBio,
           activities,
           job,
