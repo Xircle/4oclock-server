@@ -5,7 +5,7 @@ import { IsOptional } from 'class-validator';
 
 export class EditProfileInput extends PartialType(SocialRegisterInput) {
   @ApiProperty({
-    name: '연고이팅 회원이신가요?',
+    name: 'isYkClub',
     example: 'true',
     nullable: true,
   })
@@ -13,7 +13,7 @@ export class EditProfileInput extends PartialType(SocialRegisterInput) {
   isYkClub?: boolean;
 
   @ApiProperty({
-    name: '12dasd23',
+    name: 'sofoCode',
     example: '소포 이벤트코드',
     nullable: true,
   })
