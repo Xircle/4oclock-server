@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import 'env';
+import './src/env';
 
 export const ormconfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -9,7 +9,7 @@ export const ormconfig: TypeOrmModuleOptions = {
   host: process.env.RDS_HOSTNAME,
   port: +process.env.RDS_PORT,
   database: process.env.RDS_DB_NAME,
-  entities: ['dist/**/*.entity.{js,ts}'],
+  entities: [__dirname + '/**/*.entity.{js,ts}'],
   ssl: false,
   synchronize: false,
   logging: true,
