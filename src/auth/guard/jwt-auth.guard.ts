@@ -45,7 +45,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     try {
       return this.jwtService.verify(token);
     } catch (e) {
-      console.log(e);
       switch (e.message) {
         case 'invalid token':
           throw new HttpException('유효하지 않은 토큰입니다.', 401);

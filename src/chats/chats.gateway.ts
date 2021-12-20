@@ -16,7 +16,7 @@ import { JoinRoomData } from './dtos/join-room.dto';
 import { RoomGuard } from './guards/room.guard';
 import { ChatsGuard } from './guards/chats.guard';
 import { IsEnteringData } from './dtos/is-entering.dto';
-import 'env';
+import '../env';
 
 @ApiTags('ChatGateway')
 @WebSocketGateway({
