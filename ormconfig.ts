@@ -12,7 +12,7 @@ export const ormconfig: TypeOrmModuleOptions = {
   entities: [__dirname + '/**/*.entity.{js,ts}'],
   ssl: false,
   synchronize: false,
-  logging: true,
+  logging: process.env.NODE_ENV === 'dev',
   keepConnectionAlive: true,
   namingStrategy: new SnakeNamingStrategy(),
 };
