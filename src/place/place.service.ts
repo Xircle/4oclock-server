@@ -219,6 +219,7 @@ export class PlaceService {
       startDateAt,
       participationFee,
       detailAddress,
+      isVaccinated,
     } = createPlaceInput;
     const { coverImage, subImages } = placePhotoInput;
 
@@ -257,6 +258,15 @@ export class PlaceService {
             detailAddress,
           },
           transactionalEntityManager,
+        );
+        // Make reservation
+        await this.reservationRepository.save(
+          this.reservationRepository.create({
+            place_id: place.id,
+            user_id: authUser.id,
+            isCanceled: false,
+            isVaccinated,
+          }),
         );
       });
 

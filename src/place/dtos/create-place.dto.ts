@@ -120,6 +120,13 @@ export class CreatePlaceInput {
   @IsString()
   @IsOptional()
   detailLink?: string;
+
+  @ApiProperty({
+    example: 'true',
+    description: '백신 접종 유무',
+  })
+  @IsNotEmpty()
+  isVaccinated: boolean;
 }
 export class PlacePhotoInput {
   coverImage: Express.Multer.File[];
