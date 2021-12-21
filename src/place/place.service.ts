@@ -18,6 +18,7 @@ import {
 import {
   GetPlaceByLocationWhereOptions,
   MainFeedPlace,
+  MainFeedPlaceParticipantsProfile,
 } from './dtos/get-place-by-location.dto';
 import {
   CreatePlaceInput,
@@ -100,15 +101,14 @@ export class PlaceService {
       for (const place of finalPlaceEntities) {
         const startDateFromNow = place.getStartDateFromNow();
         const deadline = place.getDeadlineCaption();
-        const participantsCount: number =
-          await this.reservationRepository.count({
-            where: {
-              place_id: place.id,
-              isCanceled: false,
-            },
-          });
+
+        // Regarding to Participants
+        const participants: MainFeedPlaceParticipantsProfile[] =
+          await this.reservationRepository.getParticipantsProfile(place.id);
+        const participantsCount: number = participants.length;
         const leftParticipantsCount: number =
           place.placeDetail.maxParticipantsNumber - participantsCount;
+
         // isClosed Update 로직 (참가자 수가 최대 인원일 때, 3시간 전)
         if (!place.isClosed) {
           if (
@@ -123,8 +123,9 @@ export class PlaceService {
           ...place,
           startDateFromNow,
           deadline,
-          leftParticipantsCount,
+          participants,
           participantsCount,
+          leftParticipantsCount,
         });
       }
 
@@ -260,14 +261,13 @@ export class PlaceService {
           transactionalEntityManager,
         );
         // Make reservation
-        await this.reservationRepository.save(
-          this.reservationRepository.create({
-            place_id: place.id,
-            user_id: authUser.id,
-            isCanceled: false,
-            isVaccinated,
-          }),
-        );
+        const reservation = this.reservationRepository.create({
+          place_id: place.id,
+          user_id: authUser.id,
+          isCanceled: false,
+          isVaccinated: true,
+        });
+        await transactionalEntityManager.save(reservation);
       });
 
       return {
