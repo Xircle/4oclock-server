@@ -125,8 +125,8 @@ export class CreatePlaceInput {
     example: 'true',
     description: '백신 접종 유무',
   })
-  @IsNotEmpty()
-  isVaccinated: boolean;
+  @IsOptional()
+  isVaccinated?: boolean;
 }
 export class PlacePhotoInput {
   coverImage: Express.Multer.File[];
