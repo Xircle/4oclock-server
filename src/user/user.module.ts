@@ -1,5 +1,5 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CacheModule, Global, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthModule } from '@auth/auth.module';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { S3Service } from '@aws/s3/s3.service';
@@ -12,7 +12,6 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
 @Global()
 @Module({
   imports: [
-    CacheModule.register(),
     AuthModule,
     TypeOrmModule.forFeature([
       ReservationRepository,

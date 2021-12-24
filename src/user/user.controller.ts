@@ -1,7 +1,6 @@
 import {
   Body,
   CacheInterceptor,
-  CacheTTL,
   ClassSerializerInterceptor,
   Controller,
   Get,
@@ -75,8 +74,6 @@ export class UserController {
 
   @Get('/profile/:id')
   @ApiOperation({ summary: '특정 유저 조회 ' })
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(100)
   async seeUserById(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<SeeUserByIdOutput> {
