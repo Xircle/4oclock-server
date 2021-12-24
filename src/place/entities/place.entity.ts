@@ -3,18 +3,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import 'moment/locale/ko';
 import { Review } from '@review/entities/review.entity';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
+import { Expose } from 'class-transformer';
 
 export enum DeadlineIndicator {
   'Done' = '마감',
@@ -79,6 +77,7 @@ export class Place {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Expose()
   isToday(): boolean {
     if (moment(this.startDateAt).isSame(moment(), 'day')) {
       return true;
@@ -86,6 +85,7 @@ export class Place {
     return false;
   }
 
+  @Expose()
   isAfterToday(): boolean {
     if (moment(this.startDateAt).isAfter(moment(), 'day')) {
       return true;
@@ -93,6 +93,7 @@ export class Place {
     return false;
   }
 
+  @Expose()
   isThisWeek(): boolean {
     const thisMonday = moment().startOf('isoWeek');
     const thisSunday = moment().endOf('isoWeek');
@@ -109,6 +110,7 @@ export class Place {
     return false;
   }
 
+  @Expose()
   isNextWeek(): boolean {
     const thisMonday = moment().startOf('isoWeek');
     const thisSunday = moment().startOf('isoWeek');
@@ -127,10 +129,12 @@ export class Place {
     return false;
   }
 
+  @Expose()
   getStartHours(): number {
     return this.startDateAt.getHours();
   }
 
+  @Expose()
   getStartDateCaption() {
     const current_date = moment().format('YYYY-MM-DD');
     if (moment(this.startDateAt).diff(current_date, 'days') === 1) {
@@ -146,6 +150,7 @@ export class Place {
    * Returns event's date with custom caption.
    * @example 마감, 오늘, 내일, 모래 이번주 *요일, 다음주 *요일, 10월 31일
    */
+  @Expose()
   getStartDateFromNow() {
     const isToday = this.isToday();
     if (isToday) {
@@ -178,6 +183,7 @@ export class Place {
   /**
    * Returns deadline caption, according to event's date
    */
+  @Expose()
   getDeadlineCaption(): string {
     const current_date = moment().format('YYYY-MM-DD');
     const start_date = moment(this.startDateAt);

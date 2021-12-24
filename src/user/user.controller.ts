@@ -2,6 +2,7 @@ import {
   Body,
   CacheInterceptor,
   CacheTTL,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
@@ -36,6 +37,7 @@ import { CoreOutput } from '@common/common.interface';
 @ApiOkResponse()
 @ApiUnauthorizedResponse()
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}

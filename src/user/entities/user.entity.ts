@@ -18,6 +18,7 @@ import { Reservation } from '@reservation/entities/reservation.entity';
 import { Message } from '@message/entities/message.entity';
 import { Review } from '@review/entities/review.entity';
 import { UserProfile } from './user-profile.entity';
+import { Exclude, Expose } from 'class-transformer';
 
 export enum UserRole {
   Client = 'Client',
@@ -34,7 +35,7 @@ export class User {
   @Column({ unique: true, length: 255 })
   email: string;
 
-  @IsString()
+  @Exclude()
   @Length(5, 20)
   @Column({ nullable: true })
   password?: string;
@@ -75,6 +76,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt?: Date;
 
+  @Expose()
   async checkPassword?(password: string): Promise<boolean> {
     try {
       console.log(password, this.password);
