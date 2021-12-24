@@ -37,43 +37,12 @@ export class UserService {
           isCanceled: false,
         },
       });
-      const {
-        profileImageUrl,
-        age,
-        sofoCode,
-        gender,
-        shortBio,
-        activities,
-        job,
-        university,
-        username,
-        location,
-        interests,
-        isYkClub,
-        personality,
-        MBTI,
-        drinkingStyle,
-      } = authUser.profile;
       return {
         ok: true,
         data: {
           accountType: authUser.role,
-          gender,
-          sofoCode,
-          shortBio,
-          activities,
-          job,
-          profileImageUrl,
-          username,
-          university,
-          age,
-          location,
-          interests,
-          personality,
-          MBTI,
-          drinkingStyle,
           reservation_count: reservations.length,
-          isYkClub,
+          ...authUser.profile,
         },
       };
     } catch (err) {
@@ -93,38 +62,11 @@ export class UserService {
       );
       if (!randomUser) return { ok: true };
 
-      const {
-        profileImageUrl,
-        location,
-        username,
-        job,
-        university,
-        age,
-        interests,
-        shortBio,
-        gender,
-        activities,
-        drinkingStyle,
-        MBTI,
-        personality,
-      } = randomUser.profile;
       return {
         ok: true,
         randomProfile: {
           id: randomUser.id,
-          profileImageUrl,
-          location,
-          username,
-          job,
-          university,
-          age,
-          gender,
-          shortBio,
-          activities,
-          interests,
-          drinkingStyle,
-          MBTI,
-          personality,
+          ...randomUser.profile,
         },
       };
     } catch (err) {
@@ -148,43 +90,14 @@ export class UserService {
         };
       }
 
-      const {
-        profileImageUrl,
-        location,
-        username,
-        job,
-        university,
-        age,
-        shortBio,
-        gender,
-        interests,
-        activities,
-        MBTI,
-        personality,
-        drinkingStyle,
-      } = user.profile;
-
       return {
         ok: true,
         user: {
           id: user.id,
-          profileImageUrl,
-          location,
-          username,
-          gender,
-          job,
-          university,
-          age,
-          shortBio,
-          activities,
-          interests,
-          MBTI,
-          personality,
-          drinkingStyle,
+          ...user.profile,
         },
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -229,7 +142,6 @@ export class UserService {
         places: historyPlaces,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }
@@ -270,13 +182,11 @@ export class UserService {
             ...updateData,
           },
         );
-        // await this.clearCache('/user/me');
       });
       return {
         ok: true,
       };
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException();
     }
   }

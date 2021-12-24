@@ -22,5 +22,5 @@ export class MeData {
 }
 
 export class MeOutput extends CoreOutput {
-  data: MeData;
+  data?: Partial<MeData>;
 }

@@ -2,7 +2,7 @@ import { CoreOutput } from '@common/common.interface';
 
 export class RandomUserProfile {
   id: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   location: string;
   username: string;
   job: string;
@@ -18,5 +18,5 @@ export class RandomUserProfile {
 }
 
 export class SeeRandomProfileOutput extends CoreOutput {
-  randomProfile?: RandomUserProfile;
+  randomProfile?: Partial<RandomUserProfile>;
 }
