@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length } from 'class-validator';
 import { CoreOutput } from '@common/common.interface';
+import { Exclude, Expose } from 'class-transformer';
 
 export class CreateUserInput {
   @ApiProperty({
@@ -8,6 +9,7 @@ export class CreateUserInput {
   })
   @IsString()
   @Length(5, 20)
+  @Expose()
   email: string;
 
   @ApiProperty({
@@ -15,6 +17,7 @@ export class CreateUserInput {
   })
   @IsString()
   @Length(5, 20)
+  @Exclude()
   password: string;
 }
 export class CreateUserOutput extends CoreOutput {}
@@ -25,6 +28,7 @@ export class LoginUserInput {
   })
   @IsString()
   @Length(5, 20)
+  @Expose()
   email: string;
 
   @ApiProperty({
@@ -32,6 +36,7 @@ export class LoginUserInput {
   })
   @IsString()
   @Length(5, 20)
+  @Exclude()
   password: string;
 }
 export class LoginUserOutput extends CoreOutput {
