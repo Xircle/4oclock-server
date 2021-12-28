@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ormconfig } from '../ormconfig';
 import { UserModule } from '@user/user.module';
 import { AuthModule } from '@auth/auth.module';
 import { S3Module } from '@aws/s3/s3.module';
@@ -17,6 +16,7 @@ import { AdminModule } from '@admin/admin.module';
 import { EventModule } from '@event/event.module';
 import { HealthModule } from '@health/health.module';
 import { SmsModule } from './sms/sms.module';
+import ormconfig from '../ormconfig';
 
 @Module({
   imports: [
