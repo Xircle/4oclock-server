@@ -2,6 +2,7 @@ import { CoreOutput } from '@common/common.interface';
 import { PlaceType } from '@place/entities/place.entity';
 import { PlaceMetaData } from '@place/interface/places-with-meta';
 import { Gender } from '@user/entities/user-profile.entity';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class MainFeedPlaceParticipantsProfile {
   userId: string;
@@ -36,9 +37,15 @@ export class GetPlacesOutput extends CoreOutput {
   eventBannerImageUrl?: string;
 }
 
-export class GetPlacesWhereOptions implements WhereOptions {}
-
-export interface WhereOptions {
+export class GetPlacesParameter {
+  @IsString()
+  @IsOptional()
   location?: string;
+
+  @IsEnum(PlaceType)
+  @IsOptional()
   placeType?: PlaceType;
 }
+
+export class GetPlacesWhereOptions extends GetPlacesParameter {}
+export class WhereOptions extends GetPlacesParameter {}
