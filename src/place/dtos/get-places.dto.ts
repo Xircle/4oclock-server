@@ -1,4 +1,5 @@
 import { CoreOutput } from '@common/common.interface';
+import { ApiProperty } from '@nestjs/swagger';
 import { PlaceType } from '@place/entities/place.entity';
 import { PlaceMetaData } from '@place/interface/places-with-meta';
 import { Gender } from '@user/entities/user-profile.entity';
@@ -38,10 +39,20 @@ export class GetPlacesOutput extends CoreOutput {
 }
 
 export class GetPlacesParameter {
+  @ApiProperty({
+    example: '전체',
+    description: '성별',
+  })
   @IsString()
   @IsOptional()
   location?: string;
 
+  @ApiProperty({
+    example: 'All',
+    enum: PlaceType,
+    enumName: 'PlaceType',
+    description: '성별',
+  })
   @IsEnum(PlaceType)
   @IsOptional()
   placeType?: PlaceType;
