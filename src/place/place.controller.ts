@@ -32,8 +32,9 @@ import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
 import {
   GetPlacesOutput,
+  GetPlacesParameter,
   GetPlacesWhereOptions,
-} from './dtos/get-place-by-location.dto';
+} from './dtos/get-places.dto';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
@@ -56,19 +57,17 @@ export class PlaceController {
   @Get('')
   @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
   async getPlaces(
-    @Query('location') location: string,
-    @Query('placeType') placeType: PlaceType,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query() getPlacesQueryParameter: GetPlacesParameter,
     @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ): Promise<GetPlacesOutput> {
-    console.debug(location, placeType);
-    return this.placeService.getPlaces(location, placeType, page, limit);
+    return this.placeService.getPlaces(getPlacesQueryParameter, page, limit);
   }
 
   @Get(':placeId')
   @ApiOperation({ summary: '장소의 세부정보 보기' })
   async getPlaceById(
-    @GetUser() anyUser: User | undefined,
+    @GetUser() anyUser: User,
     @Param('placeId', new ParseUUIDPipe()) placeId: string,
   ): Promise<GetPlaceByIdOutput> {
     return this.placeService.getPlaceById(anyUser, placeId);

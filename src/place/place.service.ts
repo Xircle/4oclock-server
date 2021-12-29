@@ -16,10 +16,11 @@ import {
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 import {
+  GetPlacesParameter,
   GetPlacesWhereOptions,
   MainFeedPlace,
   MainFeedPlaceParticipantsProfile,
-} from './dtos/get-place-by-location.dto';
+} from './dtos/get-places.dto';
 import {
   CreatePlaceInput,
   CreatePlaceOutput,
@@ -29,7 +30,7 @@ import { PlaceRepository } from './repository/place.repository';
 import { PlaceDetailRepository } from './repository/place-detail.repository';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
-import { GetPlacesOutput } from './dtos/get-place-by-location.dto';
+import { GetPlacesOutput } from './dtos/get-places.dto';
 import { DeadlineIndicator, Place, PlaceType } from './entities/place.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { PlaceDetail } from './entities/place-detail.entity';
@@ -59,17 +60,17 @@ export class PlaceService {
   }
 
   private filterDefaultWhereOptions(
-    location: string,
-    placeType: PlaceType,
+    location?: string,
+    placeType?: PlaceType,
   ): GetPlacesWhereOptions {
     let whereOptions: GetPlacesWhereOptions = {};
-    if (location !== '전체') {
+    if (location && location !== '전체') {
       whereOptions = {
         ...whereOptions,
         location,
       };
     }
-    if (placeType !== PlaceType.All) {
+    if (placeType && placeType !== PlaceType.All) {
       whereOptions = {
         ...whereOptions,
         placeType,
@@ -80,8 +81,7 @@ export class PlaceService {
 
   // Potentially TO BE DELETED
   public async getPlaces(
-    location: string,
-    placeType: PlaceType,
+    { location, placeType }: GetPlacesParameter = {},
     page: number,
     limit: number,
   ): Promise<GetPlacesOutput> {
