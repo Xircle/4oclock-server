@@ -30,7 +30,10 @@ import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
-import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
+import {
+  GetPlacesOutput,
+  GetPlacesWhereOptions,
+} from './dtos/get-place-by-location.dto';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
@@ -51,23 +54,15 @@ export class PlaceController {
   constructor(private placeService: PlaceService) {}
 
   @Get('')
-  @ApiOperation({ summary: '위치별 생성된 장소 보기' })
-  async getPlacesByLocation(
+  @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
+  async getPlaces(
     @Query('location') location: string,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
-  ): Promise<GetPlacesByLocationOutput> {
-    return this.placeService.getPlacesByLocation(location, page, limit);
-  }
-
-  @Get('')
-  @ApiOperation({ summary: '장소의 타입 별로 생성된 장소 보기' })
-  async getPlacesByPlaceType(
     @Query('placeType') placeType: PlaceType,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
-  ): Promise<GetPlacesByLocationOutput> {
-    return this.placeService.getPlacesByPlaceType(placeType, page, limit);
+  ): Promise<GetPlacesOutput> {
+    console.debug(location, placeType);
+    return this.placeService.getPlaces(location, placeType, page, limit);
   }
 
   @Get(':placeId')
