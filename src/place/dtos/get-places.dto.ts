@@ -40,8 +40,8 @@ export class GetPlacesOutput extends CoreOutput {
 
 export class GetPlacesParameter {
   @ApiProperty({
-    example: '전체',
-    description: '성별',
+    example: '전체, 신촌, 안암',
+    description: '장소의 위치',
   })
   @IsString()
   @IsOptional()
@@ -51,7 +51,8 @@ export class GetPlacesParameter {
     example: 'All',
     enum: PlaceType,
     enumName: 'PlaceType',
-    description: '성별',
+    description: '장소의 종류',
+    default: PlaceType.All,
   })
   @IsEnum(PlaceType)
   @IsOptional()
