@@ -16,7 +16,7 @@ import {
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 import {
-  GetPlaceByWhereOptions,
+  GetPlacesWhereOptions,
   MainFeedPlace,
   MainFeedPlaceParticipantsProfile,
 } from './dtos/get-place-by-location.dto';
@@ -29,7 +29,7 @@ import { PlaceRepository } from './repository/place.repository';
 import { PlaceDetailRepository } from './repository/place-detail.repository';
 import { EditPlaceInput } from './dtos/edit-place.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
-import { GetPlacesByLocationOutput } from './dtos/get-place-by-location.dto';
+import { GetPlacesOutput } from './dtos/get-place-by-location.dto';
 import { DeadlineIndicator, Place, PlaceType } from './entities/place.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { PlaceDetail } from './entities/place-detail.entity';
@@ -58,105 +58,37 @@ export class PlaceService {
     return place;
   }
 
-  // Potentially TO BE DELETED
-  public async getPlacesByLocation(
+  private filterDefaultWhereOptions(
     location: string,
-    page: number,
-    limit: number,
-  ): Promise<GetPlacesByLocationOutput> {
-    try {
-      let whereOptions: GetPlaceByWhereOptions = {};
-      if (location !== '전체') {
-        whereOptions = {
-          location,
-        };
-      }
-      const places = await this.placeRepository.findManyPlaces({
-        where: {
-          ...whereOptions,
-        },
-        order: {
-          startDateAt: 'DESC',
-        },
-        loadEagerRelations: true,
-        take: limit,
-        skip: limit * (page - 1),
-      });
-      const openPlaceOrderByStartDateAtDESC = _.takeWhile(
-        places,
-        (place) => !place.isClosed,
-      );
-      const closedPlaceOrderByStartDateAtDESC = _.difference(
-        places,
-        openPlaceOrderByStartDateAtDESC,
-      );
-      const openPlaceOrderByStartDateAtASC =
-        openPlaceOrderByStartDateAtDESC.reverse();
-
-      openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
-
-      const finalPlaceEntities = openPlaceOrderByStartDateAtASC;
-
-      let mainFeedPlaces: MainFeedPlace[] = [];
-      // Start to adjust output with place entity
-      for (const place of finalPlaceEntities) {
-        const startDateFromNow = place.getStartDateFromNow();
-        const deadline = place.getDeadlineCaption();
-
-        // Regarding to Participants
-        const participants: MainFeedPlaceParticipantsProfile[] =
-          await this.reservationRepository.getParticipantsProfile(place.id);
-        const participantsCount: number = participants.length;
-        const leftParticipantsCount: number =
-          place.placeDetail.maxParticipantsNumber - participantsCount;
-
-        // isClosed Update 로직 (참가자 수가 최대 인원일 때, 3시간 전)
-        if (!place.isClosed) {
-          if (
-            deadline === DeadlineIndicator.Done ||
-            participantsCount === place.placeDetail.maxParticipantsNumber
-          ) {
-            place.isClosed = true;
-            await this.placeRepository.savePlace(place);
-          }
-        }
-        mainFeedPlaces.push({
-          ...place,
-          startDateFromNow,
-          deadline,
-          participants,
-          participantsCount,
-          leftParticipantsCount,
-        });
-      }
-
-      // Make place Metadata
-      const placeMetadata = await this.placeRepository.getPlaceMetaData(
-        page,
-        limit,
-      );
-      return {
-        ok: true,
-        places: mainFeedPlaces,
-        meta: placeMetadata,
+    placeType: PlaceType,
+  ): GetPlacesWhereOptions {
+    let whereOptions: GetPlacesWhereOptions = {};
+    if (location !== '전체') {
+      whereOptions = {
+        ...whereOptions,
+        location,
       };
-    } catch (err) {
-      throw new InternalServerErrorException();
     }
+    if (placeType !== PlaceType.All) {
+      whereOptions = {
+        ...whereOptions,
+        placeType,
+      };
+    }
+    return whereOptions;
   }
 
-  public async getPlacesByPlaceType(
+  // Potentially TO BE DELETED
+  public async getPlaces(
+    location: string,
     placeType: PlaceType,
     page: number,
     limit: number,
-  ) {
+  ): Promise<GetPlacesOutput> {
     try {
-      let whereOptions: GetPlaceByWhereOptions = {};
-      if (placeType !== PlaceType.All) {
-        whereOptions = {
-          placeType,
-        };
-      }
+      const whereOptions: GetPlacesWhereOptions =
+        this.filterDefaultWhereOptions(location, placeType);
+
       const places = await this.placeRepository.findManyPlaces({
         where: {
           ...whereOptions,
