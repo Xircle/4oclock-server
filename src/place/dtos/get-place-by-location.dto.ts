@@ -1,4 +1,5 @@
 import { CoreOutput } from '@common/common.interface';
+import { PlaceType } from '@place/entities/place.entity';
 import { PlaceMetaData } from '@place/interface/places-with-meta';
 import { Gender } from '@user/entities/user-profile.entity';
 
@@ -35,6 +36,7 @@ export class GetPlacesByLocationOutput extends CoreOutput {
   eventBannerImageUrl?: string;
 }
 
-export class GetPlaceByLocationWhereOptions {
+export class GetPlaceByWhereOptions {
   location?: string;
+  placeType?: PlaceType;
 }
