@@ -39,6 +39,7 @@ import { User } from '@user/entities/user.entity';
 import { RolesGuard } from '@auth/guard/roles.guard';
 import { Roles } from '@auth/roles.decorator';
 import { CoreOutput } from '@common/common.interface';
+import { PlaceType } from './entities/place.entity';
 
 @ApiTags('Place')
 @ApiBearerAuth('jwt')
@@ -54,9 +55,19 @@ export class PlaceController {
   async getPlacesByLocation(
     @Query('location') location: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
   ): Promise<GetPlacesByLocationOutput> {
     return this.placeService.getPlacesByLocation(location, page, limit);
+  }
+
+  @Get('')
+  @ApiOperation({ summary: '장소의 타입 별로 생성된 장소 보기' })
+  async getPlacesByPlaceType(
+    @Query('placeType') placeType: PlaceType,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
+  ): Promise<GetPlacesByLocationOutput> {
+    return this.placeService.getPlacesByPlaceType(placeType, page, limit);
   }
 
   @Get(':placeId')
