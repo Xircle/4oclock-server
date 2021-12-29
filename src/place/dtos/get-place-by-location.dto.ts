@@ -26,17 +26,19 @@ export class MainFeedPlace {
   isClosed: boolean;
 }
 
-export class GetPlaceByLocationInput {
+export class GetPlacesInput {
   location?: string;
   page: number;
 }
-export class GetPlacesByLocationOutput extends CoreOutput {
+export class GetPlacesOutput extends CoreOutput {
   places?: MainFeedPlace[];
   meta: PlaceMetaData;
   eventBannerImageUrl?: string;
 }
 
-export class GetPlaceByWhereOptions {
+export class GetPlacesWhereOptions implements WhereOptions {}
+
+export interface WhereOptions {
   location?: string;
   placeType?: PlaceType;
 }
