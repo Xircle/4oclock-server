@@ -13,6 +13,7 @@ import { Review } from '@review/entities/review.entity';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
 import { Expose } from 'class-transformer';
+import { IsEnum } from 'class-validator';
 
 export enum DeadlineIndicator {
   'Done' = '마감',
@@ -22,6 +23,12 @@ export enum DeadlineIndicator {
   'D-3' = 'D-3 마감',
 }
 
+export enum PlaceType {
+  'All' = 'All',
+  'Event' = 'Event',
+  'Lightning' = 'Lightning',
+  'Regular meeting' = 'Regular meeting',
+}
 @Entity({ name: 'places' })
 export class Place {
   @PrimaryGeneratedColumn('uuid')
@@ -53,6 +60,10 @@ export class Place {
 
   @Column({ default: false })
   isClosed: boolean;
+
+  @Column({ type: 'enum', enum: PlaceType, default: PlaceType.All })
+  @IsEnum(PlaceType)
+  placeType: PlaceType;
 
   @Column({ default: 0 })
   views: number;
