@@ -17,7 +17,7 @@
     "deploy": "npm run build && eb deploy",
     "migrate:create": "ts-node ./node_modules/typeorm/cli.js migration:create -n Test",
     "migrate:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
-    "migrate:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
+    "migrate:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
