@@ -1,6 +1,6 @@
 import { CoreOutput } from '@common/common.interface';
 import { Review } from '@review/entities/review.entity';
-import { MainFeedPlaceParticipantsProfile } from './get-place-by-location.dto';
+import { MainFeedPlaceParticipantsProfile } from './get-places.dto';
 
 export class PlaceDataParticipantsProfile extends MainFeedPlaceParticipantsProfile {}
 

@@ -1,4 +1,4 @@
-import { MainFeedPlaceParticipantsProfile } from '@place/dtos/get-place-by-location.dto';
+import { MainFeedPlaceParticipantsProfile } from '@place/dtos/get-places.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Reservation } from './../entities/reservation.entity';
 

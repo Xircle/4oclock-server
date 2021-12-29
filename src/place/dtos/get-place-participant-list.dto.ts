@@ -1,5 +1,5 @@
 import { CoreOutput } from '@common/common.interface';
-import { MainFeedPlaceParticipantsProfile } from './get-place-by-location.dto';
+import { MainFeedPlaceParticipantsProfile } from './get-places.dto';
 
 export class PlaceParticipantListDataProfile extends MainFeedPlaceParticipantsProfile {}
 
