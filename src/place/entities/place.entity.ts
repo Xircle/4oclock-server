@@ -27,7 +27,7 @@ export enum PlaceType {
   'All' = 'All',
   'Event' = 'Event',
   'Lightning' = 'Lightning',
-  'Regular meeting' = 'Regular meeting',
+  'Regular-meeting' = 'Regular-meeting',
 }
 @Entity({ name: 'places' })
 export class Place {

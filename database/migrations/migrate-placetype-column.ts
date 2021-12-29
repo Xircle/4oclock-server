@@ -7,5 +7,7 @@ export class Test1640771233821 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query('ALTER TABLE places DROP COLUMN place_type');
+  }
 }
