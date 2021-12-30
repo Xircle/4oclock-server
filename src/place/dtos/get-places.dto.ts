@@ -38,7 +38,7 @@ export class GetPlacesOutput extends CoreOutput {
   eventBannerImageUrl?: string;
 }
 
-export class GetPlacesParameter {
+export class GetPlacesQueryParameter {
   @ApiProperty({
     example: '전체, 신촌, 안암',
     description: '장소의 위치',
@@ -59,5 +59,5 @@ export class GetPlacesParameter {
   placeType?: PlaceType;
 }
 
-export class GetPlacesWhereOptions extends GetPlacesParameter {}
-export class WhereOptions extends GetPlacesParameter {}
+export class GetPlacesWhereOptions extends GetPlacesQueryParameter {}
+export class WhereOptions extends GetPlacesQueryParameter {}
