@@ -1,5 +1,6 @@
 import { CoreOutput } from '@common/common.interface';
-import { ApiBody, ApiProperty } from '@nestjs/swagger';
+import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { PlaceType } from '@place/entities/place.entity';
 import { Transform } from 'class-transformer';
 import {
@@ -52,7 +53,15 @@ export class CreatePlaceInput {
     example: '4',
     description: '모임 인원수',
   })
-  @Transform((param) => JSON.parse(param?.obj?.maxParticipantsNumber))
+  @Transform((param) => {
+    try {
+      JSON.parse(param?.obj?.maxParticipantsNumber);
+    } catch {
+      throw new BadRequestException(
+        'maxParticipantsNumber는 number 타입입니다.',
+      );
+    }
+  })
   maxParticipantsNumber: number;
 
   @ApiProperty({
@@ -80,7 +89,13 @@ export class CreatePlaceInput {
     example: '3000',
     description: '참가비',
   })
-  @Transform((param) => JSON.parse(param?.obj.participationFee))
+  @Transform((param) => {
+    try {
+      return JSON.parse(param?.obj.participationFee);
+    } catch {
+      throw new BadRequestException('participationFee는 number 타입입니다.');
+    }
+  })
   @IsNotEmpty()
   participationFee: number;
 
@@ -149,6 +164,7 @@ export class CreatePlaceInput {
     description: 'subImages',
     type: 'array',
     maxItems: 8,
+    required: true,
     items: {
       type: 'file',
       items: {
