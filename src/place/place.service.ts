@@ -16,7 +16,7 @@ import {
   PlaceDataParticipantsProfile,
 } from './dtos/get-place-by-id.dto';
 import {
-  GetPlacesParameter,
+  GetPlacesQueryParameter,
   GetPlacesWhereOptions,
   MainFeedPlace,
   MainFeedPlaceParticipantsProfile,
@@ -81,7 +81,7 @@ export class PlaceService {
 
   // Potentially TO BE DELETED
   public async getPlaces(
-    { location, placeType }: GetPlacesParameter = {},
+    { location, placeType }: GetPlacesQueryParameter = {},
     page: number,
     limit: number,
   ): Promise<GetPlacesOutput> {
@@ -240,6 +240,7 @@ export class PlaceService {
       participationFee,
       detailAddress,
       isVaccinated,
+      placeType,
     } = createPlaceInput;
     const { coverImage, subImages } = placePhotoInput;
 
@@ -263,6 +264,7 @@ export class PlaceService {
             kakaoPlaceId: placeId,
             coverImage: coverImageS3Url,
             subImages: subImageS3Urls,
+            placeType,
             name,
             startDateAt,
           },
@@ -284,7 +286,7 @@ export class PlaceService {
           place_id: place.id,
           user_id: authUser.id,
           isCanceled: false,
-          isVaccinated: true,
+          isVaccinated,
         });
         await transactionalEntityManager.save(reservation);
       });
