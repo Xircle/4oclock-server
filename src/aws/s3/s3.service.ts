@@ -22,7 +22,9 @@ export class S3Service {
           Body: buffer,
         })
         .promise();
-      return Location;
+
+      console.log('length : ', Location.length);
+      return Location.length > 255 ? Location.slice(0, 255) : Location;
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException(err);
