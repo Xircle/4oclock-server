@@ -1,8 +1,11 @@
 import { CoreOutput } from '@common/common.interface';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiBody, ApiProperty } from '@nestjs/swagger';
+import { PlaceType } from '@place/entities/place.entity';
 import { Transform } from 'class-transformer';
 import {
+  IsArray,
   IsDate,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -31,6 +34,7 @@ export class CreatePlaceInput {
     example: '고대에서 가장 시원한 맥주집!',
     description: '장소 설명 제목',
     nullable: true,
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -55,6 +59,7 @@ export class CreatePlaceInput {
     example: '안암',
     nullable: true,
     description: '장소의 대학가 주변 위치',
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -64,6 +69,7 @@ export class CreatePlaceInput {
     example: '안암에 이런 집은 없었다.',
     nullable: true,
     description: '장소 한줄소개',
+    required: false,
   })
   @IsString()
   @IsNotEmpty()
@@ -82,6 +88,7 @@ export class CreatePlaceInput {
     example: '나이 20 ~ 25 중간',
     description: '연령대 권장사항',
     nullable: true,
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -96,15 +103,6 @@ export class CreatePlaceInput {
   startDateAt: Date;
 
   @ApiProperty({
-    example: '"[맥주, 호프]"',
-    nullable: true,
-    description: '장소 해시태그',
-  })
-  @Transform((param) => JSON.parse(param?.obj.categories))
-  @IsOptional()
-  categories?: string[];
-
-  @ApiProperty({
     example: '서울 강남구 강남대로 152길 42 2층',
     description: '장소 디테일 위치',
   })
@@ -116,6 +114,7 @@ export class CreatePlaceInput {
     example: 'https://map.naver.com',
     nullable: true,
     description: '맛집 정보 더보기',
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -127,9 +126,41 @@ export class CreatePlaceInput {
   })
   @IsOptional()
   isVaccinated?: boolean;
+
+  @ApiProperty({
+    example: 'All',
+    enum: PlaceType,
+    enumName: 'PlaceType',
+    description: '장소의 종류',
+  })
+  @IsEnum(PlaceType)
+  @IsNotEmpty()
+  placeType: PlaceType;
+
+  @ApiProperty({
+    description: 'coverImage',
+    required: true,
+    type: 'string',
+    format: 'binary',
+  })
+  coverImage: Express.Multer.File;
+
+  @ApiProperty({
+    description: 'subImages',
+    type: 'array',
+    maxItems: 8,
+    items: {
+      type: 'file',
+      items: {
+        type: 'string',
+        format: 'binary',
+      },
+    },
+  })
+  subImages: Express.Multer.File[];
 }
 export class PlacePhotoInput {
-  coverImage: Express.Multer.File[];
+  coverImage: Express.Multer.File;
   subImages: Express.Multer.File[];
 }
 

@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiConsumes,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -28,12 +29,15 @@ import {
 } from '@nestjs/platform-express';
 import { EditPlaceReviewImagesInput } from './dtos/edit-place-review-image.dto';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
-import { CreatePlaceInput, CreatePlaceOutput } from './dtos/create-place.dto';
+import {
+  CreatePlaceInput,
+  CreatePlaceOutput,
+  PlacePhotoInput,
+} from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
 import {
   GetPlacesOutput,
-  GetPlacesParameter,
-  GetPlacesWhereOptions,
+  GetPlacesQueryParameter,
 } from './dtos/get-places.dto';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
 import { EditPlaceInput } from './dtos/edit-place.dto';
@@ -57,7 +61,7 @@ export class PlaceController {
   @Get('')
   @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
   async getPlaces(
-    @Query() getPlacesQueryParameter: GetPlacesParameter,
+    @Query() getPlacesQueryParameter: GetPlacesQueryParameter,
     @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ): Promise<GetPlacesOutput> {
@@ -75,8 +79,7 @@ export class PlaceController {
 
   @Post('')
   @ApiOperation({ summary: '장소 생성하기' })
-  @UseGuards(RolesGuard)
-  @Roles(['Client', 'Admin', 'Owner'])
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FileFieldsInterceptor([
       {
@@ -89,14 +92,12 @@ export class PlaceController {
       },
     ]),
   )
+  @UseGuards(RolesGuard)
+  @Roles(['Client', 'Admin', 'Owner'])
   async createPlace(
     @GetUser() authUser: User,
     @Body() createPlaceInput: CreatePlaceInput,
-    @UploadedFiles()
-    files: {
-      coverImage: Express.Multer.File[];
-      subImages: Express.Multer.File[];
-    },
+    @UploadedFiles() files: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
     const { coverImage, subImages } = files;
     if (!coverImage || !subImages)
