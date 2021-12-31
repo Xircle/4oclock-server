@@ -79,7 +79,6 @@ export class PlaceService {
     return whereOptions;
   }
 
-  // Potentially TO BE DELETED
   public async getPlaces(
     { location, placeType }: GetPlacesQueryParameter = {},
     page: number,

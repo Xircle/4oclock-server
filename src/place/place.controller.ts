@@ -47,7 +47,6 @@ import { User } from '@user/entities/user.entity';
 import { RolesGuard } from '@auth/guard/roles.guard';
 import { Roles } from '@auth/roles.decorator';
 import { CoreOutput } from '@common/common.interface';
-import { PlaceType } from './entities/place.entity';
 
 @ApiTags('Place')
 @ApiBearerAuth('jwt')

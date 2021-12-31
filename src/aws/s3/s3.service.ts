@@ -22,8 +22,6 @@ export class S3Service {
           Body: buffer,
         })
         .promise();
-
-      console.log('length : ', Location.length);
       return Location.length > 255 ? Location.slice(0, 255) : Location;
     } catch (err) {
       console.log(err);
