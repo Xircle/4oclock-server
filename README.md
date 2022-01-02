@@ -1,4 +1,4 @@
-# 네시모해, Xircle
+# 네시모해(연고이팅), Xirle
 
 This project is source code of `4o'clock` server.
 
