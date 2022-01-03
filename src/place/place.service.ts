@@ -189,9 +189,8 @@ export class PlaceService {
       const NotCanceledReservations =
         await this.reservationRepository.getNotCanceledReservations(placeId);
 
-      const participantsUsername: string[] = NotCanceledReservations.map(
-        (reservation) => reservation.participant.profile?.username,
-      );
+      const participants: PlaceDataParticipantsProfile[] =
+        await this.reservationRepository.getParticipantsProfile(placeId);
 
       // 참여 중인 크루원 수
       const participantsCount = NotCanceledReservations.length;
@@ -210,10 +209,10 @@ export class PlaceService {
         ...place,
         startDateFromNow,
         isParticipating,
+        participants,
         participantsData: {
           participantsCount,
           leftParticipantsCount,
-          participantsUsername,
         },
       };
       return {

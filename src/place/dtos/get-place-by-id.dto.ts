@@ -13,10 +13,10 @@ export class PlaceData {
   isClosed: boolean;
   views: number;
   isParticipating: boolean;
+  participants: PlaceDataParticipantsProfile[];
   participantsData: {
     participantsCount: number;
     leftParticipantsCount: number;
-    participantsUsername: string[];
   };
   placeDetail: {
     title?: string;
