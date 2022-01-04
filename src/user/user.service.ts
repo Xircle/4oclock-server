@@ -190,4 +190,8 @@ export class UserService {
       throw new InternalServerErrorException();
     }
   }
+
+  async reportUser() {
+    return { ok: true };
+  }
 }

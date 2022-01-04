@@ -85,4 +85,10 @@ export class UserController {
   async getMyPlace(@GetUser() authUser: User): Promise<GetMyPlaceOutput> {
     return this.userService.getMyPlace(authUser);
   }
+
+  @Get('report/:userId')
+  @ApiOperation({ summary: '특정 유저 신고하기' })
+  async reportUser(@GetUser() authUser: User) {
+    return this.userService.reportUser();
+  }
 }
