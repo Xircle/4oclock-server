@@ -151,7 +151,7 @@ export class Place {
     if (moment(this.startDateAt).diff(current_date, 'days') === 1) {
       return '내일';
     } else if (moment(this.startDateAt).diff(current_date, 'days') === 2) {
-      return '모래';
+      return '모레';
     } else {
       return `이번주 ${moment(this.startDateAt).format('dddd')}`;
     }
@@ -159,7 +159,7 @@ export class Place {
 
   /**
    * Returns event's date with custom caption.
-   * @example 마감, 오늘, 내일, 모래 이번주 *요일, 다음주 *요일, 10월 31일
+   * @example 마감, 오늘, 내일, 모레 이번주 *요일, 다음주 *요일, 10월 31일
    */
   @Expose()
   getStartDateFromNow() {

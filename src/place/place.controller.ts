@@ -99,10 +99,10 @@ export class PlaceController {
     @UploadedFiles() files: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
     const { coverImage, subImages } = files;
-    if (!coverImage || !subImages)
+    if (!coverImage)
       return {
         ok: false,
-        error: '대표 음식사진 혹은, 서브 음식사진들을 업로드 해주세요.',
+        error: '대표 사진을 업로드 해주세요.',
       };
     return this.placeService.createPlace(authUser, createPlaceInput, files);
   }

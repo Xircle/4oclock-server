@@ -229,30 +229,30 @@ export class PlaceService {
     createPlaceInput: CreatePlaceInput,
     placePhotoInput: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
-    const {
-      placeId,
-      name,
-      description,
-      maxParticipantsNumber,
-      startDateAt,
-      participationFee,
-      detailAddress,
-      isVaccinated,
-      placeType,
-    } = createPlaceInput;
-    const { coverImage, subImages } = placePhotoInput;
-
     try {
+      const {
+        placeId,
+        name,
+        description,
+        maxParticipantsNumber,
+        startDateAt,
+        participationFee,
+        detailAddress,
+        isVaccinated,
+        placeType,
+      } = createPlaceInput;
+      const { coverImage, subImages } = placePhotoInput;
       // Upload coverImage, subImages to S3 (url 생성)
       const coverImageS3Url = await this.s3Service.uploadToS3(
         coverImage[0],
         authUser.id,
       );
       const subImageS3Urls: string[] = [];
-      for (const subImage of subImages) {
-        const s3_url = await this.s3Service.uploadToS3(subImage, authUser.id);
-        subImageS3Urls.push(s3_url);
-      }
+      if (subImages)
+        for (const subImage of subImages) {
+          const s3_url = await this.s3Service.uploadToS3(subImage, authUser.id);
+          subImageS3Urls.push(s3_url);
+        }
 
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
