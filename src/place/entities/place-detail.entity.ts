@@ -20,6 +20,9 @@ export class PlaceDetail {
   @Column({ length: 255 })
   description: string;
 
+  @Column({ nullable: true })
+  kakaoLink?: string;
+
   @Column({ type: 'json', nullable: true })
   categories?: string;
 

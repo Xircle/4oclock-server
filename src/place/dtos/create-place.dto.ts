@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PlaceType } from '@place/entities/place.entity';
 import { Transform } from 'class-transformer';
 import {
-  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -21,6 +20,14 @@ export class CreatePlaceInput {
   @IsString()
   @IsNotEmpty()
   placeId: string;
+
+  @ApiProperty({
+    example: 'https://kakao.link',
+    description: '카카오 링크',
+  })
+  @IsString()
+  @IsOptional()
+  kakaoLink?: string;
 
   @ApiProperty({
     example: '춘자 카페',

@@ -128,6 +128,7 @@ export class UserService {
         historyPlaces.push({
           id: reservation.place.id,
           coverImage: reservation.place.coverImage,
+          kakaoPlaceId: reservation.place.kakaoPlaceId,
           name: reservation.place.name,
           oneLineIntroText: reservation.place.oneLineIntroText,
           description: reservation.place.placeDetail.description,

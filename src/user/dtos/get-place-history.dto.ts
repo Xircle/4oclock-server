@@ -2,6 +2,7 @@ import { CoreOutput } from '@common/common.interface';
 
 export class MyXircle {
   id: string;
+  kakaoPlaceId?: string;
   coverImage: string;
   name: string;
   oneLineIntroText: string;

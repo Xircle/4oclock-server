@@ -240,6 +240,7 @@ export class PlaceService {
         detailAddress,
         isVaccinated,
         placeType,
+        kakaoLink,
       } = createPlaceInput;
       const { coverImage, subImages } = placePhotoInput;
       // Upload coverImage, subImages to S3 (url 생성)
@@ -276,6 +277,7 @@ export class PlaceService {
             maxParticipantsNumber,
             place,
             detailAddress,
+            kakaoLink,
           },
           transactionalEntityManager,
         );
