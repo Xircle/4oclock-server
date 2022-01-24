@@ -67,7 +67,6 @@ export class SocialAuthController {
     @Body(new ParsePipe())
     socialRegisterInput: SocialRegisterInput,
   ): Promise<SocialRegisterOutput> {
-    console.log(socialRegisterInput);
     return this.socialAuthService.socialRegister(
       socialRegisterInput,
       file,

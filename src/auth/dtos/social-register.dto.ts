@@ -154,6 +154,14 @@ export class SocialRegisterInput {
   })
   @IsNotEmpty()
   isMarketingAgree: boolean;
+
+  @ApiProperty({
+    description: '연고이팅 팀',
+    example: 'A',
+  })
+  @IsString()
+  @IsOptional()
+  team?: string;
 }
 
 export class AuthDataToFront {

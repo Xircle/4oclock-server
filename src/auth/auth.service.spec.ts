@@ -278,6 +278,15 @@ describe('SocialAuthService', () => {
         error: '이미 존재하는 이메일입니다.',
       });
     });
+
+    it('should create user', async () => {
+      userRepository.findOne.mockResolvedValue(undefined);
+      // const result = await socialAuthService.socialRegister(
+      //   socialRegisterArgs,
+      //   profileImageFileArgs,
+      //   'kakao',
+      // );
+    });
   });
 
   describe('socialRedirect', () => {

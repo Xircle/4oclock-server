@@ -93,6 +93,9 @@ export class UserProfile {
   @Column('uuid')
   fk_user_id: string;
 
+  @Column({ nullable: true })
+  team: string;
+
   @Column('timestamptz', { name: 'created_at', select: false })
   @CreateDateColumn()
   createdAt: Date;
