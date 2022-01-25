@@ -62,7 +62,7 @@ export class CreatePlaceInput {
   })
   @Transform((param) => {
     try {
-      JSON.parse(param?.obj?.maxParticipantsNumber);
+      return JSON.parse(param?.obj?.maxParticipantsNumber);
     } catch {
       throw new BadRequestException(
         'maxParticipantsNumber는 number 타입입니다.',
