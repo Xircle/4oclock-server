@@ -137,7 +137,7 @@ export class PlaceService {
       for (const place of finalPlaceEntities) {
         const startDateFromNow = place.getStartDateFromNow();
         const deadline = place.getDeadlineCaption();
-
+        const myTeam = place.team === team;
         // Regarding to Participants
         const participants: MainFeedPlaceParticipantsProfile[] =
           await this.reservationRepository.getParticipantsProfile(place.id);
@@ -162,6 +162,7 @@ export class PlaceService {
           participants,
           participantsCount,
           leftParticipantsCount,
+          myTeam,
         });
       }
 

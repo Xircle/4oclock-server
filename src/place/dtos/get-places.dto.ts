@@ -27,6 +27,7 @@ export class MainFeedPlace {
   leftParticipantsCount: number;
   isClosed: boolean;
   team?: string;
+  myTeam?: boolean;
 }
 
 export class GetPlacesInput {
