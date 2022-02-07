@@ -96,8 +96,8 @@ export class PlaceService {
           startDateAt: 'DESC',
         },
         loadEagerRelations: true,
-        take: limit,
-        skip: limit * (page - 1),
+        // take: limit,
+        // skip: limit * (page - 1),
       });
       const openPlaceOrderByStartDateAtDESC = _.takeWhile(
         places,
@@ -127,7 +127,10 @@ export class PlaceService {
 
       // openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
 
-      const finalPlaceEntities = openMyPlaceASC;
+      const finalPlaceEntities = openMyPlaceASC.slice(
+        limit * (page - 1),
+        limit * (page - 1) + limit - 1,
+      );
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
