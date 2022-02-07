@@ -21,7 +21,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { EditProfileInput } from './dtos/edit-profile.dto';
+import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { GetMyPlaceOutput } from './dtos/get-place-history.dto';
 import { UserService } from './user.service';
@@ -51,11 +51,17 @@ export class UserController {
   @ApiOperation({ summary: '유저 정보 수정 ' })
   @UseInterceptors(FileInterceptor('profileImageFile'))
   async editProfile(
+    @Query() editPlaceQueryParam: EditPlaceQueryParam,
     @UploadedFile() file: Express.Multer.File,
     @GetUser() authUser: User,
     @Body() editProfileInput: EditProfileInput,
   ): Promise<CoreOutput> {
-    return this.userService.editProfile(authUser, file, editProfileInput);
+    return this.userService.editProfile(
+      editPlaceQueryParam,
+      authUser,
+      file,
+      editProfileInput,
+    );
   }
 
   @Get('/profile/random')

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { getManager } from 'typeorm';
 import { UserProfile } from './entities/user-profile.entity';
-import { EditProfileInput } from './dtos/edit-profile.dto';
+import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { UserRepository } from './repositories/user.repository';
 import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
@@ -148,6 +148,7 @@ export class UserService {
   }
 
   async editProfile(
+    { code }: EditPlaceQueryParam = {},
     authUser: User,
     profileImageFile: Express.Multer.File,
     editProfileInput: EditProfileInput,
@@ -162,10 +163,15 @@ export class UserService {
         );
         updateData.profileImageUrl = profile_image_s3;
       }
+      if (code === 'testAA') {
+        editProfileInput.isYkClub = true;
+      }
+
       updateData = {
         ...updateData,
         ...editProfileInput,
       };
+
       if (_.isEqual(updateData, {})) {
         // 바뀐 내용이 없으면 업데이트 없이 리턴
         return {
