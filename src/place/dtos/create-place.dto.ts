@@ -133,6 +133,14 @@ export class CreatePlaceInput {
   detailAddress: string;
 
   @ApiProperty({
+    example: 'T조',
+    description: '팀 이름',
+  })
+  @IsString()
+  @IsOptional()
+  team?: string;
+
+  @ApiProperty({
     example: 'https://map.naver.com',
     nullable: true,
     description: '맛집 정보 더보기',
