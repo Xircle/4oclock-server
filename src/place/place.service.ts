@@ -80,7 +80,7 @@ export class PlaceService {
   }
 
   public async getPlaces(
-    { location, placeType }: GetPlacesQueryParameter = {},
+    { location, placeType, team }: GetPlacesQueryParameter = {},
     page: number,
     limit: number,
   ): Promise<GetPlacesOutput> {
@@ -103,6 +103,7 @@ export class PlaceService {
         places,
         (place) => !place.isClosed,
       );
+
       const closedPlaceOrderByStartDateAtDESC = _.difference(
         places,
         openPlaceOrderByStartDateAtDESC,
@@ -110,9 +111,23 @@ export class PlaceService {
       const openPlaceOrderByStartDateAtASC =
         openPlaceOrderByStartDateAtDESC.reverse();
 
-      openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
+      const openMyPlaceASC = _.filter(
+        openPlaceOrderByStartDateAtASC,
+        (place) => place.team === team,
+      );
 
-      const finalPlaceEntities = openPlaceOrderByStartDateAtASC;
+      const openNotMyTeamPlaceASC = _.filter(
+        openPlaceOrderByStartDateAtASC,
+        (places) => places.team !== team,
+      );
+      openMyPlaceASC.push(
+        ...openNotMyTeamPlaceASC,
+        ...closedPlaceOrderByStartDateAtDESC,
+      );
+
+      // openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
+
+      const finalPlaceEntities = openMyPlaceASC;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
