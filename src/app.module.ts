@@ -16,6 +16,7 @@ import { AdminModule } from '@admin/admin.module';
 import { EventModule } from '@event/event.module';
 import { HealthModule } from '@health/health.module';
 import { SmsModule } from './sms/sms.module';
+import { TeamModule } from './team/team.module';
 import ormconfig from '../ormconfig';
 
 @Module({
@@ -64,6 +65,7 @@ import ormconfig from '../ormconfig';
     EventModule,
     HealthModule,
     SmsModule,
+    TeamModule,
   ],
   controllers: [AppController],
 })
