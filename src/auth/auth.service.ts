@@ -190,7 +190,7 @@ export class SocialAuthService {
           interests,
           isMarketingAgree,
           fk_user_id: user.id,
-          team
+          team,
         });
         await transactionalEntityManager.save(profile);
 
