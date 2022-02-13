@@ -94,7 +94,7 @@ export class UserProfile {
   fk_user_id: string;
 
   @Column({ nullable: true })
-  team: string;
+  team?: string;
 
   @Column('timestamptz', { name: 'created_at', select: false })
   @CreateDateColumn()

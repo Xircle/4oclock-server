@@ -7,7 +7,7 @@ import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { UserRepository } from './repositories/user.repository';
 import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { MeOutput } from './dtos/me.dto';
 import { S3Service } from '@aws/s3/s3.service';
 import { CoreOutput } from '@common/common.interface';
@@ -15,11 +15,17 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
 
 @Injectable()
 export class UserService {
+  codeMap: Map<any, any>;
   constructor(
     private readonly reservationRepository: ReservationRepository,
     private readonly users: UserRepository,
     private readonly s3Service: S3Service,
-  ) {}
+  ) {
+    this.codeMap = new Map();
+    this.codeMap.set('잇힝조아', { role: UserRole.Client, team: '팀1' });
+    this.codeMap.set('주량2리더', { role: UserRole.Owner, team: '팀2' });
+    this.codeMap.set('신사동연고이팅', { role: UserRole.Admin, team: '팀3' });
+  }
 
   async findUserById(id: string): Promise<User> {
     return this.users.findOne({
@@ -163,10 +169,10 @@ export class UserService {
         );
         updateData.profileImageUrl = profile_image_s3;
       }
-      if (code === 'testAA') {
+
+      if (this.codeMap.has(code)) {
         editProfileInput.isYkClub = true;
       }
-
       updateData = {
         ...updateData,
         ...editProfileInput,
@@ -189,6 +195,17 @@ export class UserService {
             ...updateData,
           },
         );
+        if (this.codeMap.has(code)) {
+          await transactionalEntityManager.update(
+            User,
+            {
+              id: authUser.id,
+            },
+            {
+              role: this.codeMap.get(code).role,
+            },
+          );
+        }
       });
       return {
         ok: true,
