@@ -302,14 +302,16 @@ export class PlaceService {
           },
           transactionalEntityManager,
         );
-        // Make reservation
-        const reservation = this.reservationRepository.create({
-          place_id: place.id,
-          user_id: authUser.id,
-          isCanceled: false,
-          isVaccinated,
-        });
-        await transactionalEntityManager.save(reservation);
+        if (placeType === PlaceType.Lightning) {
+          // Make reservation
+          const reservation = this.reservationRepository.create({
+            place_id: place.id,
+            user_id: authUser.id,
+            isCanceled: false,
+            isVaccinated,
+          });
+          await transactionalEntityManager.save(reservation);
+        }
       });
 
       return {
