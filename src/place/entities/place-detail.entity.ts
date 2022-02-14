@@ -17,7 +17,7 @@ export class PlaceDetail {
   @Column({ length: 255, nullable: true })
   title?: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 511 })
   description: string;
 
   @Column({ nullable: true })
