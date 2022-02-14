@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { getManager } from 'typeorm';
+import { getManager, MoreThanOrEqual } from 'typeorm';
 import {
   HttpException,
   HttpStatus,
@@ -87,7 +87,6 @@ export class PlaceService {
     try {
       const whereOptions: GetPlacesWhereOptions =
         this.filterDefaultWhereOptions(location, placeType);
-
       const places = await this.placeRepository.findManyPlaces({
         where: {
           ...whereOptions,
@@ -96,14 +95,13 @@ export class PlaceService {
           startDateAt: 'DESC',
         },
         loadEagerRelations: true,
-        // take: limit,
-        // skip: limit * (page - 1),
+        take: limit,
+        skip: limit * (page - 1),
       });
       const openPlaceOrderByStartDateAtDESC = _.takeWhile(
         places,
         (place) => !place.isClosed,
       );
-
       const closedPlaceOrderByStartDateAtDESC = _.difference(
         places,
         openPlaceOrderByStartDateAtDESC,
@@ -111,26 +109,9 @@ export class PlaceService {
       const openPlaceOrderByStartDateAtASC =
         openPlaceOrderByStartDateAtDESC.reverse();
 
-      const openMyPlaceASC = _.filter(
-        openPlaceOrderByStartDateAtASC,
-        (place) => place.team === team,
-      );
+      openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
 
-      const openNotMyTeamPlaceASC = _.filter(
-        openPlaceOrderByStartDateAtASC,
-        (places) => places.team !== team,
-      );
-      openMyPlaceASC.push(
-        ...openNotMyTeamPlaceASC,
-        ...closedPlaceOrderByStartDateAtDESC,
-      );
-
-      // openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
-
-      const finalPlaceEntities = openMyPlaceASC.slice(
-        limit * (page - 1),
-        limit * (page - 1) + limit - 1,
-      );
+      const finalPlaceEntities = openPlaceOrderByStartDateAtASC;
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
