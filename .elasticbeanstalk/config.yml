@@ -1,7 +1,6 @@
 branch-defaults:
   master:
-    environment: 4oclock-final-dev
-    group_suffix: null
+    environment: 4oclockfinal-env-1
 global:
   application_name: 4oclock-final
   branch: null
@@ -13,6 +12,6 @@ global:
   platform_name: null
   platform_version: null
   profile: null
-  repository: 4oclock-final-dev
+  repository: 4oclockfinal-env-1
   sc: git
   workspace_type: Application
