@@ -1,14 +1,12 @@
 branch-defaults:
   master:
     environment: 4oclockfinal-env-1
-    group_suffix: null
 environment-defaults:
   4oclockfinal-env-1:
-    branch: master
-    repository: 4oclock-final-dev
+    branch: null
+    repository: null
 global:
   application_name: 4oclock-final
-  branch: null
   default_ec2_keyname: null
   default_platform: Node.js 14 running on 64bit Amazon Linux 2
   default_region: ap-northeast-2
@@ -17,6 +15,5 @@ global:
   platform_name: null
   platform_version: null
   profile: null
-  repository: 4oclockfinal-env-1
   sc: git
   workspace_type: Application
