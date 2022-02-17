@@ -34,6 +34,7 @@ import { GetPlacesOutput } from './dtos/get-places.dto';
 import { DeadlineIndicator, Place, PlaceType } from './entities/place.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { PlaceDetail } from './entities/place-detail.entity';
+import { Gender } from '@user/entities/user-profile.entity';
 
 @Injectable()
 export class PlaceService {
@@ -228,6 +229,16 @@ export class PlaceService {
       const participants: PlaceDataParticipantsProfile[] =
         await this.reservationRepository.getParticipantsProfile(placeId);
 
+      let maleCount = 0;
+      let femaleCount = 0;
+      for (const participant of participants) {
+        if (participant.gender === Gender.Male) {
+          maleCount++;
+        } else {
+          femaleCount++;
+        }
+      }
+
       // 참여 중인 크루원 수
       const participantsCount = NotCanceledReservations.length;
       // 남은 크루원 자리 수
@@ -249,6 +260,8 @@ export class PlaceService {
         participantsData: {
           participantsCount,
           leftParticipantsCount,
+          maleCount,
+          femaleCount,
         },
       };
       return {

@@ -17,6 +17,8 @@ export class PlaceData {
   participantsData: {
     participantsCount: number;
     leftParticipantsCount: number;
+    maleCount: number;
+    femaleCount: number;
   };
   placeDetail: {
     title?: string;
