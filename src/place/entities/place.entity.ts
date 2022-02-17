@@ -13,7 +13,7 @@ import { Review } from '@review/entities/review.entity';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
 import { Expose } from 'class-transformer';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 
 export enum DeadlineIndicator {
   'Done' = '마감',
@@ -198,10 +198,12 @@ export class Place {
    * Returns deadline caption, according to event's date
    */
   @Expose()
-  getDeadlineCaption(): string {
+  getDeadlineCaption(today: Date): string {
     const current_date = moment().format('YYYY-MM-DD');
     const start_date = moment(this.startDateAt);
-
+    if (this.startDateAt < today) {
+      return DeadlineIndicator.Done;
+    }
     if (start_date.diff(current_date, 'days') === 0) {
       const deadlineDate = start_date.subtract(3, 'hours');
       const duration = moment.duration(deadlineDate.diff(moment()));

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { getManager, MoreThanOrEqual } from 'typeorm';
+import { getManager, MoreThanOrEqual, LessThan } from 'typeorm';
 import {
   HttpException,
   HttpStatus,
@@ -85,39 +85,70 @@ export class PlaceService {
     limit: number,
   ): Promise<GetPlacesOutput> {
     try {
+      const today = new Date();
       const whereOptions: GetPlacesWhereOptions =
         this.filterDefaultWhereOptions(location, placeType);
-      const places = await this.placeRepository.findManyPlaces({
+      const openPlaces = await this.placeRepository.findManyPlaces({
         where: {
           ...whereOptions,
+          isClosed: false,
+        },
+        order: {
+          startDateAt: 'ASC',
+        },
+        loadEagerRelations: true,
+        // take: limit,
+        // skip: limit * (page - 1),
+      });
+      const closedPlaces = await this.placeRepository.findManyPlaces({
+        where: {
+          ...whereOptions,
+          isClosed: true,
         },
         order: {
           startDateAt: 'DESC',
         },
         loadEagerRelations: true,
-        take: limit,
-        skip: limit * (page - 1),
+        // take: limit,
+        // skip: limit * (page - 1),
       });
-      const openPlaceOrderByStartDateAtDESC = _.takeWhile(
-        places,
-        (place) => !place.isClosed,
-      );
-      const closedPlaceOrderByStartDateAtDESC = _.difference(
-        places,
-        openPlaceOrderByStartDateAtDESC,
-      );
-      const openPlaceOrderByStartDateAtASC =
-        openPlaceOrderByStartDateAtDESC.reverse();
 
-      openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
+      const openMyPlaceASC = _.filter(
+        openPlaces,
+        (place) => place.team === team,
+      );
+      const closedMyPlaceDESC = _.filter(
+        closedPlaces,
+        (place) => place.team === team && !place.isAfterToday(),
+      );
 
-      const finalPlaceEntities = openPlaceOrderByStartDateAtASC;
+      const closeNotMyTeamPlaceDESC = _.difference(
+        closedPlaces,
+        closedMyPlaceDESC,
+      );
+
+      const openNotMyTeamPlaceASC = _.filter(
+        openPlaces,
+        (places) => places.team !== team,
+      );
+      openMyPlaceASC.push(
+        ...closedMyPlaceDESC,
+        ...openNotMyTeamPlaceASC,
+        ...closeNotMyTeamPlaceDESC,
+      );
+
+      // openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
+
+      const finalPlaceEntities = openMyPlaceASC.slice(
+        limit * (page - 1),
+        limit * page,
+      );
 
       let mainFeedPlaces: MainFeedPlace[] = [];
       // Start to adjust output with place entity
       for (const place of finalPlaceEntities) {
         const startDateFromNow = place.getStartDateFromNow();
-        const deadline = place.getDeadlineCaption();
+        const deadline = place.getDeadlineCaption(today);
         const myTeam = place.team === team;
         // Regarding to Participants
         const participants: MainFeedPlaceParticipantsProfile[] =
@@ -127,15 +158,20 @@ export class PlaceService {
           place.placeDetail.maxParticipantsNumber - participantsCount;
 
         // isClosed Update 로직 (참가자 수가 최대 인원일 때, 3시간 전)
-        if (!place.isClosed) {
-          if (
-            deadline === DeadlineIndicator.Done ||
-            participantsCount === place.placeDetail.maxParticipantsNumber
-          ) {
+        if (
+          deadline === DeadlineIndicator.Done ||
+          startDateFromNow === '마감' ||
+          participantsCount === place.placeDetail.maxParticipantsNumber
+        ) {
+          if (!place.isClosed) {
             place.isClosed = true;
             await this.placeRepository.savePlace(place);
           }
+        } else if (place.isClosed) {
+          place.isClosed = false;
+          await this.placeRepository.savePlace(place);
         }
+
         mainFeedPlaces.push({
           ...place,
           startDateFromNow,
