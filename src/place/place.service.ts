@@ -120,7 +120,8 @@ export class PlaceService {
       );
       const closedMyPlaceDESC = _.filter(
         closedPlaces,
-        (place) => place.team === team && !place.isAfterToday(),
+        (place) =>
+          place.team === team && (place.isAfterToday() || place.isToday()),
       );
 
       const closeNotMyTeamPlaceDESC = _.difference(
