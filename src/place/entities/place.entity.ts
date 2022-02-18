@@ -149,6 +149,11 @@ export class Place {
   }
 
   @Expose()
+  getStartMinute(): number {
+    return this.startDateAt.getMinutes();
+  }
+
+  @Expose()
   getStartDateCaption() {
     const current_date = moment().format('YYYY-MM-DD');
     if (moment(this.startDateAt).diff(current_date, 'days') === 1) {
@@ -166,10 +171,17 @@ export class Place {
    */
   @Expose()
   getStartDateFromNow() {
+    const noonDefined = this.getStartHours() > 11 ? '오후 ' : '오전 ';
+    const hour =
+      this.getStartHours() > 12
+        ? this.getStartHours() - 12
+        : this.getStartHours();
+    const startHours = `${noonDefined} ${hour}`;
+    const startMinute =
+      this.getStartMinute() > 0 ? `${this.getStartMinute()} 분` : '';
     const isToday = this.isToday();
     if (isToday) {
-      const startHours = this.getStartHours();
-      return `오늘 ${startHours}`;
+      return `오늘 ${startHours} 시 ${startMinute}`;
     }
 
     const isAfterToday = this.isAfterToday();
@@ -180,18 +192,19 @@ export class Place {
     const isThisWeek = this.isThisWeek();
     if (isThisWeek) {
       const dateCaption = this.getStartDateCaption();
-      const hours = this.getStartHours();
-      return `${dateCaption} ${hours}`;
+      return `${dateCaption} ${startHours} 시 ${startMinute}`;
     }
 
     const isNextWeek = this.isNextWeek();
     if (isNextWeek) {
-      return `다음주 ${moment(this.startDateAt).format('dddd')}`;
+      return `다음주 ${moment(this.startDateAt).format(
+        'dddd',
+      )} ${startHours} 시 ${startMinute}`;
     }
 
     return `${moment(this.startDateAt).format(
       'M월 DD일',
-    )} ${this.getStartHours()}`;
+    )} ${startHours} 시 ${startMinute}`;
   }
 
   /**
