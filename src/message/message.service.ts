@@ -6,6 +6,7 @@ import { User } from '@user/entities/user.entity';
 import { MessageRepository } from './repository/message.repository';
 import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
+import { isUnreadMessageOutput } from './dtos/is-unread-message.dto';
 
 @Injectable()
 export class MessageService {
@@ -15,6 +16,32 @@ export class MessageService {
     private readonly messageRepository: MessageRepository,
     private readonly roomService: RoomService,
   ) {}
+
+  async isUnReadMessage(authUser: User): Promise<isUnreadMessageOutput> {
+    try {
+      const unreadMessage = await this.messageRepository.find({
+        where: {
+          receiverId: authUser.id,
+          isRead: true,
+        },
+        loadEagerRelations: true,
+        take: 1,
+      });
+      if (unreadMessage) {
+        return {
+          ok: true,
+          isUnread: true,
+        };
+      } else {
+        return {
+          ok: true,
+          isUnread: false,
+        };
+      }
+    } catch {
+      throw new InternalServerErrorException();
+    }
+  }
 
   async getRoomsMessages(
     authUser: User,

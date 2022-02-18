@@ -17,6 +17,7 @@ import { CoreOutput } from '@common/common.interface';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
 import { SendMessageInput } from './dtos/send-message.dto';
 import { MessageService } from './message.service';
+import { isUnreadMessageOutput } from './dtos/is-unread-message.dto';
 
 @ApiTags('Message')
 @ApiBearerAuth('jwt')
@@ -41,6 +42,14 @@ export class MessageController {
       page,
       limit,
     );
+  }
+
+  @Get('/unread')
+  @ApiOperation({
+    summary: 'returns true if there is unread message, otherwise returns false',
+  })
+  isUnreadMessages(@GetUser() authUser: User): Promise<isUnreadMessageOutput> {
+    return this.messageService.isUnReadMessage(authUser);
   }
 
   @Post('/:roomId/messages')
