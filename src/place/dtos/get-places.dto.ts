@@ -28,6 +28,8 @@ export class MainFeedPlace {
   isClosed: boolean;
   team?: string;
   myTeam?: boolean;
+  seperatorMyTeam?: boolean;
+  seperatorNotMyTeam?: boolean;
 }
 
 export class GetPlacesInput {

@@ -128,6 +128,8 @@ export class PlaceService {
         closedPlaces,
         closedMyPlaceDESC,
       );
+      let seperator1 = false;
+      let seperator2 = false;
 
       const openNotMyTeamPlaceASC = _.filter(
         openPlaces,
@@ -141,6 +143,11 @@ export class PlaceService {
 
       // openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
 
+      if (page === 1 && openMyPlaceASC) seperator1 = true;
+
+      if (page === 1 && (openMyPlaceASC || closedMyPlaceDESC))
+        seperator2 = true;
+
       const finalPlaceEntities = openMyPlaceASC.slice(
         limit * (page - 1),
         limit * page,
@@ -151,7 +158,14 @@ export class PlaceService {
       for (const place of finalPlaceEntities) {
         const startDateFromNow = place.getStartDateFromNow();
         const deadline = place.getDeadlineCaption(today);
+
         const myTeam = place.team === team;
+        const seperatorMyTeam = seperator1 && myTeam;
+        const seperatorNotMyTeam = seperator2 && !myTeam;
+
+        if (seperatorMyTeam && seperator1) seperator1 = false;
+        if (seperatorNotMyTeam && seperator2) seperator2 = false;
+
         // Regarding to Participants
         const participants: MainFeedPlaceParticipantsProfile[] =
           await this.reservationRepository.getParticipantsProfile(place.id);
@@ -182,6 +196,8 @@ export class PlaceService {
           participantsCount,
           leftParticipantsCount,
           myTeam,
+          seperatorMyTeam,
+          seperatorNotMyTeam,
         });
       }
 
