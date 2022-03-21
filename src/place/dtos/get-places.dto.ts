@@ -21,6 +21,7 @@ export class MainFeedPlace {
   deadline?: string | undefined;
   startDateFromNow: string;
   oneLineIntroText?: string;
+  recommendation?: string;
   views: number;
   participants: MainFeedPlaceParticipantsProfile[];
   participantsCount: number;

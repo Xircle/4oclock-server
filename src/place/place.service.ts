@@ -308,6 +308,8 @@ export class PlaceService {
         placeType,
         kakaoLink,
         team,
+        notParticipating,
+        recommendation,
       } = createPlaceInput;
       const { coverImage, subImages } = placePhotoInput;
       // Upload coverImage, subImages to S3 (url 생성)
@@ -334,6 +336,7 @@ export class PlaceService {
             name,
             startDateAt,
             team,
+            recommendation,
           },
           transactionalEntityManager,
         );
@@ -349,7 +352,7 @@ export class PlaceService {
           },
           transactionalEntityManager,
         );
-        if (placeType === PlaceType.Lightning) {
+        if (placeType === PlaceType.Lightning && !notParticipating) {
           // Make reservation
           const reservation = this.reservationRepository.create({
             place_id: place.id,

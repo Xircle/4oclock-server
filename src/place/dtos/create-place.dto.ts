@@ -21,6 +21,9 @@ export class CreatePlaceInput {
   @IsNotEmpty()
   placeId: string;
 
+  @IsOptional()
+  notParticipating?: boolean;
+
   @ApiProperty({
     example: 'https://kakao.link',
     description: '카카오 링크',
