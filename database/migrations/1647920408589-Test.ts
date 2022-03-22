@@ -1,10 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Test1643036924665 implements MigrationInterface {
+export class Test1647920408589 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      'ALTER TABLE place_detail ADD COLUMN kakao_link character varying',
-    );
+    'ALTER TABLE event_banners ADD COLUMN main_heading VARCHAR(255), ADD COLUMN sub_heading VARCHAR(255);';
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}

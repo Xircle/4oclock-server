@@ -1,10 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Test1643035618076 implements MigrationInterface {
+export class Test1647920303600 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      'ALTER TABLE user_profiles ADD COLUMN team character varying',
-    );
+    'ALTER TABLE event_banners ADD COLUMN main_heading VARCHAR(255), ADD COLUMN sub_heading VARCHAR(255);';
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}

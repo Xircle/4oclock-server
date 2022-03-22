@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Test1644901860035 implements MigrationInterface {
+export class Test1647920589475 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    'ALTER TABLE reservations ALTER COLUMN id SET DEFAULT uuid_generate_v4();';
+    'ALTER TABLE event_banners ADD COLUMN main_heading character varying(255)';
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
