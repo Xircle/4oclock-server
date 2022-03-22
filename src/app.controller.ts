@@ -8,4 +8,14 @@ export class AppController {
   sayHello() {
     return 'Hello developersxxxx!';
   }
+
+  @Get('version')
+  getVersion() {
+    return {
+      androidRecommendedVersion: 2,
+      androidMinimumVersion: 1,
+      iOSRecommendedVersion: 2,
+      iOSMinimumVersion: 1,
+    };
+  }
 }
