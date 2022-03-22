@@ -1,6 +1,8 @@
+import { GetManyEventBannersOutput } from './dtos/get-many-event-banner.dto';
 import {
   Body,
   Controller,
+  Get,
   Post,
   UploadedFile,
   UseGuards,
@@ -13,7 +15,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateEventBannerInput } from './dtos/create-event-banner.dto';
+import {
+  CreateEventBannerInput,
+  EventPhotoInput,
+} from './dtos/create-event-banner.dto';
 import { EventService } from './event.service';
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { RolesGuard } from '@auth/guard/roles.guard';
@@ -39,11 +44,21 @@ export class EventController {
     @Body() createEventBannerInput: CreateEventBannerInput,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<CoreOutput> {
-    if (!file) return { ok: false, error: 'Only image file allowed' };
+    if (!file)
+      return {
+        ok: false,
+        error: '대표 사진을 업로드 해주세요.',
+      };
     return this.eventService.createEventBanner(
       authUser,
       file,
       createEventBannerInput,
     );
+  }
+
+  @Get('banner/many')
+  @ApiOperation({ summary: 'get 5 most recent event banners' })
+  async getManyEventBanners(): Promise<GetManyEventBannersOutput> {
+    return this.eventService.getManyEventBanners();
   }
 }

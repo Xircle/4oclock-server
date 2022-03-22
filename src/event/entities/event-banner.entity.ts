@@ -14,13 +14,22 @@ export enum EventName {
 export class EventBanner {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-  
+
   @Column({
     type: 'enum',
     enum: EventName,
     default: EventName.Halloween,
   })
   eventName: EventName;
+
+  @Column({ length: 255, nullable: true })
+  mainHeading: string;
+
+  @Column({ length: 255, nullable: true })
+  subHeading?: string;
+
+  @Column({ length: 1023, nullable: true })
+  linkUrl?: string;
 
   @Column({
     length: 512,
@@ -29,7 +38,7 @@ export class EventBanner {
   })
   eventImageUrl?: string;
 
-  @Column('timestamptz', { select: false })
+  @Column('timestamptz')
   @CreateDateColumn()
   createdAt: Date;
 
