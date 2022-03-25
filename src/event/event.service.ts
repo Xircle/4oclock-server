@@ -35,7 +35,7 @@ export class EventService {
         order: {
           createdAt: 'DESC',
         },
-        take: 5,
+        take: 4,
       });
       return { ok: true, eventBanners: eventBanners };
     } catch (error) {
