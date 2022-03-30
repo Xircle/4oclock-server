@@ -19,6 +19,7 @@ export class MeData {
   personality: string;
   MBTI: string;
   drinkingStyle: number;
+  this_season_reservation_count: number;
 }
 
 export class MeOutput extends CoreOutput {

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { getManager } from 'typeorm';
+import { getManager, MoreThan } from 'typeorm';
 import { UserProfile } from './entities/user-profile.entity';
 import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
@@ -43,12 +43,20 @@ export class UserService {
           isCanceled: false,
         },
       });
+      const thisSeasonReservations = await this.reservationRepository.find({
+        where: {
+          user_id: authUser.id,
+          isCanceled: false,
+          createdAt: MoreThan('2022-03-30'),
+        },
+      });
       return {
         ok: true,
         data: {
           accountType: authUser.role,
           reservation_count: reservations.length,
           ...authUser.profile,
+          this_season_reservation_count: thisSeasonReservations.length,
         },
       };
     } catch (err) {
