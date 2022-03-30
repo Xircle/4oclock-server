@@ -13,8 +13,8 @@ export class AppController {
   getVersion() {
     return {
       androidRecommendedVersion: 2,
-      androidMinimumVersion: 2,
-      iOSRecommendedVersion: 1,
+      androidMinimumVersion: 1,
+      iOSRecommendedVersion: 2,
       iOSMinimumVersion: 1,
     };
   }
