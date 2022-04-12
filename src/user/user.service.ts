@@ -22,9 +22,9 @@ export class UserService {
     private readonly s3Service: S3Service,
   ) {
     this.codeMap = new Map();
-    this.codeMap.set('잇힝조아', { role: UserRole.Client, team: '팀1' });
-    this.codeMap.set('주량2리더', { role: UserRole.Owner, team: '팀2' });
-    this.codeMap.set('신사동연고이팅', { role: UserRole.Admin, team: '팀3' });
+    this.codeMap.set('잇힝조아', { role: UserRole.Client, team: 'Z1' });
+    this.codeMap.set('주량2리더', { role: UserRole.Owner, team: 'Z2' });
+    this.codeMap.set('신사동연고이팅', { role: UserRole.Admin, team: 'Z3' });
   }
 
   async findUserById(id: string): Promise<User> {
@@ -163,6 +163,9 @@ export class UserService {
 
   async deleteUser(authUser: User): Promise<CoreOutput> {
     try {
+      await this.users.delete({
+        id: authUser.id,
+      });
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
