@@ -3,6 +3,7 @@ import {
   CacheInterceptor,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -62,6 +63,12 @@ export class UserController {
       file,
       editProfileInput,
     );
+  }
+
+  @Delete('/delete')
+  @ApiOperation({ summary: '유저 삭제' })
+  async deleteUser(@GetUser() authUser: User): Promise<CoreOutput> {
+    return this.userService.deleteUser(authUser);
   }
 
   @Get('/profile/random')

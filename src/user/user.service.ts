@@ -161,6 +161,14 @@ export class UserService {
     }
   }
 
+  async deleteUser(authUser: User): Promise<CoreOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
   async editProfile(
     { code }: EditPlaceQueryParam = {},
     authUser: User,
