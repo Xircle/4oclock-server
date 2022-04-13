@@ -187,7 +187,6 @@ export class PlaceService {
           place.isClosed = false;
           await this.placeRepository.savePlace(place);
         }
-
         mainFeedPlaces.push({
           ...place,
           startDateFromNow,
@@ -285,8 +284,8 @@ export class PlaceService {
         ok: true,
         placeData,
       };
-    } catch (err) {
-      throw new InternalServerErrorException();
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 
@@ -368,8 +367,8 @@ export class PlaceService {
       return {
         ok: true,
       };
-    } catch (err) {
-      throw new InternalServerErrorException();
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 
@@ -402,14 +401,16 @@ export class PlaceService {
   public async editPlace(
     placeId: string,
     editPlaceInput: EditPlaceInput,
-    coverImage: Express.Multer.File,
+    placePhotoInput: PlacePhotoInput,
   ): Promise<CoreOutput> {
+    const { coverImage, subImages } = placePhotoInput;
     const { editedPlace, editedPlaceDetail } = editPlaceInput;
+
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
       if (coverImage) {
-        const s3_url = await this.s3Service.uploadToS3(coverImage, placeId);
+        const s3_url = await this.s3Service.uploadToS3(coverImage[0], placeId);
         await this.placeRepository.updatePlace(
           {
             id: placeId,
@@ -452,8 +453,11 @@ export class PlaceService {
       return {
         ok: true,
       };
-    } catch (err) {
-      throw new InternalServerErrorException();
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
     }
   }
 
@@ -489,8 +493,8 @@ export class PlaceService {
           participantsInfo,
         },
       };
-    } catch (err) {
-      throw new InternalServerErrorException();
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 }

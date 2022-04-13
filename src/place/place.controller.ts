@@ -120,14 +120,25 @@ export class PlaceController {
   @Patch('/:placeId')
   @ApiOperation({ summary: '장소 정보 수정하기 (리뷰 제외)' })
   @UseGuards(RolesGuard)
-  @Roles(['Admin', 'Owner'])
-  @UseInterceptors(FileInterceptor('coverImage'))
+  @Roles(['Any'])
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      {
+        name: 'coverImage',
+        maxCount: 1,
+      },
+      {
+        name: 'subImages',
+        maxCount: 8,
+      },
+    ]),
+  )
   async editPlace(
     @Param('placeId') placeId: string,
     @Body() editPlaceInput: EditPlaceInput,
-    @UploadedFile() coverImage: Express.Multer.File,
+    @UploadedFiles() files: PlacePhotoInput,
   ): Promise<CoreOutput> {
-    return this.placeService.editPlace(placeId, editPlaceInput, coverImage);
+    return this.placeService.editPlace(placeId, editPlaceInput, files);
   }
 
   // TODO: 리뷰 사진이 아니라 SubImage, coverImage Edit API 만들기
