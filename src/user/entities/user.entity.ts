@@ -1,3 +1,4 @@
+import { Place } from '@place/entities/place.entity';
 import {
   Column,
   CreateDateColumn,
@@ -67,6 +68,9 @@ export class User {
 
   @OneToMany((type) => Review, (review) => review.user)
   reviews?: Review[];
+
+  @OneToMany((type) => Place, (place) => place.creator)
+  createdPlaces: Place[];
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()

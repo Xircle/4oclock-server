@@ -1,8 +1,11 @@
+import { User } from '@user/entities/user.entity';
 import * as moment from 'moment';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -82,6 +85,13 @@ export class Place {
 
   @OneToMany((type) => Reservation, (reservation) => reservation.place)
   reservations: Reservation[];
+
+  @ManyToOne((type) => User, (user) => user.createdPlaces)
+  @JoinColumn({ name: 'creator_id' })
+  creator: User;
+
+  @Column('uuid')
+  creator_id: string;
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()
@@ -218,7 +228,7 @@ export class Place {
       return DeadlineIndicator.Done;
     }
     if (start_date.diff(current_date, 'days') === 0) {
-      const deadlineDate = start_date.subtract(3, 'hours');
+      const deadlineDate = start_date.subtract(1, 'hours');
       const duration = moment.duration(deadlineDate.diff(moment()));
       if (duration.asSeconds() <= 0) {
         return DeadlineIndicator.Done; // 3 시간 전에 마감
