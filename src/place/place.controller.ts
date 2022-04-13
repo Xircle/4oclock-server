@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -105,6 +106,15 @@ export class PlaceController {
         error: '대표 사진을 업로드 해주세요.',
       };
     return this.placeService.createPlace(authUser, createPlaceInput, files);
+  }
+
+  @Delete(':placeId')
+  @ApiOperation({ summary: '장소 삭제하기' })
+  async deletePlace(
+    @GetUser() authUser: User,
+    @Param('placeId') placeId: string,
+  ): Promise<CoreOutput> {
+    return this.placeService.deletePlace(authUser, placeId);
   }
 
   @Patch('/:placeId')

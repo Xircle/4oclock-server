@@ -337,6 +337,7 @@ export class PlaceService {
             startDateAt,
             team,
             recommendation,
+            creator: authUser,
           },
           transactionalEntityManager,
         );
@@ -372,9 +373,17 @@ export class PlaceService {
     }
   }
 
-  public async deletePlace(placeId: string): Promise<DeletePlaceOutput> {
+  public async deletePlace(
+    authUser: User,
+    placeId: string,
+  ): Promise<DeletePlaceOutput> {
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
+      const place = await this.placeRepository.findOneByPlaceId(placeId);
+
+      if (authUser.id !== place.creator_id) {
+        return { ok: false, error: '모임 생성자가 아닙니다' };
+      }
 
       await this.placeRepository.delete({
         id: placeId,
@@ -382,8 +391,11 @@ export class PlaceService {
       return {
         ok: true,
       };
-    } catch (err) {
-      throw new InternalServerErrorException();
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
     }
   }
 
