@@ -403,22 +403,53 @@ export class PlaceService {
     editPlaceInput: EditPlaceInput,
     placePhotoInput: PlacePhotoInput,
   ): Promise<CoreOutput> {
-    const { coverImage, subImages } = placePhotoInput;
     const { editedPlace, editedPlaceDetail } = editPlaceInput;
 
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
+      if (placePhotoInput) {
+        const { coverImage, subImages } = placePhotoInput;
+        if (coverImage) {
+          const s3_url = await this.s3Service.uploadToS3(
+            coverImage[0],
+            placeId,
+          );
+          await this.placeRepository.updatePlace(
+            {
+              id: placeId,
+            },
+            {
+              coverImage: s3_url,
+            },
+          );
+        }
 
-      if (coverImage) {
-        const s3_url = await this.s3Service.uploadToS3(coverImage[0], placeId);
-        await this.placeRepository.updatePlace(
-          {
-            id: placeId,
-          },
-          {
-            coverImage: s3_url,
-          },
-        );
+        if (subImages) {
+          const oldLength = editedPlace?.subImages?.length;
+          const comingLength = subImages.length;
+          let j = 0;
+
+          if (oldLength) {
+            for (let i = 0; i < oldLength; i++) {
+              if (editedPlace.subImages[i] === '0') {
+                const s3_url = await this.s3Service.uploadToS3(
+                  subImages[j],
+                  placeId,
+                );
+                editedPlace.subImages[i] = s3_url;
+                j++;
+              }
+            }
+          }
+
+          for (; j < comingLength; j++) {
+            const s3_url = await this.s3Service.uploadToS3(
+              subImages[j],
+              placeId,
+            );
+            editedPlace.subImages.push(s3_url);
+          }
+        }
       }
 
       if (_.isEqual(editPlaceInput, {})) {
