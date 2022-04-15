@@ -1,3 +1,4 @@
+import { CoreOutput } from '@common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
@@ -26,6 +27,17 @@ export class S3Service {
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException(err);
+    }
+  }
+
+  async deleteFromS3(fileName: string): Promise<CoreOutput> {
+    try {
+      this.getS3().deleteObject({
+        Bucket: this.configService.get('AWS_S3_BUCKET_NAME'),
+        Key: fileName,
+      });
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 
