@@ -352,7 +352,7 @@ export class PlaceService {
           },
           transactionalEntityManager,
         );
-        if (placeType === PlaceType.Lightning && !notParticipating) {
+        if (!notParticipating) {
           // Make reservation
           const reservation = this.reservationRepository.create({
             place_id: place.id,
