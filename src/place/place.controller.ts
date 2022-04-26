@@ -99,7 +99,7 @@ export class PlaceController {
     @Body() createPlaceInput: CreatePlaceInput,
     @UploadedFiles() files: PlacePhotoInput,
   ): Promise<CreatePlaceOutput> {
-    const { coverImage, subImages } = files;
+    const { coverImage } = files;
     if (!coverImage)
       return {
         ok: false,
