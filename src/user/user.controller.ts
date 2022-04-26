@@ -24,7 +24,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
-import { GetMyPlaceOutput } from './dtos/get-place-history.dto';
+import {
+  GetMyPlaceOutput,
+  GetMyPlaceCreatedOutput,
+} from './dtos/get-place-history.dto';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
@@ -94,9 +97,17 @@ export class UserController {
   }
 
   @Get('history')
-  @ApiOperation({ summary: '유저가 신청한 써클 조회' })
+  @ApiOperation({ summary: '유저가 신청한 모임 조회' })
   async getMyPlace(@GetUser() authUser: User): Promise<GetMyPlaceOutput> {
     return this.userService.getMyPlace(authUser);
+  }
+
+  @Get('history/created')
+  @ApiOperation({ summary: '유저가 생성한 모임 조회' })
+  async getMyPlaceCreated(
+    @GetUser() authUser: User,
+  ): Promise<GetMyPlaceCreatedOutput> {
+    return this.userService.getMyPlaceCreated(authUser);
   }
 
   @Get('report/:userId')
