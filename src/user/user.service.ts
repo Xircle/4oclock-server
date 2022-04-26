@@ -1,3 +1,4 @@
+import { PlaceRepository } from './../place/repository/place.repository';
 import * as _ from 'lodash';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { getManager, MoreThan } from 'typeorm';
@@ -5,7 +6,11 @@ import { UserProfile } from './entities/user-profile.entity';
 import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
 import { UserRepository } from './repositories/user.repository';
-import { GetMyPlaceOutput, MyXircle } from './dtos/get-place-history.dto';
+import {
+  GetMyPlaceCreatedOutput,
+  GetMyPlaceOutput,
+  MyXircle,
+} from './dtos/get-place-history.dto';
 import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { User, UserRole } from './entities/user.entity';
 import { MeOutput } from './dtos/me.dto';
@@ -20,6 +25,7 @@ export class UserService {
     private readonly reservationRepository: ReservationRepository,
     private readonly users: UserRepository,
     private readonly s3Service: S3Service,
+    private readonly placeRepository: PlaceRepository,
   ) {
     this.codeMap = new Map();
     this.codeMap.set('잇힝조아', { role: UserRole.Client, team: 'Z1' });
@@ -113,6 +119,25 @@ export class UserService {
       };
     } catch (err) {
       throw new InternalServerErrorException();
+    }
+  }
+
+  async getMyPlaceCreated(authUser: User): Promise<GetMyPlaceCreatedOutput> {
+    try {
+      const placesCreated = await this.placeRepository.find({
+        where: {
+          creator_id: authUser.id,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+      return {
+        ok: true,
+        places: placesCreated,
+      };
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 
