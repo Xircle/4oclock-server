@@ -1,3 +1,4 @@
+import { Place } from './../../place/entities/place.entity';
 import { CoreOutput } from '@common/common.interface';
 
 export class MyXircle {
@@ -14,4 +15,8 @@ export class MyXircle {
 
 export class GetMyPlaceOutput extends CoreOutput {
   places: MyXircle[];
+}
+
+export class GetMyPlaceCreatedOutput extends CoreOutput {
+  places?: Place[];
 }
