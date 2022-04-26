@@ -1,3 +1,5 @@
+import { PlaceRepository } from './../place/repository/place.repository';
+import { Place } from './../place/entities/place.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Global, Module } from '@nestjs/common';
 import { AuthModule } from '@auth/auth.module';
@@ -17,6 +19,8 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
       ReservationRepository,
       UserRepository,
       Reservation,
+      Place,
+      PlaceRepository,
     ]),
   ],
   providers: [JwtAuthGuard, UserService, S3Service],
