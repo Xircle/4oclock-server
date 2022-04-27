@@ -33,7 +33,6 @@ import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list
 import {
   CreatePlaceInput,
   CreatePlaceOutput,
-  EditPlacePhotoInput,
   PlacePhotoInput,
 } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
@@ -42,7 +41,7 @@ import {
   GetPlacesQueryParameter,
 } from './dtos/get-places.dto';
 import { GetPlaceByIdOutput } from './dtos/get-place-by-id.dto';
-import { EditPlaceInput } from './dtos/edit-place.dto';
+import { EditPlaceInput, EditPlacePhotoInput } from './dtos/edit-place.dto';
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { GetUser } from '@auth/decorators/get-user.decorator';
 import { User } from '@user/entities/user.entity';
@@ -89,7 +88,7 @@ export class PlaceController {
       },
       {
         name: 'subImages',
-        maxCount: 8,
+        maxCount: 16,
       },
     ]),
   )
@@ -125,12 +124,8 @@ export class PlaceController {
   @UseInterceptors(
     FileFieldsInterceptor([
       {
-        name: 'coverImage',
-        maxCount: 1,
-      },
-      {
-        name: 'subImages',
-        maxCount: 8,
+        name: 'images',
+        maxCount: 16,
       },
     ]),
   )
