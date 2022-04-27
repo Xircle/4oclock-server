@@ -33,6 +33,7 @@ import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list
 import {
   CreatePlaceInput,
   CreatePlaceOutput,
+  EditPlacePhotoInput,
   PlacePhotoInput,
 } from './dtos/create-place.dto';
 import { PlaceService } from './place.service';
@@ -136,7 +137,7 @@ export class PlaceController {
   async editPlace(
     @Param('placeId') placeId: string,
     @Body() editPlaceInput: EditPlaceInput,
-    @UploadedFiles() files: PlacePhotoInput,
+    @UploadedFiles() files: EditPlacePhotoInput,
   ): Promise<CoreOutput> {
     return this.placeService.editPlace(placeId, editPlaceInput, files);
   }
