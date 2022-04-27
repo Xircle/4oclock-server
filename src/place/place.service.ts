@@ -28,7 +28,7 @@ import {
 } from './dtos/create-place.dto';
 import { PlaceRepository } from './repository/place.repository';
 import { PlaceDetailRepository } from './repository/place-detail.repository';
-import { EditPlaceInput } from './dtos/edit-place.dto';
+import { EditPlaceInput, EditPlacePhotoInput } from './dtos/edit-place.dto';
 import { DeletePlaceOutput } from './dtos/delete-place.dto';
 import { GetPlacesOutput } from './dtos/get-places.dto';
 import { DeadlineIndicator, Place, PlaceType } from './entities/place.entity';
@@ -401,55 +401,14 @@ export class PlaceService {
   public async editPlace(
     placeId: string,
     editPlaceInput: EditPlaceInput,
-    placePhotoInput: PlacePhotoInput,
+    placePhotoInput: EditPlacePhotoInput,
   ): Promise<CoreOutput> {
     const { editedPlace, editedPlaceDetail } = editPlaceInput;
 
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
       if (placePhotoInput) {
-        const { coverImage, subImages } = placePhotoInput;
-        if (coverImage) {
-          const s3_url = await this.s3Service.uploadToS3(
-            coverImage[0],
-            placeId,
-          );
-          await this.placeRepository.updatePlace(
-            {
-              id: placeId,
-            },
-            {
-              coverImage: s3_url,
-            },
-          );
-        }
-
-        if (subImages) {
-          const oldLength = editedPlace?.subImages?.length;
-          const comingLength = subImages.length;
-          let j = 0;
-
-          if (oldLength) {
-            for (let i = 0; i < oldLength; i++) {
-              if (editedPlace.subImages[i] === '0') {
-                const s3_url = await this.s3Service.uploadToS3(
-                  subImages[j],
-                  placeId,
-                );
-                editedPlace.subImages[i] = s3_url;
-                j++;
-              }
-            }
-          }
-
-          for (; j < comingLength; j++) {
-            const s3_url = await this.s3Service.uploadToS3(
-              subImages[j],
-              placeId,
-            );
-            editedPlace.subImages.push(s3_url);
-          }
-        }
+        const { images } = placePhotoInput;
       }
 
       if (_.isEqual(editPlaceInput, {})) {
