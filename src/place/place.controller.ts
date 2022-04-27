@@ -117,7 +117,7 @@ export class PlaceController {
     return this.placeService.deletePlace(authUser, placeId);
   }
 
-  @Patch('/:placeId')
+  @Patch(':placeId')
   @ApiOperation({ summary: '장소 정보 수정하기 (리뷰 제외)' })
   @UseGuards(RolesGuard)
   @Roles(['Any'])
