@@ -403,7 +403,19 @@ export class PlaceService {
     editPlaceInput: EditPlaceInput,
     placePhotoInput: EditPlacePhotoInput,
   ): Promise<CoreOutput> {
-    const { editedPlace, editedPlaceDetail } = editPlaceInput;
+    const {
+      placeId: kakaoPlaceId,
+      name,
+      description,
+      maxParticipantsNumber,
+      startDateAt,
+      participationFee,
+      detailAddress,
+      placeType,
+      kakaoLink,
+      team,
+      recommendation,
+    } = editPlaceInput;
 
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
@@ -425,7 +437,12 @@ export class PlaceService {
             id: placeId,
           },
           {
-            ...editedPlace,
+            kakaoPlaceId: kakaoPlaceId,
+            placeType,
+            name,
+            startDateAt,
+            team,
+            recommendation,
           },
         );
         // Edit place detail
@@ -435,7 +452,11 @@ export class PlaceService {
             place_id: placeId,
           },
           {
-            ...editedPlaceDetail,
+            participationFee: +participationFee,
+            description,
+            maxParticipantsNumber,
+            detailAddress,
+            kakaoLink,
           },
         );
       });
