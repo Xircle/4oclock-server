@@ -130,11 +130,17 @@ export class PlaceController {
     ]),
   )
   async editPlace(
+    @GetUser() authUser: User,
     @Param('placeId') placeId: string,
     @Body() editPlaceInput: EditPlaceInput,
     @UploadedFiles() files: EditPlacePhotoInput,
   ): Promise<CoreOutput> {
-    return this.placeService.editPlace(placeId, editPlaceInput, files);
+    return this.placeService.editPlace(
+      authUser,
+      placeId,
+      editPlaceInput,
+      files,
+    );
   }
 
   // TODO: 리뷰 사진이 아니라 SubImage, coverImage Edit API 만들기
