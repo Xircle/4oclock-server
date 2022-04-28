@@ -399,6 +399,7 @@ export class PlaceService {
   }
 
   public async editPlace(
+    authUser: User,
     placeId: string,
     editPlaceInput: EditPlaceInput,
     placePhotoInput: EditPlacePhotoInput,
@@ -414,20 +415,35 @@ export class PlaceService {
       placeType,
       kakaoLink,
       team,
+      isCoverImageDeleted,
       recommendation,
+      oldSubImageUrls,
+      oldCoverImageUrl,
     } = editPlaceInput;
 
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
+
       if (placePhotoInput) {
         const { images } = placePhotoInput;
+        if (images) {
+          for (const image of images) {
+            const s3_url = await this.s3Service.uploadToS3(image, authUser.id);
+            oldSubImageUrls.push(s3_url);
+          }
+        }
       }
 
-      if (_.isEqual(editPlaceInput, {})) {
-        return {
-          ok: true,
-        };
-      }
+      const newCoverImage =
+        isCoverImageDeleted && oldSubImageUrls.length > 0
+          ? oldSubImageUrls.shift()
+          : oldCoverImageUrl;
+
+      // if (_.isEqual(editPlaceInput, {})) {
+      //   return {
+      //     ok: true,
+      //   };
+      // }
 
       await getManager().transaction(async (transactionalEntityManager) => {
         // Edit place
@@ -443,6 +459,8 @@ export class PlaceService {
             startDateAt,
             team,
             recommendation,
+            coverImage: newCoverImage,
+            subImages: oldSubImageUrls,
           },
         );
         // Edit place detail
