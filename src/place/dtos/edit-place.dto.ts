@@ -15,6 +15,8 @@ export class EditPlaceInput extends CreatePlaceInput {
     description: '이전 커버 이미지가 지워졌는지 판단',
   })
   isCoverImageDeleted: boolean;
+
+  oldCoverImageUrl: string;
 }
 
 export class EditPlacePhotoInput {
