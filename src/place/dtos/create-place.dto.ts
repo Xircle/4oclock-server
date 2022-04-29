@@ -181,7 +181,7 @@ export class CreatePlaceInput {
   @ApiProperty({
     description: 'subImages',
     type: 'array',
-    maxItems: 8,
+    maxItems: 16,
     required: true,
     items: {
       type: 'file',
