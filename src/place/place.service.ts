@@ -424,20 +424,28 @@ export class PlaceService {
     try {
       await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
+      let newSubImageUrls: string[] = !oldSubImageUrls
+        ? []
+        : typeof oldSubImageUrls === 'string'
+        ? [oldSubImageUrls]
+        : [...oldSubImageUrls];
+      let newCoverImage;
+
       if (placePhotoInput) {
         const { images } = placePhotoInput;
         if (images) {
           for (const image of images) {
             const s3_url = await this.s3Service.uploadToS3(image, authUser.id);
-            oldSubImageUrls.push(s3_url);
+            newSubImageUrls.push(s3_url);
           }
         }
       }
 
-      const newCoverImage =
-        isCoverImageDeleted && oldSubImageUrls.length > 0
-          ? oldSubImageUrls.shift()
-          : oldCoverImageUrl;
+      if (oldCoverImageUrl) {
+        newCoverImage = oldCoverImageUrl;
+      } else {
+        newCoverImage = newSubImageUrls.shift();
+      }
 
       // if (_.isEqual(editPlaceInput, {})) {
       //   return {
@@ -460,7 +468,7 @@ export class PlaceService {
             team,
             recommendation,
             coverImage: newCoverImage,
-            subImages: oldSubImageUrls,
+            subImages: newSubImageUrls,
           },
         );
         // Edit place detail
