@@ -1,3 +1,4 @@
+import { CoreOutput } from '@common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PlaceService } from '@place/place.service';
 import { DeleteReservationOutput } from '@user/dtos/delete-reservation.dto';
@@ -128,6 +129,37 @@ export class ReservationService {
       };
     } catch (err) {
       throw new InternalServerErrorException();
+    }
+  }
+
+  async cancelReservationByCreator(
+    authUser: User,
+    placeId: string,
+    participantId: string,
+  ): Promise<CoreOutput> {
+    try {
+      const { creator_id } =
+        await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
+      if (creator_id !== authUser.id) {
+        return { ok: false, error: '모임 생성자가 아닙니다' };
+      } else {
+        await this.reservationRepository.update(
+          {
+            place_id: placeId,
+            user_id: participantId,
+          },
+          {
+            isCanceled: true,
+            cancelReason: '방장에 의한 강퇴',
+            detailReason: '방장에 의한 강퇴',
+          },
+        );
+        return {
+          ok: true,
+        };
+      }
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 }
