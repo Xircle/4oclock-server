@@ -9,7 +9,6 @@ import {
   IsDate,
   IsEnum,
 } from 'class-validator';
-import { CreatePlaceInput } from './create-place.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class EditPlaceInput {
