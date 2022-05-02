@@ -1,3 +1,4 @@
+import { SearchPlaceInput, SearchPlaceOutput } from './dtos/search-place.dto';
 import * as _ from 'lodash';
 import { getManager, MoreThanOrEqual, LessThan } from 'typeorm';
 import {
@@ -533,5 +534,12 @@ export class PlaceService {
     } catch (error) {
       return { ok: false, error };
     }
+  }
+
+  async searchPlaceByName({
+    query,
+    page,
+  }: SearchPlaceInput): Promise<SearchPlaceOutput> {
+    return { ok: true };
   }
 }
