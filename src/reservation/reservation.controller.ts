@@ -67,4 +67,18 @@ export class ReservationController {
 
   @Patch()
   async editReservation() {}
+
+  @Patch('cancel-by-creator/:placeId/:participantId')
+  @ApiOperation({ summary: '생성자에 의해 예약 취소하기' })
+  async cancelReservationByCreator(
+    @GetUser() authUser: User,
+    @Param('placeId') placeId: string,
+    @Param('participantId') participantId: string,
+  ) {
+    return this.reservationService.cancelReservationByCreator(
+      authUser,
+      placeId,
+      participantId,
+    );
+  }
 }
