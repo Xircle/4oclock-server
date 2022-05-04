@@ -60,6 +60,8 @@ export class PlaceController {
 
   @Get('')
   @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
+  @UseGuards(RolesGuard)
+  @Roles(['Client', 'Admin', 'Owner'])
   async getPlaces(
     @Query() getPlacesQueryParameter: GetPlacesQueryParameter,
     @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
