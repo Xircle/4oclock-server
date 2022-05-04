@@ -25,6 +25,7 @@ export enum UserRole {
   Client = 'Client',
   Owner = 'Owner',
   Admin = 'Admin',
+  Banned = 'Banned',
 }
 
 @Entity({ name: 'users' })
