@@ -13,6 +13,9 @@ export class RolesGuard implements CanActivate {
     const user: User = request.user;
     if (!user) return false;
 
-    return roles.includes(user.role) || roles.includes('Any');
+    return (
+      (roles.includes(user.role) || roles.includes('Any')) &&
+      user.role !== 'Banned'
+    );
   }
 }
