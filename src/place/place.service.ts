@@ -545,17 +545,15 @@ export class PlaceService {
         where: [
           {
             name: Raw((name) => `${name} ILIKE '%${query}%'`),
-            skip: (page - 1) * 5,
-            take: 5,
           },
           {
             recommendation: Raw(
               (recommendation) => `${recommendation} ILIKE '%${query}%'`,
             ),
-            skip: (page - 1) * 5,
-            take: 5,
           },
         ],
+        skip: (page - 1) * 5,
+        take: 5,
       });
       return {
         ok: true,
