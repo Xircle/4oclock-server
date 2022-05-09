@@ -1,6 +1,6 @@
 import { SearchPlaceInput, SearchPlaceOutput } from './dtos/search-place.dto';
 import * as _ from 'lodash';
-import { getManager, MoreThanOrEqual, LessThan } from 'typeorm';
+import { getManager, MoreThanOrEqual, LessThan, Raw } from 'typeorm';
 import {
   HttpException,
   HttpStatus,
@@ -540,6 +540,31 @@ export class PlaceService {
     query,
     page,
   }: SearchPlaceInput): Promise<SearchPlaceOutput> {
-    return { ok: true };
+    try {
+      const [places, totalResults] = await this.placeRepository.findAndCount({
+        where: [
+          {
+            name: Raw((name) => `${name} ILIKE '%${query}%'`),
+            skip: (page - 1) * 5,
+            take: 5,
+          },
+          {
+            recommendation: Raw(
+              (recommendation) => `${recommendation} ILIKE '%${query}%'`,
+            ),
+            skip: (page - 1) * 5,
+            take: 5,
+          },
+        ],
+      });
+      return {
+        ok: true,
+        places,
+        totalResults,
+        totalPages: Math.ceil(totalResults / 25),
+      };
+    } catch {
+      return { ok: false, error: 'Could not search for places' };
+    }
   }
 }
