@@ -1,3 +1,4 @@
+import { IsString, IsOptional } from 'class-validator';
 import { Place } from '@place/entities/place.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -9,7 +10,9 @@ export class SearchPlaceInput extends PaginationInput {
     example: '꼭그닭',
     description: '장소 검색',
   })
-  query: string;
+  @IsString()
+  @IsOptional()
+  query?: string;
 }
 
 export class SearchPlaceOutput extends PagincationOutput {
