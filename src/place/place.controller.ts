@@ -71,6 +71,15 @@ export class PlaceController {
     return this.placeService.getPlaces(getPlacesQueryParameter, page, limit);
   }
 
+  @Get('search')
+  @ApiOperation({ summary: '장소 검색' })
+  async searchPlaces(
+    @Query('query') query: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ): Promise<SearchPlaceOutput> {
+    return this.placeService.searchPlaceByName({ query: query, page: page });
+  }
+
   @Get(':placeId')
   @ApiOperation({ summary: '장소의 세부정보 보기' })
   async getPlaceById(
@@ -174,13 +183,5 @@ export class PlaceController {
     @Param('placeId') placeId: string,
   ): Promise<GetPlaceParticipantListOutput> {
     return this.placeService.getPlaceParticipantList(placeId);
-  }
-
-  @Get('/search')
-  @ApiOperation({ summary: '장소 검색' })
-  async searchPlaces(
-    @Body() searchPlaceInput: SearchPlaceInput,
-  ): Promise<SearchPlaceOutput> {
-    return this.placeService.searchPlaceByName(searchPlaceInput);
   }
 }
