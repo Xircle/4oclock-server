@@ -48,6 +48,7 @@ import { User } from '@user/entities/user.entity';
 import { RolesGuard } from '@auth/guard/roles.guard';
 import { Roles } from '@auth/roles.decorator';
 import { CoreOutput } from '@common/common.interface';
+import { SearchPlaceOutput, SearchPlaceInput } from './dtos/search-place.dto';
 
 @ApiTags('Place')
 @ApiBearerAuth('jwt')
@@ -173,5 +174,13 @@ export class PlaceController {
     @Param('placeId') placeId: string,
   ): Promise<GetPlaceParticipantListOutput> {
     return this.placeService.getPlaceParticipantList(placeId);
+  }
+
+  @Get('/search')
+  @ApiOperation({ summary: '장소 검색' })
+  async searchPlaces(
+    @Body() searchPlaceInput: SearchPlaceInput,
+  ): Promise<SearchPlaceOutput> {
+    return this.placeService.searchPlaceByName(searchPlaceInput);
   }
 }
