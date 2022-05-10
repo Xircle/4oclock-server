@@ -84,7 +84,6 @@ export class User {
   @Expose()
   async checkPassword?(password: string): Promise<boolean> {
     try {
-      console.log(password, this.password);
       return bcrypt.compare(password, this.password);
     } catch (e) {
       console.log(e);
