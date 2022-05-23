@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Post,
   Put,
   Query,
   UploadedFile,
@@ -114,5 +115,14 @@ export class UserController {
   @ApiOperation({ summary: '특정 유저 신고하기' })
   async reportUser(@GetUser() authUser: User) {
     return this.userService.reportUser();
+  }
+
+  @Post('/fbtoken/:token')
+  @ApiOperation({ summary: 'for testing' })
+  async updateFirebaseToken(
+    @GetUser() authUser: User,
+    @Param('token') token: string,
+  ) {
+    return this.userService.updateFirebaseToken(authUser, token);
   }
 }
