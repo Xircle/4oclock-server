@@ -115,10 +115,12 @@ export class MessageService {
         const messageOutput = await admin
           .messaging()
           .sendToDevice(receiver.firebaseToken, {
-            notification: { title: '새로운 메세지' },
+            notification: {
+              title: authUser.profile.username,
+              body: sendMessageInput.content,
+            },
           });
 
-        console.log(messageOutput);
         return {
           ok: true,
           createdRoomId: newRoom.id,
@@ -136,10 +138,11 @@ export class MessageService {
       const messageOutput = await admin
         .messaging()
         .sendToDevice(receiver.firebaseToken, {
-          notification: { title: '새로운 메세지' },
+          notification: {
+            title: authUser.profile.username,
+            body: sendMessageInput.content,
+          },
         });
-
-      console.log(messageOutput);
       return {
         ok: true,
       };
