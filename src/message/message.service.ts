@@ -7,6 +7,7 @@ import { MessageRepository } from './repository/message.repository';
 import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
 import { isUnreadMessageOutput } from './dtos/is-unread-message.dto';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class MessageService {
@@ -82,13 +83,14 @@ export class MessageService {
     roomId: string,
     sendMessageInput: SendMessageInput,
   ): Promise<SendMessageOutput> {
+    const receiver = await this.userRepository.findOne({
+      where: {
+        id: sendMessageInput.receiverId,
+      },
+    });
+
     try {
       if (roomId === '0') {
-        const receiver = await this.userRepository.findOne({
-          where: {
-            id: sendMessageInput.receiverId,
-          },
-        });
         if (!receiver) {
           return {
             ok: false,
@@ -110,6 +112,13 @@ export class MessageService {
         });
         await this.messageRepository.save(message);
 
+        const messageOutput = await admin
+          .messaging()
+          .sendToDevice(receiver.firebaseToken, {
+            notification: { title: '새로운 메세지' },
+          });
+
+        console.log(messageOutput);
         return {
           ok: true,
           createdRoomId: newRoom.id,
@@ -124,6 +133,13 @@ export class MessageService {
         });
         await this.messageRepository.save(message);
       }
+      const messageOutput = await admin
+        .messaging()
+        .sendToDevice(receiver.firebaseToken, {
+          notification: { title: '새로운 메세지' },
+        });
+
+      console.log(messageOutput);
       return {
         ok: true,
       };
