@@ -55,6 +55,9 @@ export class User {
   })
   profile?: UserProfile;
 
+  @Column('varchar', { array: true, default: false, nullable: true })
+  firebaseToken?: string[];
+
   @OneToMany((type) => Reservation, (reservation) => reservation.participant)
   reservations?: Reservation[];
 
