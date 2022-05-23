@@ -259,6 +259,22 @@ export class UserService {
     }
   }
 
+  async updateFirebaseToken(authUser: User, token: string) {
+    await getManager().transaction(async (transactionalEntityManager) => {
+      // Update profile
+
+      await transactionalEntityManager.update(
+        User,
+        {
+          id: authUser.id,
+        },
+        {
+          firebaseToken: [token],
+        },
+      );
+    });
+  }
+
   async reportUser() {
     return { ok: true };
   }
