@@ -111,15 +111,15 @@ export class MessageService {
           isRead: sendMessageInput.isRead,
         });
         await this.messageRepository.save(message);
-
-        const messageOutput = await admin
-          .messaging()
-          .sendToDevice(receiver.firebaseToken, {
+        if (receiver.firebaseToken) {
+          await admin.messaging().sendToDevice(receiver.firebaseToken, {
             notification: {
               title: authUser.profile.username,
               body: sendMessageInput.content,
+              sound: 'default',
             },
           });
+        }
 
         return {
           ok: true,
@@ -135,14 +135,23 @@ export class MessageService {
         });
         await this.messageRepository.save(message);
       }
-      const messageOutput = await admin
-        .messaging()
-        .sendToDevice(receiver.firebaseToken, {
+      if (receiver.firebaseToken) {
+        await admin.messaging().sendToDevice(receiver.firebaseToken, {
           notification: {
             title: authUser.profile.username,
             body: sendMessageInput.content,
+            sound: 'default',
+          },
+          data: {
+            type: 'message',
+            receiverId: sendMessageInput.receiverId,
+            senderId: authUser.id,
+            sentAt: new Date().toString(),
+            content: sendMessageInput.content,
           },
         });
+      }
+
       return {
         ok: true,
       };
