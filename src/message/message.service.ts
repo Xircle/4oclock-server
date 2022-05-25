@@ -118,6 +118,13 @@ export class MessageService {
               body: sendMessageInput.content,
               sound: 'default',
             },
+            data: {
+              type: 'message',
+              receiverId: sendMessageInput.receiverId,
+              senderId: authUser.id,
+              sentAt: new Date().toString(),
+              content: sendMessageInput.content,
+            },
           });
         }
 
