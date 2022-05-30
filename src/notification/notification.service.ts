@@ -20,8 +20,8 @@ export class NotificationService {
         return { ok: false, error: 'No Firebase Token' };
       }
       if (options?.cronInput) {
-        const job = new CronJob(options.cronInput.time, async () => {
-          await admin
+        const job = new CronJob(options.cronInput.time, () => {
+          admin
             .messaging()
             .sendToDevice(
               registrationTokenOrTokens,
