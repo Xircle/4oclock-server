@@ -113,20 +113,23 @@ export class MessageService {
           isRead: sendMessageInput.isRead,
         });
         await this.messageRepository.save(message);
-        this.notificationService.sendNotifications(receiver.firebaseToken, {
-          notification: {
-            title: authUser.profile.username,
-            body: sendMessageInput.content,
-            sound: 'default',
+        await this.notificationService.sendNotifications(
+          receiver.firebaseToken,
+          {
+            notification: {
+              title: authUser.profile.username,
+              body: sendMessageInput.content,
+              sound: 'default',
+            },
+            data: {
+              type: 'message',
+              receiverId: sendMessageInput.receiverId,
+              senderId: authUser.id,
+              sentAt: new Date().toString(),
+              content: sendMessageInput.content,
+            },
           },
-          data: {
-            type: 'message',
-            receiverId: sendMessageInput.receiverId,
-            senderId: authUser.id,
-            sentAt: new Date().toString(),
-            content: sendMessageInput.content,
-          },
-        });
+        );
 
         return {
           ok: true,
@@ -142,7 +145,7 @@ export class MessageService {
         });
         await this.messageRepository.save(message);
       }
-      this.notificationService.sendNotifications(receiver.firebaseToken, {
+      await this.notificationService.sendNotifications(receiver.firebaseToken, {
         notification: {
           title: authUser.profile.username,
           body: sendMessageInput.content,
