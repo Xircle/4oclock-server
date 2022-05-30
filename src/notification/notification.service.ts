@@ -1,13 +1,10 @@
 import { CoreOutput } from '@common/common.interface';
 import { Injectable } from '@nestjs/common';
-import {
-  MessagingOptions,
-  MessagingPayload,
-} from 'firebase-admin/lib/messaging/messaging-api';
+import { MessagingPayload } from 'firebase-admin/lib/messaging/messaging-api';
 import * as admin from 'firebase-admin';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import { CronInput } from './dtos/cron.dto';
+import { INotificationOptions } from './dtos/cron.dto';
 
 @Injectable()
 export class NotificationService {
@@ -16,26 +13,33 @@ export class NotificationService {
   async sendNotifications(
     registrationTokenOrTokens: string | string[],
     payload: MessagingPayload,
-    options?: MessagingOptions,
-    cronInput?: CronInput,
+    options?: INotificationOptions,
   ): Promise<CoreOutput> {
     try {
       if (!registrationTokenOrTokens) {
         return { ok: false, error: 'No Firebase Token' };
       }
-      if (cronInput) {
-        const job = new CronJob(cronInput.time, async () => {
+      if (options?.cronInput) {
+        const job = new CronJob(options.cronInput.time, async () => {
           await admin
             .messaging()
-            .sendToDevice(registrationTokenOrTokens, payload, options);
+            .sendToDevice(
+              registrationTokenOrTokens,
+              payload,
+              options?.fcmOptions,
+            );
         });
 
-        this.schedulerRegistry.addCronJob(cronInput.name, job);
+        this.schedulerRegistry.addCronJob(options.cronInput.name, job);
         job.start();
       } else {
         await admin
           .messaging()
-          .sendToDevice(registrationTokenOrTokens, payload, options);
+          .sendToDevice(
+            registrationTokenOrTokens,
+            payload,
+            options?.fcmOptions,
+          );
       }
 
       return { ok: true };
