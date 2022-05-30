@@ -5,6 +5,7 @@ import { ReservationController } from './reservation.controller';
 import { ReservationRepository } from './repository/reservation.repository';
 import { AuthModule } from '@auth/auth.module';
 import { PlaceModule } from '@place/place.module';
+import { NotificationService } from 'notification/notification.service';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { PlaceModule } from '@place/place.module';
     AuthModule,
     PlaceModule,
   ],
-  providers: [ReservationService],
+  providers: [ReservationService, NotificationService],
   controllers: [ReservationController],
   exports: [ReservationService],
 })
