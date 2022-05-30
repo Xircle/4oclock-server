@@ -18,6 +18,8 @@ import { HealthModule } from '@health/health.module';
 import { SmsModule } from './sms/sms.module';
 import { TeamModule } from './team/team.module';
 import ormconfig from '../ormconfig';
+import { ScheduleModule } from '@nestjs/schedule';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -52,6 +54,7 @@ import ormconfig from '../ormconfig';
           : '.env.test',
     }),
     TypeOrmModule.forRoot(ormconfig),
+    ScheduleModule.forRoot(),
     UserModule,
     AuthModule,
     S3Module,
@@ -66,6 +69,7 @@ import ormconfig from '../ormconfig';
     HealthModule,
     SmsModule,
     TeamModule,
+    NotificationModule,
   ],
   controllers: [AppController],
 })
