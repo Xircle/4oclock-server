@@ -1,6 +1,8 @@
+import { NotificationService } from 'notification/notification.service';
+import { ReservationService } from './../reservation/reservation.service';
 import { SearchPlaceInput, SearchPlaceOutput } from './dtos/search-place.dto';
 import * as _ from 'lodash';
-import { getManager, MoreThanOrEqual, LessThan, Raw } from 'typeorm';
+import { getManager, Raw } from 'typeorm';
 import {
   HttpException,
   HttpStatus,
@@ -36,6 +38,7 @@ import { DeadlineIndicator, Place, PlaceType } from './entities/place.entity';
 import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list.dto';
 import { PlaceDetail } from './entities/place-detail.entity';
 import { Gender } from '@user/entities/user-profile.entity';
+import * as moment from 'moment';
 
 @Injectable()
 export class PlaceService {
@@ -44,6 +47,7 @@ export class PlaceService {
     private placeRepository: PlaceRepository,
     private placeDetailRepository: PlaceDetailRepository,
     private s3Service: S3Service,
+    private notificationService: NotificationService,
   ) {}
 
   private checkPlaceException(entity: Place): void {
@@ -354,6 +358,25 @@ export class PlaceService {
           transactionalEntityManager,
         );
         if (!notParticipating) {
+          const time = moment(startDateAt).subtract(5, 'h').toDate();
+          const payload = {
+            notification: {
+              title: name,
+              body: '모임 시작까지 5시간전!',
+              sound: 'default',
+            },
+            data: {
+              type: 'place',
+              sentAt: new Date().toString(),
+              content: '테스트',
+            },
+          };
+
+          await this.notificationService.sendNotifications(
+            authUser.firebaseToken,
+            payload,
+            { cronInput: { time, name: 'reservation' } },
+          );
           // Make reservation
           const reservation = this.reservationRepository.create({
             place_id: place.id,
