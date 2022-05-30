@@ -1,3 +1,4 @@
+import { NotificationService } from './../notification/notification.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { MessageRepository } from './repository/message.repository';
@@ -19,7 +20,7 @@ import { RoomService } from '@room/room.service';
     AuthModule,
     ChatsModule,
   ],
-  providers: [MessageService, RoomService],
+  providers: [MessageService, RoomService, NotificationService],
   controllers: [MessageController],
 })
 export class MessageModule {}
