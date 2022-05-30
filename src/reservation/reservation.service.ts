@@ -11,6 +11,7 @@ import {
 } from './dtos/make-reservation.dto';
 import { PatchReservationInput } from './dtos/patch-reservation.dto';
 import { ReservationRepository } from './repository/reservation.repository';
+import * as moment from 'moment';
 
 @Injectable()
 export class ReservationService {
@@ -73,14 +74,11 @@ export class ReservationService {
         );
       }
 
-      const time: string = `0 ${targetPlace.startDateAt.getMinutes()} ${targetPlace.startDateAt.getHours()} ${targetPlace.startDateAt.getDate()} ${
-        targetPlace.startDateAt.getMonth() + 1
-      } ? ${targetPlace.startDateAt.getFullYear()}`;
-      const temp: string = `0 20 17 30 5 ? 2022`;
+      const time = moment(targetPlace.startDateAt).subtract(5, 'h').toDate();
       const payload = {
         notification: {
-          title: '모임 테스트',
-          body: time,
+          title: targetPlace.name,
+          body: '모임 시작까지 5시간전!',
           sound: 'default',
         },
         data: {
@@ -93,7 +91,7 @@ export class ReservationService {
       await this.notificationService.sendNotifications(
         authUser.firebaseToken,
         payload,
-        { cronInput: { time: temp, name: 'reservation' } },
+        { cronInput: { time, name: 'reservation' } },
       );
       return {
         ok: true,
