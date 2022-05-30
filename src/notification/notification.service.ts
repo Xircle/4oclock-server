@@ -7,6 +7,7 @@ import {
 import * as admin from 'firebase-admin';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
+import { CronInput } from './dtos/cron.dto';
 
 @Injectable()
 export class NotificationService {
@@ -16,20 +17,20 @@ export class NotificationService {
     registrationTokenOrTokens: string | string[],
     payload: MessagingPayload,
     options?: MessagingOptions,
-    scheduledTime?: string,
+    cronInput?: CronInput,
   ): Promise<CoreOutput> {
     try {
       if (!registrationTokenOrTokens) {
         return { ok: false, error: 'No Firebase Token' };
       }
-      if (scheduledTime) {
-        const job = new CronJob(scheduledTime, async () => {
+      if (cronInput) {
+        const job = new CronJob(cronInput.time, async () => {
           await admin
             .messaging()
             .sendToDevice(registrationTokenOrTokens, payload, options);
         });
 
-        this.schedulerRegistry.addCronJob('notification', job);
+        this.schedulerRegistry.addCronJob(cronInput.name, job);
         job.start();
       } else {
         await admin
