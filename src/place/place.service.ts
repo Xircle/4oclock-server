@@ -1,5 +1,4 @@
 import { NotificationService } from 'notification/notification.service';
-import { ReservationService } from './../reservation/reservation.service';
 import { SearchPlaceInput, SearchPlaceOutput } from './dtos/search-place.dto';
 import * as _ from 'lodash';
 import { getManager, Raw } from 'typeorm';
