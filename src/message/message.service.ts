@@ -1,3 +1,4 @@
+import { NotificationService } from './../notification/notification.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoomRepository } from '@room/repository/room.repository';
@@ -16,6 +17,7 @@ export class MessageService {
     private readonly roomRepository: RoomRepository,
     private readonly messageRepository: MessageRepository,
     private readonly roomService: RoomService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async isUnReadMessage(authUser: User): Promise<isUnreadMessageOutput> {
@@ -111,22 +113,20 @@ export class MessageService {
           isRead: sendMessageInput.isRead,
         });
         await this.messageRepository.save(message);
-        if (receiver.firebaseToken) {
-          await admin.messaging().sendToDevice(receiver.firebaseToken, {
-            notification: {
-              title: authUser.profile.username,
-              body: sendMessageInput.content,
-              sound: 'default',
-            },
-            data: {
-              type: 'message',
-              receiverId: sendMessageInput.receiverId,
-              senderId: authUser.id,
-              sentAt: new Date().toString(),
-              content: sendMessageInput.content,
-            },
-          });
-        }
+        this.notificationService.sendNotifications(receiver.firebaseToken, {
+          notification: {
+            title: authUser.profile.username,
+            body: sendMessageInput.content,
+            sound: 'default',
+          },
+          data: {
+            type: 'message',
+            receiverId: sendMessageInput.receiverId,
+            senderId: authUser.id,
+            sentAt: new Date().toString(),
+            content: sendMessageInput.content,
+          },
+        });
 
         return {
           ok: true,
@@ -142,22 +142,20 @@ export class MessageService {
         });
         await this.messageRepository.save(message);
       }
-      if (receiver.firebaseToken) {
-        await admin.messaging().sendToDevice(receiver.firebaseToken, {
-          notification: {
-            title: authUser.profile.username,
-            body: sendMessageInput.content,
-            sound: 'default',
-          },
-          data: {
-            type: 'message',
-            receiverId: sendMessageInput.receiverId,
-            senderId: authUser.id,
-            sentAt: new Date().toString(),
-            content: sendMessageInput.content,
-          },
-        });
-      }
+      this.notificationService.sendNotifications(receiver.firebaseToken, {
+        notification: {
+          title: authUser.profile.username,
+          body: sendMessageInput.content,
+          sound: 'default',
+        },
+        data: {
+          type: 'message',
+          receiverId: sendMessageInput.receiverId,
+          senderId: authUser.id,
+          sentAt: new Date().toString(),
+          content: sendMessageInput.content,
+        },
+      });
 
       return {
         ok: true,
