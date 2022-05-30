@@ -1,3 +1,4 @@
+import { NotificationService } from './../notification/notification.service';
 import { CoreOutput } from '@common/common.interface';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PlaceService } from '@place/place.service';
@@ -16,6 +17,7 @@ export class ReservationService {
   constructor(
     private reservationRepository: ReservationRepository,
     private placeService: PlaceService,
+    private notificationService: NotificationService,
   ) {}
 
   async makeReservation(
@@ -39,7 +41,13 @@ export class ReservationService {
           user_id: authUser.id,
         },
       });
-
+      if (exists && !exists.isCanceled) {
+        // 예약이 생성은 됐는데 취소를 한 적이 없으면, 예약이 중복된 상황
+        return {
+          ok: false,
+          error: '이미 신청하셨습니다.',
+        };
+      }
       if (!exists) {
         // 유저가 최초에 예약할 때
         const reservation = this.reservationRepository.create({
@@ -49,10 +57,6 @@ export class ReservationService {
           isVaccinated,
         });
         await this.reservationRepository.save(reservation);
-
-        return {
-          ok: true,
-        };
       } else if (exists.isCanceled) {
         // 예약한 적이 있는데, 취소를 했었을 때
         await this.reservationRepository.update(
@@ -67,16 +71,33 @@ export class ReservationService {
             detailReason: null,
           },
         );
-        return {
-          ok: true,
-        };
-      } else {
-        // 예약이 생성은 됐는데 취소를 한 적이 없으면, 예약이 중복된 상황
-        return {
-          ok: false,
-          error: '이미 신청하셨습니다.',
-        };
       }
+
+      const time: string = `0 ${targetPlace.startDateAt.getMinutes()} ${targetPlace.startDateAt.getHours()} ${targetPlace.startDateAt.getDate()} ${
+        targetPlace.startDateAt.getMonth() + 1
+      } ? ${targetPlace.startDateAt.getFullYear()}`;
+      const temp: string = `0 20 17 30 5 ? 2022`;
+      const payload = {
+        notification: {
+          title: '모임 테스트',
+          body: time,
+          sound: 'default',
+        },
+        data: {
+          type: 'place',
+          sentAt: new Date().toString(),
+          content: '테스트',
+        },
+      };
+
+      await this.notificationService.sendNotifications(
+        authUser.firebaseToken,
+        payload,
+        { cronInput: { time: temp, name: 'reservation' } },
+      );
+      return {
+        ok: true,
+      };
     } catch (err) {
       throw new InternalServerErrorException();
     }
