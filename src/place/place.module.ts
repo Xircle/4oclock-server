@@ -1,3 +1,4 @@
+import { NotificationService } from 'notification/notification.service';
 import { ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,6 +14,7 @@ import { CurrentUserInterceptor } from './interceptors/current-user.interceptor'
 import { PlaceRepository } from './repository/place.repository';
 import { PlaceService } from './place.service';
 import { PlaceController } from './place.controller';
+import { ReservationService } from '@reservation/reservation.service';
 @Module({
   imports: [
     AuthModule,
@@ -31,6 +33,8 @@ import { PlaceController } from './place.controller';
     CurrentUserInterceptor,
     ConfigService,
     EventService,
+    ReservationService,
+    NotificationService,
   ],
   controllers: [PlaceController],
   exports: [PlaceService],
