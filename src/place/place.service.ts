@@ -448,12 +448,6 @@ export class PlaceService {
         newCoverImage = newSubImageUrls.shift();
       }
 
-      // if (_.isEqual(editPlaceInput, {})) {
-      //   return {
-      //     ok: true,
-      //   };
-      // }
-
       await getManager().transaction(async (transactionalEntityManager) => {
         // Edit place
         await transactionalEntityManager.update(
