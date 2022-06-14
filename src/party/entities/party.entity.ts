@@ -1,9 +1,23 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'party' })
 export class Place {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column('timestamptz', { select: false })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Column('timestamptz', { select: false })
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Column({ length: 255 })
   name: string;
@@ -18,7 +32,7 @@ export class Place {
   kakaoId: string;
 
   @Column({ default: false })
-  isClosed: boolean;
+  isClosed?: boolean;
 
   @Column({ length: 511 })
   description: string;
@@ -39,8 +53,8 @@ export class Place {
   participatingRecommendations: string[];
 
   @Column({ length: 1023, default: '입력된 부분이 없습니다' })
-  invitationDetail: string;
+  invitationDetail?: string;
 
   @Column({ length: 1023, default: '입력된 부분이 없습니다' })
-  InvitaionInstruction: string;
+  InvitaionInstruction?: string;
 }
