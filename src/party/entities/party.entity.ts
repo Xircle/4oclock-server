@@ -41,7 +41,7 @@ export class Place {
   description: string;
 
   @Column({ length: 255 })
-  address: string;
+  kakaoAddress: string;
 
   @Column({ length: 255 })
   placeName: string;
