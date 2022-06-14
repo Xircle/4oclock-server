@@ -14,8 +14,16 @@ export class CreatePartyOutput extends CoreOutput {
   name: string;
 
   @ApiProperty({
-    example: 'https://kakao.link',
-    description: '카카오 링크',
+    example: '준비물은 청춘과 체력! 같이 이런저런 얘기 나눠요~~',
+    description: '파티 디테일 설명',
+  })
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @ApiProperty({
+    example: '',
+    description: '외부 링크',
   })
   @IsString()
   @IsOptional()
