@@ -1,7 +1,10 @@
+import { Reservation } from '@reservation/entities/reservation.entity';
+import { Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -57,4 +60,15 @@ export class Place {
 
   @Column({ length: 1023, default: '입력된 부분이 없습니다' })
   InvitaionInstruction?: string;
+
+  @Column({ default: 0 })
+  maxParticipantsCount?: number;
+
+  @OneToMany((type) => Reservation, (reservation) => reservation.place)
+  reservations: Reservation[];
+
+  @Expose()
+  returnCurParticipantsCount(): number {
+    return Reservation.length;
+  }
 }
