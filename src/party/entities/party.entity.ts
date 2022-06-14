@@ -7,4 +7,16 @@ export class Place {
 
   @Column({ length: 255 })
   name: string;
+
+  @Column({ length: 255 })
+  images: string[];
+
+  @Column('timestamptz')
+  startDateAt: Date;
+
+  @Column({ length: 255 })
+  kakaoId: string;
+
+  @Column({ default: false })
+  isClosed: boolean;
 }
