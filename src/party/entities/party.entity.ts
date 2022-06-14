@@ -59,7 +59,7 @@ export class Place {
   invitationDetail?: string;
 
   @Column({ length: 1023, default: '입력된 부분이 없습니다' })
-  InvitaionInstruction?: string;
+  invitaionInstruction?: string;
 
   @Column({ default: 0 })
   maxParticipantsCount?: number;
