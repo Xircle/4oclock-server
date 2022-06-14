@@ -20,6 +20,7 @@ import { TeamModule } from './team/team.module';
 import ormconfig from '../ormconfig';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notification/notification.module';
+import { PartyModule } from './party/party.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { NotificationModule } from './notification/notification.module';
     SmsModule,
     TeamModule,
     NotificationModule,
+    PartyModule,
   ],
   controllers: [AppController],
 })
