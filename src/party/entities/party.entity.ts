@@ -49,8 +49,8 @@ export class Place {
   @Column({ length: 511, nullable: true })
   externalLink?: string;
 
-  @Column({ length: 124 })
-  fee: string;
+  @Column({ length: 124, default: '무료' })
+  fee?: string;
 
   @Column({ length: 1023, default: [] })
   participatingRecommendations: string[];
