@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'party' })
-export class Place {
+export class Party {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,8 +25,8 @@ export class Place {
   @Column({ length: 255 })
   name: string;
 
-  @Column({ length: 255 })
-  images: string[];
+  @Column('varchar', { array: true, nullable: true })
+  images?: string[];
 
   @Column('timestamptz')
   startDateAt: Date;
@@ -52,8 +52,8 @@ export class Place {
   @Column({ length: 124, default: '무료' })
   fee?: string;
 
-  @Column({ length: 1023, default: [] })
-  participatingRecommendations: string[];
+  @Column('varchar', { array: true, nullable: true })
+  participatingRecommendations?: string[];
 
   @Column({ length: 1023, default: '입력된 부분이 없습니다' })
   invitationDetail?: string;
@@ -64,7 +64,7 @@ export class Place {
   @Column({ default: 0 })
   maxParticipantsCount?: number;
 
-  @OneToMany((type) => Reservation, (reservation) => reservation.place)
+  @OneToMany((type) => Reservation, (reservation) => reservation.party)
   reservations: Reservation[];
 
   @Expose()
