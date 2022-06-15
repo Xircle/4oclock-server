@@ -1,3 +1,4 @@
+import { Party } from './../../party/entities/party.entity';
 import {
   Column,
   CreateDateColumn,
@@ -43,9 +44,17 @@ export class Reservation {
 
   @ManyToOne((type) => Place, (place) => place.reservations, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn({ name: 'place_id' })
   place: Place;
+
+  @ManyToOne((type) => Party, (place) => place.reservations, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @JoinColumn({ name: 'party_id' })
+  party: Party;
 
   @Column('timestamptz', { select: false })
   @CreateDateColumn()
