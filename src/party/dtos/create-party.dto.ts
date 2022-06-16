@@ -1,7 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import { CoreOutput } from '@common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { isString } from 'lodash';
 import { Transform } from 'class-transformer';
 export class CreatePartyInput {
@@ -38,6 +44,10 @@ export class CreatePartyInput {
   @IsOptional()
   kakaoPlaceId?: string;
 
+  @IsString()
+  @IsOptional()
+  kakaoPlaceName?: string;
+
   @ApiProperty({
     example: 'XX시 XX구 XX동 등등',
     description: '카카오 로컬 api에서 가져온 장소 api 정보',
@@ -62,6 +72,18 @@ export class CreatePartyInput {
   @IsOptional()
   invitationDetail?: string;
 
+  @IsString()
+  @IsOptional()
+  fee?: string;
+
+  @ApiProperty({
+    example: '2021-11-29T05:35:14.757Z',
+    description: '미팅 시작 날짜',
+  })
+  @IsDate()
+  @IsNotEmpty()
+  startDateAt: Date;
+
   @Transform((param) => {
     try {
       return JSON.parse(param?.obj.maxParticipantsCount);
@@ -73,6 +95,8 @@ export class CreatePartyInput {
   })
   @IsNotEmpty()
   maxParticipantsCount?: number;
+
+  participatingRecommendations?: string[];
 }
 
 export class CreatePartyOutput extends CoreOutput {}
