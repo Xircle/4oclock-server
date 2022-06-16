@@ -30,6 +30,11 @@ export class PartyService {
         kakaoAddress,
         invitationInstruction,
         invitationDetail,
+        startDateAt,
+        maxParticipantsCount,
+        participatingRecommendations,
+        fee,
+        kakaoPlaceName,
       } = createPartyInput;
       const { images } = partyPhotoInput;
 
@@ -40,24 +45,29 @@ export class PartyService {
           imageS3Urls.push(s3_url);
         }
       }
-      //   Transction start
-      //   await getManager().transaction(async (transactionalEntityManager) => {
-      //     //   Create place
-      //     const party = await this.partyRepository.createAndSavePlace(
-      //       {
-      //         kakaoPlaceId: placeId,
-      //         coverImage: coverImageS3Url,
-      //         subImages: subImageS3Urls,
-      //         placeType,
-      //         name,
-      //         startDateAt,
-      //         team,
-      //         recommendation,
-      //         creator: authUser,
-      //       },
-      //       transactionalEntityManager,
-      //     );
-      //   });
+      // Transction start
+      await getManager().transaction(async (transactionalEntityManager) => {
+        //   Create place
+        const party = await this.partyRepository.createAndSaveParty(
+          {
+            kakaoPlaceId,
+            images: imageS3Urls,
+            description,
+            name,
+            startDateAt,
+            externalLink,
+            kakaoAddress,
+            invitationInstruction,
+            invitationDetail,
+            maxParticipantsCount,
+            participatingRecommendations,
+            fee,
+            kakaoPlaceName,
+            isClosed: false,
+          },
+          transactionalEntityManager,
+        );
+      });
 
       return {
         ok: true,
