@@ -31,8 +31,8 @@ export class Party {
   @Column('timestamptz')
   startDateAt: Date;
 
-  @Column({ length: 255 })
-  kakaoId: string;
+  @Column({ length: 255, nullable: true })
+  kakaoPlaceId?: string;
 
   @Column({ default: false })
   isClosed?: boolean;
@@ -40,11 +40,11 @@ export class Party {
   @Column({ length: 511 })
   description: string;
 
-  @Column({ length: 255 })
-  kakaoAddress: string;
+  @Column({ length: 255, nullable: true })
+  kakaoAddress?: string;
 
-  @Column({ length: 255 })
-  placeName: string;
+  @Column({ length: 255, nullable: true })
+  kakaoPlaceName?: string;
 
   @Column({ length: 511, nullable: true })
   externalLink?: string;
