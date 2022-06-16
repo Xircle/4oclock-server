@@ -1,3 +1,4 @@
+import { PartyRepository } from './repositories/party.repository';
 import { PlaceDetailRepository } from './../place/repository/place-detail.repository';
 import { PlaceRepository } from './../place/repository/place.repository';
 import { PlaceService } from '@place/place.service';
@@ -15,22 +16,12 @@ import { PartyService } from './party.service';
 import { PartyController } from './party.controller';
 
 @Module({
-  imports: [
-    AuthModule,
-    TypeOrmModule.forFeature([
-      ReservationRepository,
-      PlaceRepository,
-      PlaceDetailRepository,
-      User,
-    ]),
-  ],
+  imports: [AuthModule, TypeOrmModule.forFeature([PartyRepository, User])],
   providers: [
     PartyService,
-    PlaceService,
     S3Service,
     CurrentUserInterceptor,
     ConfigService,
-    ReservationService,
     NotificationService,
   ],
   controllers: [PartyController],
