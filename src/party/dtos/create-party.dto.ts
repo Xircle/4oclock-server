@@ -1,10 +1,10 @@
+import { BadRequestException } from '@nestjs/common';
 import { CoreOutput } from '@common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { isString } from 'lodash';
-export class CreatePartyInput {}
-
-export class CreatePartyOutput extends CoreOutput {
+import { Transform } from 'class-transformer';
+export class CreatePartyInput {
   @ApiProperty({
     example: '춘자 카페',
     description: '장소 이름',
@@ -35,13 +35,15 @@ export class CreatePartyOutput extends CoreOutput {
     description: '카카오 플레이스 아이디',
   })
   @IsString()
-  kakaoId: string;
+  @IsOptional()
+  kakaoPlaceId?: string;
 
   @ApiProperty({
     example: 'XX시 XX구 XX동 등등',
     description: '카카오 로컬 api에서 가져온 장소 api 정보',
   })
   @IsString()
+  @IsOptional()
   kakaoAddress?: string;
 
   @ApiProperty({
@@ -49,6 +51,7 @@ export class CreatePartyOutput extends CoreOutput {
     description: '',
   })
   @IsString()
+  @IsOptional()
   invitationInstruction?: string;
 
   @ApiProperty({
@@ -56,5 +59,24 @@ export class CreatePartyOutput extends CoreOutput {
     description: '',
   })
   @IsString()
-  invittationDetail?: string;
+  @IsOptional()
+  invitationDetail?: string;
+
+  @Transform((param) => {
+    try {
+      return JSON.parse(param?.obj.maxParticipantsCount);
+    } catch {
+      throw new BadRequestException(
+        'maxParticipantsCount는 number 타입입니다.',
+      );
+    }
+  })
+  @IsNotEmpty()
+  maxParticipantsCount?: number;
+}
+
+export class CreatePartyOutput extends CoreOutput {}
+
+export class PartyPhotoInput {
+  images: Express.Multer.File[];
 }
