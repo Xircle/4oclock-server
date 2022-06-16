@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'party' })
+@Entity({ name: 'parties' })
 export class Party {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -59,7 +59,7 @@ export class Party {
   invitationDetail?: string;
 
   @Column({ length: 1023, default: '입력된 부분이 없습니다' })
-  invitaionInstruction?: string;
+  invitationInstruction?: string;
 
   @Column({ default: 0 })
   maxParticipantsCount?: number;
