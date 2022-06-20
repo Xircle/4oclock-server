@@ -70,13 +70,13 @@ export class UserController {
     );
   }
 
-  @Patch('me/code?:code')
+  @Patch('me/verify?:code')
   @ApiOperation({ summary: '유저 활동코드 입력' })
   async VerifyByCode(
     @GetUser() authUser: User,
     @Param('code') code: string,
   ): Promise<CoreOutput> {
-    return { ok: true };
+    return this.userService.verifyUserByCode(authUser, code);
   }
 
   @Delete('/delete')
