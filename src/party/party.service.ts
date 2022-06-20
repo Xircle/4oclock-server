@@ -111,8 +111,46 @@ export class PartyService {
         participatingRecommendations,
         fee,
         kakaoPlaceName,
+        oldImageUrls,
       } = editPartyByIdInput;
-      const { images } = partyPhotoInput;
+      await this.GetPartyByIdAndcheckPartyException(partyId);
+
+      let newImageUrls: string[] = !oldImageUrls
+        ? []
+        : typeof oldImageUrls === 'string'
+        ? [oldImageUrls]
+        : [...oldImageUrls];
+
+      if (partyPhotoInput) {
+        const { images: newImages } = partyPhotoInput;
+        if (newImages) {
+          for (const image of newImages) {
+            const s3_url = await this.s3Service.uploadToS3(image, authUser.id);
+            newImageUrls.push(s3_url);
+          }
+        }
+      }
+
+      const party = await this.partyRepository.updateParty(
+        {
+          id: partyId,
+        },
+        {
+          name,
+          description,
+          externalLink,
+          kakaoPlaceId,
+          kakaoAddress,
+          invitationInstruction,
+          invitationDetail,
+          startDateAt,
+          maxParticipantsCount,
+          participatingRecommendations,
+          fee,
+          kakaoPlaceName,
+          images: newImageUrls,
+        },
+      );
 
       return { ok: true };
     } catch (error) {
