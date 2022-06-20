@@ -157,4 +157,13 @@ export class PartyService {
       return { ok: false, error };
     }
   }
+
+  public async getParties() {
+    try {
+      const parties = await this.partyRepository.findManyParties({});
+      return { ok: true, parties };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
 }
