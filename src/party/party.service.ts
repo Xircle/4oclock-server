@@ -1,3 +1,5 @@
+import { GetPartyByIdOutput } from './dtos/get-party-by-id.dto';
+import { GetPartiesOutput } from './dtos/get-parties.dto';
 import { Party } from './entities/party.entity';
 import { EditPartyByIdInput } from './dtos/edit-party-by-id.dto';
 import { PartyRepository } from './repositories/party.repository';
@@ -158,10 +160,19 @@ export class PartyService {
     }
   }
 
-  public async getParties() {
+  public async getParties(): Promise<GetPartiesOutput> {
     try {
       const parties = await this.partyRepository.findManyParties({});
       return { ok: true, parties };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
+  public async getPartyById(partyId: string): Promise<GetPartyByIdOutput> {
+    try {
+      const party = await this.partyRepository.findOneByPartyId(partyId);
+      return { ok: true, party };
     } catch (error) {
       return { ok: false, error };
     }
