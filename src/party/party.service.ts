@@ -1,3 +1,4 @@
+import { EditPartyByIdInput } from './dtos/edit-party-by-id.dto';
 import { PartyRepository } from './repositories/party.repository';
 import { CreatePartyInput, PartyPhotoInput } from './dtos/create-party.dto';
 import { User } from '@user/entities/user.entity';
@@ -73,6 +74,15 @@ export class PartyService {
         ok: true,
       };
     } catch (error) {}
+    return { ok: true };
+  }
+
+  public async editPartyById(
+    authUser: User,
+    editPartyByIdInput: EditPartyByIdInput,
+    partyPhotoInput: PartyPhotoInput,
+    partyId: string,
+  ): Promise<CoreOutput> {
     return { ok: true };
   }
 }
