@@ -44,7 +44,7 @@ export class PartyController {
     ]),
   )
   @UseGuards(RolesGuard)
-  @Roles(['Client', 'Admin', 'Owner'])
+  @Roles(['Admin'])
   async createParty(
     @GetUser() authUser: User,
     @Body() createPartyInput: CreatePartyInput,
@@ -53,7 +53,8 @@ export class PartyController {
     return this.partyService.createParty(authUser, createPartyInput, files);
   }
 
-  async editParty();
+  @Patch(':PartyId')
+  async editPartyById(): Promise<CoreOutput> {}
 
   async deleteParty();
 
