@@ -278,4 +278,6 @@ export class UserService {
   async reportUser() {
     return { ok: true };
   }
+
+  async verifyUserByCode(code: string) {}
 }
