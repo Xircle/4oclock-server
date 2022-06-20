@@ -1,3 +1,4 @@
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { PlaceRepository } from './../place/repository/place.repository';
 import * as _ from 'lodash';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
@@ -17,6 +18,8 @@ import { MeOutput } from './dtos/me.dto';
 import { S3Service } from '@aws/s3/s3.service';
 import { CoreOutput } from '@common/common.interface';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
+import { CronJob } from 'cron';
+import * as moment from 'moment';
 
 @Injectable()
 export class UserService {
@@ -26,6 +29,7 @@ export class UserService {
     private readonly users: UserRepository,
     private readonly s3Service: S3Service,
     private readonly placeRepository: PlaceRepository,
+    private schedulerRegistry: SchedulerRegistry,
   ) {
     this.codeMap = new Map();
     this.codeMap.set('잇힝조아', { role: UserRole.Client, team: 'Z1' });
@@ -279,5 +283,84 @@ export class UserService {
     return { ok: true };
   }
 
-  async verifyUserByCode(code: string) {}
+  async verifyUserByCode(authUser: User, code: string): Promise<CoreOutput> {
+    try {
+      const correctCrewCode = 'crew';
+      const correctLeaderCode = 'leader';
+      const oldRole = authUser.role;
+      if (code !== correctCrewCode && code !== correctLeaderCode) {
+        return {
+          ok: false,
+          error: 'wrong code',
+        };
+      }
+      const role: UserRole =
+        code === correctLeaderCode
+          ? UserRole.Owner
+          : code === correctCrewCode
+          ? UserRole.Client
+          : oldRole;
+      await getManager().transaction(async (transactionalEntityManager) => {
+        // Update profile
+        await transactionalEntityManager.update(
+          UserProfile,
+          {
+            fk_user_id: authUser.id,
+          },
+          {
+            isYkClub: true,
+          },
+        );
+        await transactionalEntityManager.update(
+          User,
+          {
+            id: authUser.id,
+          },
+          {
+            role: role,
+          },
+        );
+      });
+
+      const time = moment().add(10, 'm').toDate();
+      const job = new CronJob(time, async () => {
+        console.log('user verification expired');
+        // Update profile
+
+        await getManager().transaction(async (transactionalEntityManager) => {
+          // Update profile
+          await transactionalEntityManager.update(
+            UserProfile,
+            {
+              fk_user_id: authUser.id,
+            },
+            {
+              isYkClub: false,
+            },
+          );
+          await transactionalEntityManager.update(
+            User,
+            {
+              id: authUser.id,
+            },
+            {
+              role: UserRole.Client,
+            },
+          );
+        });
+      });
+      const jobName = `verification: ${authUser.id}`;
+
+      if (this.schedulerRegistry.doesExist('cron', jobName)) {
+        console.log(`${jobName} already exist`);
+        this.schedulerRegistry.deleteCronJob(jobName);
+      }
+      this.schedulerRegistry.addCronJob(jobName, job);
+      job.start();
+
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
 }
