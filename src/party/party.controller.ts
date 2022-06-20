@@ -1,3 +1,4 @@
+import { GetPartyByIdOutput } from './dtos/get-party-by-id.dto';
 import { GetPartiesOutput } from './dtos/get-parties.dto';
 import { EditPartyByIdInput } from './dtos/edit-party-by-id.dto';
 import { PartyService } from './party.service';
@@ -12,6 +13,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UploadedFiles,
@@ -73,7 +75,7 @@ export class PartyController {
   @Roles(['Admin'])
   async editPartyById(
     @GetUser() authUser: User,
-    @Param('partyId') partyId: string,
+    @Param('partyId', ParseUUIDPipe) partyId: string,
     @Body() editPartyByIdInput: EditPartyByIdInput,
     @UploadedFiles() files: PartyPhotoInput,
   ): Promise<CoreOutput> {
@@ -99,4 +101,13 @@ export class PartyController {
   }
 
   // async getParty();
+  @Get(':partyId')
+  @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
+  @UseGuards(RolesGuard)
+  @Roles(['Client', 'Admin', 'Owner'])
+  async getPartyById(
+    @Param('partyId', ParseUUIDPipe) partyId: string,
+  ): Promise<GetPartyByIdOutput> {
+    return this.partyService.getPartyById(partyId);
+  }
 }
