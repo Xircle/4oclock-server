@@ -1,3 +1,4 @@
+import { Party } from './entities/party.entity';
 import { EditPartyByIdInput } from './dtos/edit-party-by-id.dto';
 import { PartyRepository } from './repositories/party.repository';
 import { CreatePartyInput, PartyPhotoInput } from './dtos/create-party.dto';
@@ -6,7 +7,7 @@ import { CoreOutput } from '@common/common.interface';
 import { NotificationService } from 'notification/notification.service';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
 import { S3Service } from '@aws/s3/s3.service';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { getManager } from 'typeorm';
 
 @Injectable()
@@ -16,7 +17,20 @@ export class PartyService {
     private s3Service: S3Service,
     private notificationService: NotificationService,
   ) {}
+  private checkPartyException(entity: Party): void {
+    if (!entity) {
+      throw new HttpException(
+        '존재하지 않는 파티입니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
+  public async GetPartyByIdAndcheckPartyException(partyId: string) {
+    const party = await this.partyRepository.findOneByPartyId(partyId);
+    this.checkPartyException(party);
+    return party;
+  }
   public async createParty(
     authUser: User,
     createPartyInput: CreatePartyInput,
@@ -83,6 +97,26 @@ export class PartyService {
     partyPhotoInput: PartyPhotoInput,
     partyId: string,
   ): Promise<CoreOutput> {
-    return { ok: true };
+    try {
+      const {
+        name,
+        description,
+        externalLink,
+        kakaoPlaceId,
+        kakaoAddress,
+        invitationInstruction,
+        invitationDetail,
+        startDateAt,
+        maxParticipantsCount,
+        participatingRecommendations,
+        fee,
+        kakaoPlaceName,
+      } = editPartyByIdInput;
+      const { images } = partyPhotoInput;
+
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
+    }
   }
 }
