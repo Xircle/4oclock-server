@@ -53,6 +53,15 @@ export class UserController {
     return this.userService.me(authUser);
   }
 
+  @Patch('me/:code')
+  @ApiOperation({ summary: '유저 활동코드 입력' })
+  async VerifyByCode(
+    @GetUser() authUser: User,
+    @Param('code') code: string,
+  ): Promise<CoreOutput> {
+    return this.userService.verifyUserByCode(authUser, code);
+  }
+
   @Put('')
   @ApiOperation({ summary: '유저 정보 수정 ' })
   @UseInterceptors(FileInterceptor('profileImageFile'))
@@ -68,15 +77,6 @@ export class UserController {
       file,
       editProfileInput,
     );
-  }
-
-  @Patch('me/verify?:code')
-  @ApiOperation({ summary: '유저 활동코드 입력' })
-  async VerifyByCode(
-    @GetUser() authUser: User,
-    @Param('code') code: string,
-  ): Promise<CoreOutput> {
-    return this.userService.verifyUserByCode(authUser, code);
   }
 
   @Delete('/delete')
