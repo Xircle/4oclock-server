@@ -50,7 +50,16 @@ export class PartyController {
     @Body() createPartyInput: CreatePartyInput,
     @UploadedFiles() files: PartyPhotoInput,
   ): Promise<CoreOutput> {
-    console.log(createPartyInput);
     return this.partyService.createParty(authUser, createPartyInput, files);
   }
+
+  async editParty();
+
+  async deleteParty();
+
+  async participateParty();
+
+  async getParty();
+
+  async getParties();
 }
