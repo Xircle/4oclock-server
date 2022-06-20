@@ -1,3 +1,4 @@
+import { EditPartyByIdInput } from './dtos/edit-party-by-id.dto';
 import { PartyService } from './party.service';
 import { CreatePartyInput, PartyPhotoInput } from './dtos/create-party.dto';
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
@@ -8,6 +9,8 @@ import { RolesGuard } from './../auth/guard/roles.guard';
 import {
   Body,
   Controller,
+  Param,
+  Patch,
   Post,
   UploadedFiles,
   UseGuards,
@@ -53,14 +56,26 @@ export class PartyController {
     return this.partyService.createParty(authUser, createPartyInput, files);
   }
 
-  @Patch(':PartyId')
-  async editPartyById(): Promise<CoreOutput> {}
+  @Patch(':partyId')
+  async editPartyById(
+    @GetUser() authUser: User,
+    @Param('partyId') partyId: string,
+    @Body() editPartyByIdInput: EditPartyByIdInput,
+    @UploadedFiles() files: PartyPhotoInput,
+  ): Promise<CoreOutput> {
+    return this.partyService.editPartyById(
+      authUser,
+      editPartyByIdInput,
+      files,
+      partyId,
+    );
+  }
 
-  async deleteParty();
+  // async deleteParty();
 
-  async participateParty();
+  // async participateParty();
 
-  async getParty();
+  // async getParty();
 
-  async getParties();
+  // async getParties();
 }
