@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -67,6 +68,15 @@ export class UserController {
       file,
       editProfileInput,
     );
+  }
+
+  @Patch('me/code?:code')
+  @ApiOperation({ summary: '유저 활동코드 입력' })
+  async VerifyByCode(
+    @GetUser() authUser: User,
+    @Param('code') code: string,
+  ): Promise<CoreOutput> {
+    return { ok: true };
   }
 
   @Delete('/delete')
