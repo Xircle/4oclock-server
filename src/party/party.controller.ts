@@ -57,6 +57,18 @@ export class PartyController {
   }
 
   @Patch(':partyId')
+  @ApiOperation({ summary: '파티 변경하기' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      {
+        name: 'images',
+        maxCount: 16,
+      },
+    ]),
+  )
+  @UseGuards(RolesGuard)
+  @Roles(['Admin'])
   async editPartyById(
     @GetUser() authUser: User,
     @Param('partyId') partyId: string,
