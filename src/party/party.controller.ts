@@ -1,3 +1,4 @@
+import { GetPartiesOutput } from './dtos/get-parties.dto';
 import { EditPartyByIdInput } from './dtos/edit-party-by-id.dto';
 import { PartyService } from './party.service';
 import { CreatePartyInput, PartyPhotoInput } from './dtos/create-party.dto';
@@ -9,6 +10,7 @@ import { RolesGuard } from './../auth/guard/roles.guard';
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -87,7 +89,14 @@ export class PartyController {
 
   // async participateParty();
 
-  // async getParty();
-
   // async getParties();
+  @Get('')
+  @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
+  @UseGuards(RolesGuard)
+  @Roles(['Client', 'Admin', 'Owner'])
+  async getParties(): Promise<GetPartiesOutput> {
+    return this.partyService.getParties();
+  }
+
+  // async getParty();
 }
