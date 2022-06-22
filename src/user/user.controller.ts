@@ -53,13 +53,21 @@ export class UserController {
     return this.userService.me(authUser);
   }
 
-  @Patch('me/:code')
+  @Patch('me/verify/:code')
   @ApiOperation({ summary: '유저 활동코드 입력' })
   async VerifyByCode(
     @GetUser() authUser: User,
     @Param('code') code: string,
   ): Promise<CoreOutput> {
     return this.userService.verifyUserByCode(authUser, code);
+  }
+
+  @Patch('me/team/')
+  async patchTeam(
+    @GetUser() authUser: User,
+    @Param('teamId') teamId: string,
+  ): Promise<CoreOutput> {
+    return { ok: true };
   }
 
   @Put('')
