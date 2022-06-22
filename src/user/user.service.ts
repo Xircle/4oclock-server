@@ -201,6 +201,25 @@ export class UserService {
     }
   }
 
+  async patchTeam(authUser: User, teamId: string): Promise<CoreOutput> {
+    try {
+      await getManager().transaction(async (transactionalEntityManager) => {
+        // Update profile
+        await transactionalEntityManager.update(
+          UserProfile,
+          {
+            fk_user_id: authUser.id,
+          },
+          {
+            team: teamId,
+          },
+        );
+      });
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
   async editProfile(
     { code }: EditPlaceQueryParam = {},
     authUser: User,
