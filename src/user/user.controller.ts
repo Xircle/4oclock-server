@@ -62,12 +62,12 @@ export class UserController {
     return this.userService.verifyUserByCode(authUser, code);
   }
 
-  @Patch('me/team/')
+  @Patch('me/team/:teamId')
   async patchTeam(
     @GetUser() authUser: User,
     @Param('teamId') teamId: string,
   ): Promise<CoreOutput> {
-    return { ok: true };
+    return this.userService.patchTeam(authUser, teamId);
   }
 
   @Put('')
