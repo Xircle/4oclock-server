@@ -215,6 +215,7 @@ export class UserService {
           },
         );
       });
+      return { ok: true };
     } catch (error) {
       return { ok: false, error };
     }
