@@ -327,6 +327,14 @@ export class PlaceService {
           subImageS3Urls.push(s3_url);
         }
 
+      const qAndAs: string[] = [];
+      if (qAndA) {
+        for (const qa of qAndA) {
+          qAndAs.push(qa);
+        }
+        qAndAs.pop();
+      }
+
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
@@ -341,7 +349,7 @@ export class PlaceService {
             team,
             recommendation,
             creator: authUser,
-            qAndA,
+            qAndA: qAndAs,
           },
           transactionalEntityManager,
         );
