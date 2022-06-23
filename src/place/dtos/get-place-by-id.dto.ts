@@ -13,6 +13,7 @@ export class PlaceData {
   isClosed: boolean;
   views: number;
   isParticipating: boolean;
+  qAndA?: string[];
   participants: PlaceDataParticipantsProfile[];
   participantsData: {
     participantsCount: number;
