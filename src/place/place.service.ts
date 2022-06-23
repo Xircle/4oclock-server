@@ -307,7 +307,6 @@ export class PlaceService {
         startDateAt,
         participationFee,
         detailAddress,
-        isVaccinated,
         placeType,
         kakaoLink,
         team,
@@ -381,7 +380,6 @@ export class PlaceService {
             place_id: place.id,
             user_id: authUser.id,
             isCanceled: false,
-            isVaccinated,
           });
           await transactionalEntityManager.save(reservation);
         }
