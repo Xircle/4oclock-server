@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { CoreOutput } from '@common/common.interface';
 
 export class MakeReservationDto {
@@ -10,6 +16,13 @@ export class MakeReservationDto {
   @IsNotEmpty()
   @IsUUID()
   placeId: string;
+
+  @IsArray()
+  @IsString({
+    each: true,
+  })
+  @IsOptional()
+  qAndA?: string[];
 }
 
 export class MakeReservationOutput extends CoreOutput {}
