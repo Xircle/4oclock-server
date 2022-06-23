@@ -18,6 +18,9 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column('varchar', { array: true, nullable: true })
+  qAndA?: string[];
+
   @Column({ default: false })
   isCanceled: boolean;
 
