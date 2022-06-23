@@ -13,6 +13,7 @@ export class MainFeedPlaceParticipantsProfile {
   job: string;
   shortBio: string;
   isYkClub: boolean;
+  qAnda?: string[];
 }
 export class MainFeedPlace {
   id: string;
@@ -31,6 +32,7 @@ export class MainFeedPlace {
   myTeam?: boolean;
   seperatorMyTeam?: boolean;
   seperatorNotMyTeam?: boolean;
+  qAnda?: string[];
 }
 
 export class GetPlacesInput {
