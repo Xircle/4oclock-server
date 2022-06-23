@@ -25,7 +25,7 @@ export class ReservationService {
     authUser: User,
     makeReservation: MakeReservationDto,
   ): Promise<MakeReservationOutput> {
-    const { isVaccinated, placeId } = makeReservation;
+    const { placeId } = makeReservation;
     try {
       const targetPlace =
         await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
@@ -55,7 +55,6 @@ export class ReservationService {
           place_id: placeId,
           user_id: authUser.id,
           isCanceled: false,
-          isVaccinated,
         });
         await this.reservationRepository.save(reservation);
       } else if (exists.isCanceled) {
@@ -66,7 +65,6 @@ export class ReservationService {
             place_id: placeId,
           },
           {
-            isVaccinated,
             isCanceled: false,
             cancelReason: null,
             detailReason: null,
