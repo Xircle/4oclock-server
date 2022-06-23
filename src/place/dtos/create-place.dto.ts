@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PlaceType } from '@place/entities/place.entity';
 import { Transform } from 'class-transformer';
 import {
+  IsArray,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -153,12 +154,11 @@ export class CreatePlaceInput {
   @IsOptional()
   detailLink?: string;
 
-  @ApiProperty({
-    example: 'true',
-    description: '백신 접종 유무',
+  @IsArray()
+  @IsString({
+    each: true,
   })
-  @IsOptional()
-  isVaccinated?: boolean;
+  qAnda?: string[];
 
   @ApiProperty({
     example: 'All',
