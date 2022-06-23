@@ -312,6 +312,7 @@ export class PlaceService {
         team,
         notParticipating,
         recommendation,
+        qAndA,
       } = createPlaceInput;
       const { coverImage, subImages } = placePhotoInput;
       // Upload coverImage, subImages to S3 (url 생성)
@@ -340,6 +341,7 @@ export class PlaceService {
             team,
             recommendation,
             creator: authUser,
+            qAndA,
           },
           transactionalEntityManager,
         );
@@ -440,6 +442,7 @@ export class PlaceService {
       recommendation,
       oldSubImageUrls,
       oldCoverImageUrl,
+      qAndA,
     } = editPlaceInput;
 
     try {
@@ -484,6 +487,7 @@ export class PlaceService {
             recommendation,
             coverImage: newCoverImage,
             subImages: newSubImageUrls,
+            qAndA,
           },
         );
         // Edit place detail
