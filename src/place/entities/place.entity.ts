@@ -49,6 +49,9 @@ export class Place {
   @Column('varchar', { array: true, nullable: true, length: 511 })
   subImages?: string[];
 
+  @Column('varchar', { array: true, nullable: true })
+  qAnda?: string[];
+
   @Column('varchar', { nullable: true, length: 255 })
   team?: string;
 
