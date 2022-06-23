@@ -158,7 +158,8 @@ export class CreatePlaceInput {
   @IsString({
     each: true,
   })
-  qAnda?: string[];
+  @IsOptional()
+  qAndA?: string[];
 
   @ApiProperty({
     example: 'All',
