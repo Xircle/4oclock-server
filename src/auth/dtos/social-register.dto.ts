@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -143,6 +144,7 @@ export class SocialRegisterInput {
     description: '관심사',
     type: [String],
   })
+  @IsArray()
   @IsString({
     each: true,
   })
