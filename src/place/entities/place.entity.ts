@@ -50,7 +50,7 @@ export class Place {
   subImages?: string[];
 
   @Column('varchar', { array: true, nullable: true })
-  qAnda?: string[];
+  qAndA?: string[];
 
   @Column('varchar', { nullable: true, length: 255 })
   team?: string;
