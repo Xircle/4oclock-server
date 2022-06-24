@@ -527,13 +527,17 @@ export class PlaceService {
 
   public async getPlaceParticipantList(
     placeId: string,
+    authUser: User,
   ): Promise<GetPlaceParticipantListOutput> {
     try {
-      await this.GetPlaceByIdAndcheckPlaceException(placeId);
+      const place = await this.GetPlaceByIdAndcheckPlaceException(placeId);
 
       // 참가자들 간략한 프로필 정보
       const participantListProfiles: PlaceDataParticipantsProfile[] =
-        await this.reservationRepository.getParticipantsProfile(placeId);
+        await this.reservationRepository.getParticipantsProfile(
+          placeId,
+          place.creator_id === authUser.id,
+        );
 
       // 참여자 성비, 평균 나이 추가
       let total_count = participantListProfiles.length;
@@ -552,7 +556,9 @@ export class PlaceService {
 
       return {
         ok: true,
+
         participants: {
+          qAndA: place.qAndA,
           participantListProfiles,
           participantsInfo,
         },
