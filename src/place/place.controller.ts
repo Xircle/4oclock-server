@@ -180,8 +180,9 @@ export class PlaceController {
   @Get('/:placeId/participants')
   @ApiOperation({ summary: '해당 장소에 예약한 참가자 리스트 보기' })
   async getPlaceParticipantList(
+    @GetUser() authUser: User,
     @Param('placeId') placeId: string,
   ): Promise<GetPlaceParticipantListOutput> {
-    return this.placeService.getPlaceParticipantList(placeId);
+    return this.placeService.getPlaceParticipantList(placeId, authUser);
   }
 }
