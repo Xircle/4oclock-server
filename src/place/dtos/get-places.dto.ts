@@ -13,7 +13,7 @@ export class MainFeedPlaceParticipantsProfile {
   job: string;
   shortBio: string;
   isYkClub: boolean;
-  qAnda?: string[];
+  qAndA?: string[];
 }
 export class MainFeedPlace {
   id: string;
