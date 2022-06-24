@@ -5,6 +5,7 @@ export class PlaceParticipantListDataProfile extends MainFeedPlaceParticipantsPr
 
 export class PlaceParticipantListData {
   participantListProfiles: PlaceParticipantListDataProfile[];
+  qAndA?: string[];
   participantsInfo: {
     total_count: number;
     male_count: number;
