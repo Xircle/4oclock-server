@@ -21,6 +21,7 @@ export class ReservationRepository extends Repository<Reservation> {
 
   async getParticipantsProfile(
     placeId: string,
+    showAnswer: boolean = false,
   ): Promise<MainFeedPlaceParticipantsProfile[]> {
     const participants = await this.find({
       where: {
@@ -32,17 +33,33 @@ export class ReservationRepository extends Repository<Reservation> {
     });
     if (participants.length === 0) return [];
     const mainFeedPlacePartiProfile: MainFeedPlaceParticipantsProfile[] = [];
-    participants.map((parti) => {
-      mainFeedPlacePartiProfile.push({
-        userId: parti.participant.id,
-        profileImgUrl: parti.participant.profile?.profileImageUrl,
-        gender: parti.participant.profile?.gender,
-        age: parti.participant.profile?.age,
-        job: parti.participant.profile?.job,
-        shortBio: parti.participant.profile?.shortBio,
-        isYkClub: parti.participant.profile?.isYkClub,
+    if (showAnswer) {
+      participants.map((parti) => {
+        mainFeedPlacePartiProfile.push({
+          userId: parti.participant.id,
+          profileImgUrl: parti.participant.profile?.profileImageUrl,
+          gender: parti.participant.profile?.gender,
+          age: parti.participant.profile?.age,
+          job: parti.participant.profile?.job,
+          shortBio: parti.participant.profile?.shortBio,
+          isYkClub: parti.participant.profile?.isYkClub,
+          qAndA: parti.qAndA,
+        });
       });
-    });
+    } else {
+      participants.map((parti) => {
+        mainFeedPlacePartiProfile.push({
+          userId: parti.participant.id,
+          profileImgUrl: parti.participant.profile?.profileImageUrl,
+          gender: parti.participant.profile?.gender,
+          age: parti.participant.profile?.age,
+          job: parti.participant.profile?.job,
+          shortBio: parti.participant.profile?.shortBio,
+          isYkClub: parti.participant.profile?.isYkClub,
+        });
+      });
+    }
+
     return mainFeedPlacePartiProfile;
   }
 
