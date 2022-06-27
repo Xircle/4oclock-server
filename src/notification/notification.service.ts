@@ -1,3 +1,4 @@
+import { User } from '@user/entities/user.entity';
 import { CoreOutput } from '@common/common.interface';
 import { Injectable } from '@nestjs/common';
 import { MessagingPayload } from 'firebase-admin/lib/messaging/messaging-api';
@@ -9,6 +10,18 @@ import { INotificationOptions } from './dtos/cron.dto';
 @Injectable()
 export class NotificationService {
   constructor(private schedulerRegistry: SchedulerRegistry) {}
+
+  async sendOkLink(
+    authUser: User,
+    partyId: string,
+    userId: string,
+  ): Promise<CoreOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
 
   async sendNotifications(
     registrationTokenOrTokens: string | string[],
