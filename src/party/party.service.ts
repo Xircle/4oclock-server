@@ -7,7 +7,6 @@ import { CreatePartyInput, PartyPhotoInput } from './dtos/create-party.dto';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from '@common/common.interface';
 import { NotificationService } from 'notification/notification.service';
-import { ReservationRepository } from '@reservation/repository/reservation.repository';
 import { S3Service } from '@aws/s3/s3.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { getManager } from 'typeorm';
@@ -17,7 +16,6 @@ export class PartyService {
   constructor(
     private partyRepository: PartyRepository,
     private s3Service: S3Service,
-    private notificationService: NotificationService,
   ) {}
   private checkPartyException(entity: Party): void {
     if (!entity) {
