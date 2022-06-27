@@ -26,9 +26,9 @@ export class NotificationController {
   @Get('sendOkLink')
   async sendOkLink(
     @GetUser() authUser: User,
-    @Param('placeId', ParseUUIDPipe) partyId: string,
+    @Param('placeId', ParseUUIDPipe) placeId: string,
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<CoreOutput> {
-    return await { ok: true };
+    return this.sendOkLink(authUser, placeId, userId);
   }
 }
