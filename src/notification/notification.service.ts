@@ -1,3 +1,4 @@
+import { PlaceRepository } from './../place/repository/place.repository';
 import { UserRepository } from '@user/repositories/user.repository';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from '@common/common.interface';
@@ -13,11 +14,12 @@ export class NotificationService {
   constructor(
     private schedulerRegistry: SchedulerRegistry,
     private readonly userRepository: UserRepository,
+    private placeRepository: PlaceRepository,
   ) {}
 
   async sendOkLink(
     authUser: User,
-    partyId: string,
+    placeId: string,
     userId: string,
   ): Promise<CoreOutput> {
     try {
@@ -26,6 +28,10 @@ export class NotificationService {
           id: userId,
         },
       });
+      const place = await this.placeRepository.findOneByPlaceId(placeId);
+      if (authUser.id !== place.creator_id) {
+        return { ok: false, error: 'you are not the creator' };
+      }
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
