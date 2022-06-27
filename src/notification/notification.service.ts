@@ -1,3 +1,4 @@
+import { UserRepository } from '@user/repositories/user.repository';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from '@common/common.interface';
 import { Injectable } from '@nestjs/common';
@@ -9,7 +10,10 @@ import { INotificationOptions } from './dtos/cron.dto';
 
 @Injectable()
 export class NotificationService {
-  constructor(private schedulerRegistry: SchedulerRegistry) {}
+  constructor(
+    private schedulerRegistry: SchedulerRegistry,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async sendOkLink(
     authUser: User,
@@ -17,6 +21,11 @@ export class NotificationService {
     userId: string,
   ): Promise<CoreOutput> {
     try {
+      const receiver = await this.userRepository.findOne({
+        where: {
+          id: userId,
+        },
+      });
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
