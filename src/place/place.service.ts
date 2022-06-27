@@ -1,3 +1,4 @@
+import { UserRepository } from '@user/repositories/user.repository';
 import { NotificationService } from 'notification/notification.service';
 import { SearchPlaceInput, SearchPlaceOutput } from './dtos/search-place.dto';
 import * as _ from 'lodash';
@@ -47,6 +48,7 @@ export class PlaceService {
     private placeDetailRepository: PlaceDetailRepository,
     private s3Service: S3Service,
     private notificationService: NotificationService,
+    private userRepository: UserRepository,
   ) {}
 
   private checkPlaceException(entity: Place): void {
@@ -563,6 +565,47 @@ export class PlaceService {
           participantsInfo,
         },
       };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
+  async sendOkLink(
+    authUser: User,
+    placeId: string,
+    userId: string,
+  ): Promise<CoreOutput> {
+    try {
+      const receiver = await this.userRepository.findOne({
+        where: {
+          id: userId,
+        },
+      });
+      const place = await this.placeRepository.findDetailPlaceByPlaceId(
+        placeId,
+      );
+      if (authUser.id !== place.creator_id) {
+        return { ok: false, error: 'you are not the creator' };
+      }
+      const payload = {
+        notification: {
+          title: place.name,
+          body: '모임 시작까지 5시간전!',
+          sound: 'default',
+        },
+        data: {
+          type: 'okLink',
+          sentAt: new Date().toString(),
+          content: '테스트',
+          okLink: place.placeDetail.kakaoLink,
+        },
+      };
+
+      await this.notificationService.sendNotifications(
+        receiver.firebaseToken,
+        payload,
+      );
+      return { ok: true };
     } catch (error) {
       return { ok: false, error };
     }
