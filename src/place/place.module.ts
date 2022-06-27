@@ -1,3 +1,4 @@
+import { UserRepository } from '@user/repositories/user.repository';
 import { NotificationService } from 'notification/notification.service';
 import { ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
@@ -25,6 +26,7 @@ import { ReservationService } from '@reservation/reservation.service';
       PlaceDetailRepository,
       ReservationRepository,
       User,
+      UserRepository,
     ]),
   ],
   providers: [
