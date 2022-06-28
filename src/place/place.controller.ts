@@ -186,12 +186,12 @@ export class PlaceController {
     return this.placeService.getPlaceParticipantList(placeId, authUser);
   }
 
-  @Get('sendOkLink?placeId=:placeId&receiverId=:receiverId')
+  @Get('sendOkLink/:placeId/:receiverId')
   async sendOkLink(
     @GetUser() authUser: User,
     @Param('placeId', ParseUUIDPipe) placeId: string,
     @Param('receiverId', ParseUUIDPipe) receiverId: string,
   ): Promise<CoreOutput> {
-    return this.sendOkLink(authUser, placeId, receiverId);
+    return this.placeService.sendOkLink(authUser, placeId, receiverId);
   }
 }
