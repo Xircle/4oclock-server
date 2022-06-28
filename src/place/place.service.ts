@@ -590,7 +590,7 @@ export class PlaceService {
       const payload = {
         notification: {
           title: place.name,
-          body: '모임 시작까지 5시간전!',
+          body: '방장님이 오카방에 초대하셨습니다!',
           sound: 'default',
         },
         data: {
