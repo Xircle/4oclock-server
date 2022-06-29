@@ -12,6 +12,10 @@ export class NotificationService {
     private schedulerRegistry: SchedulerRegistry, // private readonly userRepository: UserRepository, // private placeRepository: PlaceRepository,
   ) {}
 
+  async cancelNotifications(name: string): Promise<void> {
+    this.schedulerRegistry.deleteCronJob(name);
+  }
+
   async sendNotifications(
     registrationTokenOrTokens: string | string[],
     payload: MessagingPayload,
