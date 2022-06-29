@@ -385,7 +385,7 @@ export class PlaceService {
           await this.notificationService.sendNotifications(
             authUser.firebaseToken,
             payload,
-            { cronInput: { time, name: 'reservation' } },
+            { cronInput: { time, name: `reservation ${place.id}` } },
           );
           // Make reservation
           const reservation = this.reservationRepository.create({
