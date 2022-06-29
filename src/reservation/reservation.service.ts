@@ -91,7 +91,7 @@ export class ReservationService {
       await this.notificationService.sendNotifications(
         authUser.firebaseToken,
         payload,
-        { cronInput: { time, name: 'reservation' } },
+        { cronInput: { time, name: `reservation ${targetPlace.id}` } },
       );
       return {
         ok: true,
@@ -106,7 +106,7 @@ export class ReservationService {
   ): Promise<GetReservationParticipantNumberOutput> {
     try {
       await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
-
+      this.notificationService.cancelNotifications(`reservation ${placeId}`);
       const number_reservations = await this.reservationRepository.count({
         where: {
           place_id: placeId,
@@ -162,6 +162,7 @@ export class ReservationService {
       if (creator_id !== authUser.id) {
         return { ok: false, error: '모임 생성자가 아닙니다' };
       } else {
+        this.notificationService.cancelNotifications(`reservation ${placeId}`);
         await this.reservationRepository.update(
           {
             place_id: placeId,
