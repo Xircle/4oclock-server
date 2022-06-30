@@ -85,6 +85,7 @@ export class ReservationService {
           type: 'place',
           sentAt: new Date().toString(),
           content: '테스트',
+          mainParam: targetPlace.id,
         },
       };
 
