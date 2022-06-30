@@ -27,13 +27,12 @@ export class NotificationService {
       }
       if (options?.cronInput) {
         const job = new CronJob(options.cronInput.time, () => {
-          admin
-            .messaging()
-            .sendToDevice(
-              registrationTokenOrTokens,
-              payload,
-              options?.fcmOptions,
-            );
+          admin.messaging().sendToDevice(registrationTokenOrTokens, payload, {
+            // Required for background/quit data-only messages on iOS
+            contentAvailable: true,
+            // Required for background/quit data-only messages on Android
+            priority: 'high',
+          });
         });
 
         this.schedulerRegistry.addCronJob(options.cronInput.name, job);
@@ -41,11 +40,12 @@ export class NotificationService {
       } else {
         await admin
           .messaging()
-          .sendToDevice(
-            registrationTokenOrTokens,
-            payload,
-            options?.fcmOptions,
-          );
+          .sendToDevice(registrationTokenOrTokens, payload, {
+            // Required for background/quit data-only messages on iOS
+            contentAvailable: true,
+            // Required for background/quit data-only messages on Android
+            priority: 'high',
+          });
       }
 
       return { ok: true };
