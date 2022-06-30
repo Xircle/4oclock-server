@@ -379,6 +379,7 @@ export class PlaceService {
               type: 'place',
               sentAt: new Date().toString(),
               content: '테스트',
+              mainParam: place.id,
             },
           };
 
@@ -598,6 +599,7 @@ export class PlaceService {
           sentAt: new Date().toString(),
           content: '테스트',
           okLink: place.placeDetail.kakaoLink,
+          mainParam: place.id,
         },
       };
 
