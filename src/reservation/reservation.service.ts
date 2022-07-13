@@ -107,7 +107,6 @@ export class ReservationService {
   ): Promise<GetReservationParticipantNumberOutput> {
     try {
       await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
-      this.notificationService.cancelNotifications(`reservation ${placeId}`);
       const number_reservations = await this.reservationRepository.count({
         where: {
           place_id: placeId,
