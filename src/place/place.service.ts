@@ -597,9 +597,9 @@ export class PlaceService {
         data: {
           type: 'okLink',
           sentAt: new Date().toString(),
-          content: '테스트',
+          content: '방장님이 오카방에 초대하셨습니다!',
           okLink: place.placeDetail.kakaoLink,
-          mainParam: place.id,
+          mainParam: place.placeDetail.kakaoLink,
         },
       };
 
