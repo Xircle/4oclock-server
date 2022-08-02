@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "연고이팅, 네시모해 Backend application",
   "main": "Reservation platform",
-  "author": "2donny",
+  "author": "hyeonum",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
