@@ -311,10 +311,10 @@ export class PlaceService {
         detailAddress,
         placeType,
         kakaoLink,
-        team,
         notParticipating,
         recommendation,
         qAndA,
+        teamOnly,
       } = createPlaceInput;
       const { coverImage, subImages } = placePhotoInput;
       // Upload coverImage, subImages to S3 (url 생성)
@@ -348,7 +348,7 @@ export class PlaceService {
             placeType,
             name,
             startDateAt,
-            team,
+            team: teamOnly ? authUser.profile.team : null,
             recommendation,
             creator: authUser,
             qAndA: qAndAs,
@@ -448,7 +448,7 @@ export class PlaceService {
       detailAddress,
       placeType,
       kakaoLink,
-      team,
+      teamOnly,
       isCoverImageDeleted,
       recommendation,
       oldSubImageUrls,
@@ -494,7 +494,7 @@ export class PlaceService {
             placeType,
             name,
             startDateAt,
-            team,
+            team: teamOnly ? authUser.profile.team : null,
             recommendation,
             coverImage: newCoverImage,
             subImages: newSubImageUrls,
