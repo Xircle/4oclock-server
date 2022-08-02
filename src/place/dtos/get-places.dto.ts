@@ -33,6 +33,7 @@ export class MainFeedPlace {
   seperatorMyTeam?: boolean;
   seperatorNotMyTeam?: boolean;
   qAnda?: string[];
+  divider?: string;
 }
 
 export class GetPlacesInput {
@@ -64,14 +65,6 @@ export class GetPlacesQueryParameter {
   @IsEnum(PlaceType)
   @IsOptional()
   placeType?: PlaceType;
-
-  @ApiProperty({
-    example: 'X',
-    description: '팀 이름',
-  })
-  @IsString()
-  @IsOptional()
-  team?: string;
 }
 
 export class GetPlacesWhereOptions extends GetPlacesQueryParameter {}
