@@ -64,11 +64,17 @@ export class PlaceController {
   @UseGuards(RolesGuard)
   @Roles(['Client', 'Admin', 'Owner'])
   async getPlaces(
+    @GetUser() authUser: User,
     @Query() getPlacesQueryParameter: GetPlacesQueryParameter,
     @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ): Promise<GetPlacesOutput> {
-    return this.placeService.getPlaces(getPlacesQueryParameter, page, limit);
+    return this.placeService.getPlaces(
+      getPlacesQueryParameter,
+      page,
+      limit,
+      authUser,
+    );
   }
 
   @Get('search')
