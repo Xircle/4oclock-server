@@ -5,6 +5,7 @@ import { PlaceType } from '@place/entities/place.entity';
 import { Transform } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsEnum,
   IsNotEmpty,
@@ -96,6 +97,10 @@ export class CreatePlaceInput {
   @IsOptional()
   oneLineIntroText?: string;
 
+  @IsBoolean()
+  @IsOptional()
+  teamOnly?: boolean;
+
   @ApiProperty({
     example: '3000',
     description: '참가비',
@@ -135,14 +140,6 @@ export class CreatePlaceInput {
   @IsString()
   @IsNotEmpty()
   detailAddress: string;
-
-  @ApiProperty({
-    example: 'T조',
-    description: '팀 이름',
-  })
-  @IsString()
-  @IsOptional()
-  team?: string;
 
   @ApiProperty({
     example: 'https://map.naver.com',
