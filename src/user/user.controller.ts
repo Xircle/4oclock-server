@@ -96,15 +96,15 @@ export class UserController {
   @Get('/profile/random')
   @ApiOperation({ summary: '랜덤 유저 프로필 조회' })
   @ApiQuery({
-    name: 'ykClubOnly',
+    name: 'myTeamOnly',
     required: true,
-    description: '연고이팅 동아리 친구만 보기 ',
+    description: '내 팀원만 보기 ',
   })
   async seeRandomProfile(
     @GetUser() authUser: User,
-    @Query('ykClubOnly') ykClubOnly: boolean,
+    @Query('myTeamOnly') myTeamOnly: boolean,
   ): Promise<SeeRandomProfileOutput> {
-    return this.userService.seeRandomProfile(authUser, ykClubOnly);
+    return this.userService.seeRandomProfile(authUser, myTeamOnly);
   }
 
   @Get('/profile/:id')
