@@ -77,12 +77,13 @@ export class UserService {
 
   async seeRandomProfile(
     authUser: User,
-    ykClubOnly: boolean,
+    myTeamOnly: boolean,
   ): Promise<SeeRandomProfileOutput> {
     try {
       const randomUser = await this.users.findRandomUser(
         authUser.id,
-        ykClubOnly,
+        myTeamOnly,
+        authUser.profile.team,
       );
       if (!randomUser) return { ok: true };
 
