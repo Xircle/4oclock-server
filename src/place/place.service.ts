@@ -348,7 +348,10 @@ export class PlaceService {
             placeType,
             name,
             startDateAt,
-            team: teamOnly ? authUser.profile.team : null,
+            team:
+              teamOnly || placeType === PlaceType['Regular-meeting']
+                ? authUser.profile.team
+                : null,
             recommendation,
             creator: authUser,
             qAndA: qAndAs,
@@ -494,7 +497,10 @@ export class PlaceService {
             placeType,
             name,
             startDateAt,
-            team: teamOnly ? authUser.profile.team : null,
+            team:
+              teamOnly || placeType === PlaceType['Regular-meeting']
+                ? authUser.profile.team
+                : null,
             recommendation,
             coverImage: newCoverImage,
             subImages: newSubImageUrls,
