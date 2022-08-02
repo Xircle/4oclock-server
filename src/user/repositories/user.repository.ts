@@ -3,15 +3,19 @@ import { User } from './../entities/user.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  public async findRandomUser(userId: string, ykClubOnly: boolean) {
+  public async findRandomUser(
+    userId: string,
+    myTeamOnly: boolean,
+    team?: string,
+  ) {
     const queryBuilder = this.createQueryBuilder('User')
       .where(`User.id != :id`, { id: userId })
       .leftJoinAndSelect('User.profile', 'User_profile')
       .orderBy('RANDOM()');
-    return ykClubOnly
+    return myTeamOnly && team
       ? queryBuilder
-          .andWhere(`User_profile.isYkClub = :isYkClub`, {
-            isYkClub: ykClubOnly,
+          .andWhere(`User_profile.team = :team`, {
+            team: team,
           })
           .getOne()
       : queryBuilder.getOne();
