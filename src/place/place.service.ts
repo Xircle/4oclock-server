@@ -87,11 +87,13 @@ export class PlaceService {
   }
 
   public async getPlaces(
-    { location, placeType, team }: GetPlacesQueryParameter = {},
+    { location, placeType }: GetPlacesQueryParameter = {},
     page: number,
     limit: number,
+    authUser: User,
   ): Promise<GetPlacesOutput> {
     try {
+      const team = authUser.profile.team;
       const today = new Date();
       const whereOptions: GetPlacesWhereOptions =
         this.filterDefaultWhereOptions(location, placeType);
@@ -104,8 +106,7 @@ export class PlaceService {
           startDateAt: 'ASC',
         },
         loadEagerRelations: true,
-        // take: limit,
-        // skip: limit * (page - 1),
+        take: 100,
       });
       const closedPlaces = await this.placeRepository.findManyPlaces({
         where: {
@@ -116,43 +117,54 @@ export class PlaceService {
           startDateAt: 'DESC',
         },
         loadEagerRelations: true,
-        // take: limit,
-        // skip: limit * (page - 1),
+        take: 100,
       });
 
       const openMyPlaceASC = _.filter(
         openPlaces,
         (place) => place.team === team,
       );
-      const closedMyPlaceDESC = _.filter(
+      const closedMyPlaceThisWeekDESC = _.filter(
         closedPlaces,
         (place) =>
           place.team === team && (place.isAfterToday() || place.isToday()),
       );
 
-      const closeNotMyTeamPlaceDESC = _.difference(
-        closedPlaces,
-        closedMyPlaceDESC,
-      );
-      let seperator1 = false;
-      let seperator2 = false;
+      const closeNotMyTeamPlaceDESC =
+        placeType === PlaceType['Regular-meeting']
+          ? _.difference(closedPlaces, closedMyPlaceThisWeekDESC)
+          : _.difference(closedPlaces, closedMyPlaceThisWeekDESC).filter(
+              (place) => !place.team || place.team === team,
+            );
 
-      const openNotMyTeamPlaceASC = _.filter(
-        openPlaces,
-        (places) => places.team !== team,
-      );
+      const openNotMyTeamPlaceASC =
+        placeType === PlaceType['Regular-meeting']
+          ? _.filter(openPlaces, (places) => places.team !== team)
+          : _.filter(openPlaces, (places) => !places.team);
+
+      let myTeamSeperatorId = '';
+      let otherTeamSeperatorId = '';
+
+      if (openMyPlaceASC?.length) {
+        myTeamSeperatorId = openMyPlaceASC[0].id;
+      } else if (closedMyPlaceThisWeekDESC?.length) {
+        myTeamSeperatorId = closedMyPlaceThisWeekDESC[0].id;
+      }
+      if (myTeamSeperatorId) {
+        if (openNotMyTeamPlaceASC?.length) {
+          otherTeamSeperatorId = openNotMyTeamPlaceASC[0].id;
+        } else if (closeNotMyTeamPlaceDESC?.length) {
+          otherTeamSeperatorId = closeNotMyTeamPlaceDESC[0].id;
+        }
+      }
+
       openMyPlaceASC.push(
-        ...closedMyPlaceDESC,
+        ...closedMyPlaceThisWeekDESC,
         ...openNotMyTeamPlaceASC,
         ...closeNotMyTeamPlaceDESC,
       );
 
       // openPlaceOrderByStartDateAtASC.push(...closedPlaceOrderByStartDateAtDESC);
-
-      if (page === 1 && openMyPlaceASC) seperator1 = true;
-
-      if (page === 1 && (openMyPlaceASC || closedMyPlaceDESC))
-        seperator2 = true;
 
       const finalPlaceEntities = openMyPlaceASC.slice(
         limit * (page - 1),
@@ -166,11 +178,6 @@ export class PlaceService {
         const deadline = place.getDeadlineCaption(today);
 
         const myTeam = place.team === team;
-        const seperatorMyTeam = seperator1 && myTeam;
-        const seperatorNotMyTeam = seperator2 && !myTeam;
-
-        if (seperatorMyTeam && seperator1) seperator1 = false;
-        if (seperatorNotMyTeam && seperator2) seperator2 = false;
 
         // Regarding to Participants
         const participants: MainFeedPlaceParticipantsProfile[] =
@@ -201,8 +208,12 @@ export class PlaceService {
           participantsCount,
           leftParticipantsCount,
           myTeam,
-          seperatorMyTeam,
-          seperatorNotMyTeam,
+          divider:
+            place.id === myTeamSeperatorId
+              ? 'myTeam'
+              : place.id === otherTeamSeperatorId
+              ? 'otherTeam'
+              : '',
         });
       }
 
