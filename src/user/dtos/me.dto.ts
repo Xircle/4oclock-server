@@ -20,6 +20,8 @@ export class MeData {
   MBTI: string;
   drinkingStyle: number;
   this_season_reservation_count: number;
+  team_id?: number;
+  team?: string;
 }
 
 export class MeOutput extends CoreOutput {
