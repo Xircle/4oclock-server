@@ -134,7 +134,7 @@ export class SocialAuthService {
       drinkingStyle,
       interests,
       isMarketingAgree,
-      team,
+      teamId,
     } = socialRegisterInput;
 
     try {
@@ -190,7 +190,6 @@ export class SocialAuthService {
           interests,
           isMarketingAgree,
           fk_user_id: user.id,
-          team,
         });
         await transactionalEntityManager.save(profile);
 
