@@ -247,14 +247,14 @@ export class PlaceService {
         };
       }
 
-      await this.placeRepository.updatePlace(
-        {
-          id: placeId,
-        },
-        {
-          views: place.views + 1,
-        },
-      );
+      // await this.placeRepository.updatePlace(
+      //   {
+      //     id: placeId,
+      //   },
+      //   {
+      //     views: place.views + 1,
+      //   },
+      // );
 
       const NotCanceledReservations =
         await this.reservationRepository.getNotCanceledReservations(placeId);
@@ -296,6 +296,7 @@ export class PlaceService {
           maleCount,
           femaleCount,
         },
+        myTeam: anyUser?.profile.team === place.team,
       };
       return {
         ok: true,
@@ -347,7 +348,6 @@ export class PlaceService {
         }
         qAndAs.pop();
       }
-
       //   Transction start
       await getManager().transaction(async (transactionalEntityManager) => {
         //   Create place
