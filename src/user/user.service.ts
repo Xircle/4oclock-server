@@ -1,8 +1,9 @@
+import { TeamRepository } from './../team/repository/team.repository';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { PlaceRepository } from './../place/repository/place.repository';
 import * as _ from 'lodash';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { getManager, MoreThan } from 'typeorm';
+import { getManager, MoreThan, Repository } from 'typeorm';
 import { UserProfile } from './entities/user-profile.entity';
 import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
@@ -20,6 +21,7 @@ import { CoreOutput } from '@common/common.interface';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
 import { CronJob } from 'cron';
 import * as moment from 'moment';
+import { Team } from 'team/entities/team.entity';
 
 @Injectable()
 export class UserService {
@@ -29,6 +31,7 @@ export class UserService {
     private readonly users: UserRepository,
     private readonly s3Service: S3Service,
     private readonly placeRepository: PlaceRepository,
+    private readonly teamRepository: TeamRepository,
     private schedulerRegistry: SchedulerRegistry,
   ) {
     this.codeMap = new Map();
@@ -60,13 +63,16 @@ export class UserService {
           createdAt: MoreThan('2022-03-30'),
         },
       });
+      const team = await this.teamRepository.findOne(authUser.team_id);
       return {
         ok: true,
         data: {
           accountType: authUser.role,
           reservation_count: reservations.length,
           ...authUser.profile,
+          team_id: authUser.team_id,
           this_season_reservation_count: thisSeasonReservations.length,
+          team: team?.name,
         },
       };
     } catch (err) {
@@ -83,7 +89,7 @@ export class UserService {
       const randomUser = await this.users.findRandomUser(
         authUser.id,
         myTeamOnly,
-        authUser.profile.team,
+        authUser.team,
       );
       if (!randomUser) return { ok: true };
 
@@ -202,17 +208,18 @@ export class UserService {
     }
   }
 
-  async patchTeam(authUser: User, teamId: string): Promise<CoreOutput> {
+  async patchTeam(authUser: User, teamId: number): Promise<CoreOutput> {
     try {
+      const team = await this.teamRepository.findOne(teamId);
+
       await getManager().transaction(async (transactionalEntityManager) => {
-        // Update profile
         await transactionalEntityManager.update(
-          UserProfile,
+          User,
           {
-            fk_user_id: authUser.id,
+            id: authUser.id,
           },
           {
-            team: teamId,
+            team_id: team.id,
           },
         );
       });
@@ -242,9 +249,17 @@ export class UserService {
       if (this.codeMap.has(code)) {
         editProfileInput.isYkClub = true;
       }
+
       updateData = {
         ...updateData,
-        ...editProfileInput,
+        username: editProfileInput.username,
+        shortBio: editProfileInput.shortBio,
+        job: editProfileInput.job,
+        activities: editProfileInput.activities,
+        isYkClub: editProfileInput.isYkClub,
+        MBTI: editProfileInput.MBTI,
+        personality: editProfileInput.personality,
+        drinkingStyle: editProfileInput.drinkingStyle,
       };
 
       if (_.isEqual(updateData, {})) {
@@ -253,6 +268,8 @@ export class UserService {
           ok: true,
         };
       }
+      const team = await this.teamRepository.findOne(editProfileInput.teamId);
+
       await getManager().transaction(async (transactionalEntityManager) => {
         // Update profile
         await transactionalEntityManager.update(
@@ -264,14 +281,21 @@ export class UserService {
             ...updateData,
           },
         );
-        if (this.codeMap.has(code)) {
+        if (
+          (code && this.codeMap.get(code)?.role) ||
+          authUser.profile.isYkClub
+        ) {
           await transactionalEntityManager.update(
             User,
             {
               id: authUser.id,
             },
             {
-              role: this.codeMap.get(code).role,
+              role:
+                code && this.codeMap.get(code)?.role
+                  ? this.codeMap.get(code).role
+                  : authUser.role,
+              team_id: editProfileInput.teamId,
             },
           );
         }
