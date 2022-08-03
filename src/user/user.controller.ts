@@ -65,7 +65,7 @@ export class UserController {
   @Patch('me/team/:teamId')
   async patchTeam(
     @GetUser() authUser: User,
-    @Param('teamId') teamId: string,
+    @Param('teamId') teamId: number,
   ): Promise<CoreOutput> {
     return this.userService.patchTeam(authUser, teamId);
   }
