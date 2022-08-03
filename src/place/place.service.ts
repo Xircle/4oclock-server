@@ -93,7 +93,7 @@ export class PlaceService {
     authUser: User,
   ): Promise<GetPlacesOutput> {
     try {
-      const team = authUser.profile.team;
+      const teamId = authUser.team_id;
       const today = new Date();
       const whereOptions: GetPlacesWhereOptions =
         this.filterDefaultWhereOptions(location, placeType);
@@ -122,25 +122,25 @@ export class PlaceService {
 
       const openMyPlaceASC = _.filter(
         openPlaces,
-        (place) => place.team === team,
+        (place) => place.team_id === teamId,
       );
       const closedMyPlaceThisWeekDESC = _.filter(
         closedPlaces,
         (place) =>
-          place.team === team && (place.isAfterToday() || place.isToday()),
+          place.team_id === teamId && (place.isAfterToday() || place.isToday()),
       );
 
       const closeNotMyTeamPlaceDESC =
         placeType === PlaceType['Regular-meeting']
           ? _.difference(closedPlaces, closedMyPlaceThisWeekDESC)
           : _.difference(closedPlaces, closedMyPlaceThisWeekDESC).filter(
-              (place) => !place.team || place.team === team,
+              (place) => !place.team_id || place.team_id === teamId,
             );
 
       const openNotMyTeamPlaceASC =
         placeType === PlaceType['Regular-meeting']
-          ? _.filter(openPlaces, (places) => places.team !== team)
-          : _.filter(openPlaces, (places) => !places.team);
+          ? _.filter(openPlaces, (places) => places.team_id !== teamId)
+          : _.filter(openPlaces, (places) => !places.team_id);
 
       let myTeamSeperatorId = '';
       let otherTeamSeperatorId = '';
@@ -177,7 +177,7 @@ export class PlaceService {
         const startDateFromNow = place.getStartDateFromNow();
         const deadline = place.getDeadlineCaption(today);
 
-        const myTeam = place.team === team;
+        const myTeam = place.team_id === teamId;
 
         // Regarding to Participants
         const participants: MainFeedPlaceParticipantsProfile[] =
@@ -296,7 +296,7 @@ export class PlaceService {
           maleCount,
           femaleCount,
         },
-        myTeam: anyUser?.profile.team === place.team,
+        myTeam: anyUser?.team_id === place.team_id,
       };
       return {
         ok: true,
@@ -359,9 +359,9 @@ export class PlaceService {
             placeType,
             name,
             startDateAt,
-            team:
+            team_id:
               teamOnly || placeType === PlaceType['Regular-meeting']
-                ? authUser.profile.team
+                ? authUser.team_id
                 : null,
             recommendation,
             creator: authUser,
@@ -508,9 +508,9 @@ export class PlaceService {
             placeType,
             name,
             startDateAt,
-            team:
+            team_id:
               teamOnly || placeType === PlaceType['Regular-meeting']
-                ? authUser.profile.team
+                ? authUser.team_id
                 : null,
             recommendation,
             coverImage: newCoverImage,
