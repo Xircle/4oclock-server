@@ -343,7 +343,7 @@ export class UserService {
         );
       });
 
-      const time = moment().add(10, 'm').toDate();
+      const time = moment().add(60, 'days').toDate();
       const job = new CronJob(time, async () => {
         console.log('user verification expired');
         // Update profile
