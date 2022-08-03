@@ -17,6 +17,7 @@ import { Reservation } from '@reservation/entities/reservation.entity';
 import { PlaceDetail } from './place-detail.entity';
 import { Expose } from 'class-transformer';
 import { IsEnum, IsOptional } from 'class-validator';
+import { Team } from 'team/entities/team.entity';
 
 export enum DeadlineIndicator {
   'Done' = '마감',
@@ -52,8 +53,13 @@ export class Place {
   @Column('varchar', { array: true, nullable: true })
   qAndA?: string[];
 
-  @Column('varchar', { nullable: true, length: 255 })
-  team?: string;
+  @ManyToOne((type) => Team, (Team) => Team.places, {
+    nullable: true,
+  })
+  team: Team;
+
+  @Column('integer', { nullable: true })
+  team_id: number;
 
   @Column({ length: 255, nullable: true })
   oneLineIntroText?: string;
@@ -61,10 +67,10 @@ export class Place {
   @Column({ length: 255, default: '전체' })
   location?: string;
 
-  @Column({ length: 255, default: '모든' })
+  @Column({ length: 255, nullable: true })
   recommendation?: string;
 
-  @Column('timestamptz')
+  @Column('timestamptz', { nullable: true })
   startDateAt: Date;
 
   @Column({ default: false })
@@ -93,7 +99,7 @@ export class Place {
   @JoinColumn({ name: 'creator_id' })
   creator: User;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   creator_id: string;
 
   @Column('timestamptz', { select: false })
