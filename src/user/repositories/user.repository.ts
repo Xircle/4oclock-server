@@ -1,3 +1,4 @@
+import { Team } from 'team/entities/team.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './../entities/user.entity';
 
@@ -6,7 +7,7 @@ export class UserRepository extends Repository<User> {
   public async findRandomUser(
     userId: string,
     myTeamOnly: boolean,
-    team?: string,
+    team?: Team,
   ) {
     const queryBuilder = this.createQueryBuilder('User')
       .where(`User.id != :id`, { id: userId })
@@ -14,8 +15,8 @@ export class UserRepository extends Repository<User> {
       .orderBy('RANDOM()');
     return myTeamOnly && team
       ? queryBuilder
-          .andWhere(`User_profile.team = :team`, {
-            team: team,
+          .andWhere(`User.team_id = :team`, {
+            team: team.id,
           })
           .getOne()
       : queryBuilder.getOne();
