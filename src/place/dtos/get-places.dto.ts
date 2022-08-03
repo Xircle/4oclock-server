@@ -28,7 +28,7 @@ export class MainFeedPlace {
   participantsCount: number;
   leftParticipantsCount: number;
   isClosed: boolean;
-  team?: string;
+  teamId?: string;
   myTeam?: boolean;
   seperatorMyTeam?: boolean;
   seperatorNotMyTeam?: boolean;
