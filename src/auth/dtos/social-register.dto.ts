@@ -2,6 +2,7 @@ import {
   IsArray,
   IsEmail,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -161,9 +162,9 @@ export class SocialRegisterInput {
     description: '연고이팅 팀',
     example: 'A',
   })
-  @IsString()
+  @IsInt()
   @IsOptional()
-  team?: string;
+  teamId?: number;
 }
 
 export class AuthDataToFront {
