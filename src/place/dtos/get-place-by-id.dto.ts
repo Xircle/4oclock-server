@@ -28,6 +28,7 @@ export class PlaceData {
     participationFee: number;
     maxParticipantsNumber: number;
   };
+  myTeam?: boolean;
 }
 
 export class GetPlaceByIdOutput extends CoreOutput {
