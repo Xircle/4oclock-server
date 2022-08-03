@@ -1,3 +1,4 @@
+import { Team } from 'team/entities/team.entity';
 import { Place } from '@place/entities/place.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Index,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -55,7 +57,7 @@ export class User {
   })
   profile?: UserProfile;
 
-  @Column('varchar', { array: true, default: false, nullable: true })
+  @Column('varchar', { array: true, nullable: true })
   firebaseToken?: string[];
 
   @OneToMany((type) => Reservation, (reservation) => reservation.participant)
@@ -83,6 +85,12 @@ export class User {
   @Column('timestamptz', { select: false })
   @UpdateDateColumn()
   updatedAt?: Date;
+
+  @ManyToOne((type) => Team, (team) => team.users)
+  team?: Team;
+
+  @Column('integer', { nullable: true })
+  team_id: number;
 
   @Expose()
   async checkPassword?(password: string): Promise<boolean> {
