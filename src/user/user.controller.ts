@@ -36,6 +36,7 @@ import { SeeRandomProfileOutput } from './dtos/see-random-profile.dto';
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { GetUser } from '@auth/decorators/get-user.decorator';
 import { CoreOutput } from '@common/common.interface';
+import { GetPointOutput } from './dtos/get-point.dto';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')
@@ -127,6 +128,11 @@ export class UserController {
     @GetUser() authUser: User,
   ): Promise<GetMyPlaceCreatedOutput> {
     return this.userService.getMyPlaceCreated(authUser);
+  }
+
+  @Get('point')
+  async getPoint(@GetUser() authUser: User): Promise<GetPointOutput> {
+    return this.userService.getPoint(authUser, 1);
   }
 
   @Get('report/:userId')
