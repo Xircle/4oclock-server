@@ -1,3 +1,4 @@
+import { Reservation } from '@reservation/entities/reservation.entity';
 import { TeamRepository } from './../team/repository/team.repository';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { PlaceRepository } from './../place/repository/place.repository';
@@ -21,14 +22,14 @@ import { CoreOutput } from '@common/common.interface';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
 import { CronJob } from 'cron';
 import * as moment from 'moment';
-import { Team } from 'team/entities/team.entity';
+import { GetPointOutput } from './dtos/get-point.dto';
 
 @Injectable()
 export class UserService {
   codeMap: Map<any, any>;
   constructor(
     private readonly reservationRepository: ReservationRepository,
-    private readonly users: UserRepository,
+    private readonly userRepository: UserRepository,
     private readonly s3Service: S3Service,
     private readonly placeRepository: PlaceRepository,
     private readonly teamRepository: TeamRepository,
@@ -41,7 +42,7 @@ export class UserService {
   }
 
   async findUserById(id: string): Promise<User> {
-    return this.users.findOne({
+    return this.userRepository.findOne({
       where: {
         id,
       },
@@ -86,7 +87,7 @@ export class UserService {
     myTeamOnly: boolean,
   ): Promise<SeeRandomProfileOutput> {
     try {
-      const randomUser = await this.users.findRandomUser(
+      const randomUser = await this.userRepository.findRandomUser(
         authUser.id,
         myTeamOnly,
         authUser.team,
@@ -108,7 +109,7 @@ export class UserService {
 
   async seeUserById(userId: string): Promise<SeeUserByIdOutput> {
     try {
-      const user = await this.users.findOne({
+      const user = await this.userRepository.findOne({
         where: {
           id: userId,
         },
@@ -199,7 +200,7 @@ export class UserService {
 
   async deleteUser(authUser: User): Promise<CoreOutput> {
     try {
-      await this.users.delete({
+      await this.userRepository.delete({
         id: authUser.id,
       });
       return { ok: true };
@@ -226,6 +227,28 @@ export class UserService {
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
+    }
+  }
+
+  async getPoint(authUser: User, season: number): Promise<GetPointOutput> {
+    try {
+      const point = await this.userRepository.getPointThisSeason(
+        authUser,
+        season,
+      );
+      await getManager().transaction(async (transactionalEntityManager) => {});
+      return {
+        ok: true,
+        data: {
+          totalPointThisSeason: 4,
+          myPointThisSeason: point,
+        },
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
     }
   }
 
