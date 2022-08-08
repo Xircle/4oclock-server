@@ -160,7 +160,11 @@ export class PartyService {
 
   public async getParties(): Promise<GetPartiesOutput> {
     try {
-      const parties = await this.partyRepository.findManyParties({});
+      const parties = await this.partyRepository.findManyParties({
+        where: {
+          isClosed: false,
+        },
+      });
       return { ok: true, parties };
     } catch (error) {
       return { ok: false, error };
