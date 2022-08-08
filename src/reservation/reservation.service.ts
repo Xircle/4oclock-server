@@ -35,7 +35,15 @@ export class ReservationService {
         return { ok: false, error: '활동코드를 입력해주세요' };
       }
 
-      if (targetPlace.placeType === PlaceType['Regular-meeting']) {
+      if (
+        targetPlace.placeType === PlaceType['Regular-meeting'] &&
+        (moment().day() === 1 || moment().day() === 2) &&
+        targetPlace.team_id !== authUser.team_id
+      ) {
+        return {
+          ok: false,
+          error: '다른 팀의 정기 모임은 수요일부터 신청 가능합니다',
+        };
       }
 
       if (targetPlace.isClosed) {
