@@ -120,15 +120,17 @@ export class PlaceService {
         take: 100,
       });
 
-      const openMyPlaceASC = _.filter(
-        openPlaces,
-        (place) => place.team_id === teamId,
-      );
-      const closedMyPlaceThisWeekDESC = _.filter(
-        closedPlaces,
-        (place) =>
-          place.team_id === teamId && (place.isAfterToday() || place.isToday()),
-      );
+      const openMyPlaceASC = teamId
+        ? _.filter(openPlaces, (place) => place.team_id === teamId)
+        : [];
+      const closedMyPlaceThisWeekDESC = teamId
+        ? _.filter(
+            closedPlaces,
+            (place) =>
+              place.team_id === teamId &&
+              (place.isAfterToday() || place.isToday()),
+          )
+        : [];
 
       const closeNotMyTeamPlaceDESC =
         placeType === PlaceType['Regular-meeting']
@@ -150,13 +152,15 @@ export class PlaceService {
       } else if (closedMyPlaceThisWeekDESC?.length) {
         myTeamSeperatorId = closedMyPlaceThisWeekDESC[0].id;
       }
-      if (myTeamSeperatorId) {
-        if (openNotMyTeamPlaceASC?.length) {
-          otherTeamSeperatorId = openNotMyTeamPlaceASC[0].id;
-        } else if (closeNotMyTeamPlaceDESC?.length) {
-          otherTeamSeperatorId = closeNotMyTeamPlaceDESC[0].id;
-        }
+
+      if (openNotMyTeamPlaceASC?.length) {
+        otherTeamSeperatorId = openNotMyTeamPlaceASC[0].id;
+      } else if (closeNotMyTeamPlaceDESC?.length) {
+        otherTeamSeperatorId = closeNotMyTeamPlaceDESC[0].id;
       }
+
+      console.log('myTeamSeperatorId ' + myTeamSeperatorId);
+      console.log('otherTeamSeperatorId ' + otherTeamSeperatorId);
 
       openMyPlaceASC.push(
         ...closedMyPlaceThisWeekDESC,
