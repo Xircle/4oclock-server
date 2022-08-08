@@ -11,7 +11,8 @@ import {
 } from './dtos/make-reservation.dto';
 import { PatchReservationInput } from './dtos/patch-reservation.dto';
 import { ReservationRepository } from './repository/reservation.repository';
-import * as moment from 'moment';
+import { PlaceType } from '@place/entities/place.entity';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class ReservationService {
@@ -29,6 +30,13 @@ export class ReservationService {
     try {
       const targetPlace =
         await this.placeService.GetPlaceByIdAndcheckPlaceException(placeId);
+
+      if (authUser.profile.isYkClub === false) {
+        return { ok: false, error: '활동코드를 입력해주세요' };
+      }
+
+      if (targetPlace.placeType === PlaceType['Regular-meeting']) {
+      }
 
       if (targetPlace.isClosed) {
         return {
