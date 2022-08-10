@@ -1,12 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 
+
 @Controller()
 export class AppController {
   constructor() {}
 
   @Get()
   sayHello() {
-    return 'Hello developersxxxx!';
+    return 'hi';
   }
 
   @Get('version')
