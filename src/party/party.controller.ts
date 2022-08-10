@@ -93,7 +93,7 @@ export class PartyController {
 
   // async getParties();
   @Get('')
-  @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
+  @ApiOperation({ summary: '파티 모두 보기' })
   @UseGuards(RolesGuard)
   @Roles(['Client', 'Admin', 'Owner'])
   async getParties(): Promise<GetPartiesOutput> {
@@ -102,7 +102,7 @@ export class PartyController {
 
   // async getParty();
   @Get(':partyId')
-  @ApiOperation({ summary: '장소의 Type, Location 별로 생성된 장소 보기' })
+  @ApiOperation({ summary: '특정 파티 보기' })
   @UseGuards(RolesGuard)
   @Roles(['Client', 'Admin', 'Owner'])
   async getPartyById(
