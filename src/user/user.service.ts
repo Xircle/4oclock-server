@@ -353,7 +353,7 @@ export class UserService {
 
   async verifyUserByCode(authUser: User, code: string): Promise<CoreOutput> {
     try {
-      const correctCrewCode = 'crew';
+      const correctCrewCode = 'friends';
       const correctLeaderCode = 'leader';
       const oldRole = authUser.role;
       if (code !== correctCrewCode && code !== correctLeaderCode) {
