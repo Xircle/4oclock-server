@@ -353,8 +353,8 @@ export class UserService {
 
   async verifyUserByCode(authUser: User, code: string): Promise<CoreOutput> {
     try {
-      const correctCrewCode = 'friends';
-      const correctLeaderCode = 'leader';
+      const correctCrewCode = '친구';
+      const correctLeaderCode = '케빈';
       const oldRole = authUser.role;
       if (code !== correctCrewCode && code !== correctLeaderCode) {
         return {
@@ -390,41 +390,41 @@ export class UserService {
         );
       });
 
-      const time = moment().add(60, 'days').toDate();
-      const job = new CronJob(time, async () => {
-        console.log('user verification expired');
-        // Update profile
+      // const time = moment().add(90, 'days').toDate();
+      // const job = new CronJob(time, async () => {
+      //   console.log('user verification expired');
+      //   // Update profile
 
-        await getManager().transaction(async (transactionalEntityManager) => {
-          // Update profile
-          await transactionalEntityManager.update(
-            UserProfile,
-            {
-              fk_user_id: authUser.id,
-            },
-            {
-              isYkClub: false,
-            },
-          );
-          await transactionalEntityManager.update(
-            User,
-            {
-              id: authUser.id,
-            },
-            {
-              role: UserRole.Client,
-            },
-          );
-        });
-      });
-      const jobName = `verification: ${authUser.id}`;
+      //   await getManager().transaction(async (transactionalEntityManager) => {
+      //     // Update profile
+      //     await transactionalEntityManager.update(
+      //       UserProfile,
+      //       {
+      //         fk_user_id: authUser.id,
+      //       },
+      //       {
+      //         isYkClub: false,
+      //       },
+      //     );
+      //     await transactionalEntityManager.update(
+      //       User,
+      //       {
+      //         id: authUser.id,
+      //       },
+      //       {
+      //         role: UserRole.Client,
+      //       },
+      //     );
+      //   });
+      // });
+      // const jobName = `verification: ${authUser.id}`;
 
-      if (this.schedulerRegistry.doesExist('cron', jobName)) {
-        console.log(`${jobName} already exist`);
-        this.schedulerRegistry.deleteCronJob(jobName);
-      }
-      this.schedulerRegistry.addCronJob(jobName, job);
-      job.start();
+      // if (this.schedulerRegistry.doesExist('cron', jobName)) {
+      //   console.log(`${jobName} already exist`);
+      //   this.schedulerRegistry.deleteCronJob(jobName);
+      // }
+      // this.schedulerRegistry.addCronJob(jobName, job);
+      // job.start();
 
       return { ok: true };
     } catch (error) {
