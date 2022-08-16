@@ -332,6 +332,9 @@ export class UserService {
   }
 
   async updateFirebaseToken(authUser: User, token: string) {
+    if (authUser.firebaseToken?.includes(token)) {
+      return;
+    }
     await getManager().transaction(async (transactionalEntityManager) => {
       // Update profile
 
@@ -341,7 +344,7 @@ export class UserService {
           id: authUser.id,
         },
         {
-          firebaseToken: [token],
+          firebaseToken: [...authUser.firebaseToken, token],
         },
       );
     });
