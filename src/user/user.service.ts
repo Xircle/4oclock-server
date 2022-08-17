@@ -224,7 +224,7 @@ export class UserService {
           },
         );
       });
-      return { ok: true, error: '팀 입력 셩공!' };
+      return { ok: true, error: '팀 입력 성공!' };
     } catch (error) {
       return { ok: false, error };
     }
