@@ -14,8 +14,8 @@ export class AppController {
     return {
       androidRecommendedVersion: 13,
       androidMinimumVersion: 13,
-      iOSRecommendedVersion: 11,
-      iOSMinimumVersion: 11,
+      iOSRecommendedVersion: 12,
+      iOSMinimumVersion: 12,
     };
   }
 }
