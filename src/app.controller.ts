@@ -12,8 +12,8 @@ export class AppController {
   @Get('version')
   getVersion() {
     return {
-      androidRecommendedVersion: 11,
-      androidMinimumVersion: 11,
+      androidRecommendedVersion: 13,
+      androidMinimumVersion: 13,
       iOSRecommendedVersion: 11,
       iOSMinimumVersion: 11,
     };
