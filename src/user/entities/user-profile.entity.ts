@@ -15,6 +15,8 @@ export enum Gender {
   Male = 'Male',
 }
 
+export enum Interest {}
+
 @Entity({ name: 'user_profiles' })
 export class UserProfile {
   @PrimaryGeneratedColumn('uuid')
@@ -43,7 +45,7 @@ export class UserProfile {
   @Column({
     type: 'enum',
     enum: Gender,
-    default: Gender.Male,
+    nullable: true,
   })
   gender: Gender;
 
@@ -93,9 +95,6 @@ export class UserProfile {
   @Column('uuid')
   fk_user_id: string;
 
-  @Column({ nullable: true })
-  team?: string;
-
   @Column('timestamptz', { name: 'created_at', select: false })
   @CreateDateColumn()
   createdAt: Date;
@@ -103,4 +102,7 @@ export class UserProfile {
   @Column('timestamptz', { name: 'created_at', select: false })
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column('integer', { nullable: true })
+  team_id: number;
 }
