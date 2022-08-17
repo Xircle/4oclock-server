@@ -36,9 +36,9 @@ export class UserService {
     private schedulerRegistry: SchedulerRegistry,
   ) {
     this.codeMap = new Map();
-    this.codeMap.set('잇힝조아', { role: UserRole.Client, team: 'Z1' });
-    this.codeMap.set('주량2리더', { role: UserRole.Owner, team: 'Z2' });
-    this.codeMap.set('신사동연고이팅', { role: UserRole.Admin, team: 'Z3' });
+    this.codeMap.set('친구', { role: UserRole.Client });
+    this.codeMap.set('케빈', { role: UserRole.Owner });
+    this.codeMap.set('운영쥔', { role: UserRole.Admin });
   }
 
   async findUserById(id: string): Promise<User> {
@@ -224,7 +224,7 @@ export class UserService {
           },
         );
       });
-      return { ok: true };
+      return { ok: true, error: '팀 입력 셩공!' };
     } catch (error) {
       return { ok: false, error };
     }
@@ -429,7 +429,7 @@ export class UserService {
       // this.schedulerRegistry.addCronJob(jobName, job);
       // job.start();
 
-      return { ok: true };
+      return { ok: true, error: '코드 입력 성공' };
     } catch (error) {
       return { ok: false, error };
     }
