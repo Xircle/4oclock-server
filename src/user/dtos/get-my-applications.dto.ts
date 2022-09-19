@@ -7,6 +7,7 @@ export class MyApplication {
   appliedAt: Date;
   teamId: number;
   teamName: string;
+  isCanceled: boolean;
 }
 
 export class GetMyApplicationsOutput extends CoreOutput {
