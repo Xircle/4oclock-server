@@ -1,3 +1,4 @@
+import { EditApplicationInput } from './dtos/edit-application.dto';
 import { CreateApplicationInput } from './dtos/create-application.dto';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
@@ -48,6 +49,16 @@ export class ApplicationService {
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException();
+    }
+  }
+
+  async editApplication(
+    editApplicationInput: EditApplicationInput,
+  ): Promise<CoreOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 }
