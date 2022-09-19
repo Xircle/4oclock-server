@@ -1,3 +1,4 @@
+import { ApplicationService } from './application.service';
 import { CreateApplicationInput } from './dtos/create-application.dto';
 import { CoreOutput } from '../common/common.interface';
 import { User } from '../user/entities/user.entity';
@@ -17,6 +18,7 @@ import { GetUser } from '@auth/decorators/get-user.decorator';
 @UseGuards(JwtAuthGuard)
 @Controller('application')
 export class ApplicationController {
+  constructor(private applicationService: ApplicationService) {}
   @Post('create')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '팀에 지원하기' })
@@ -24,7 +26,9 @@ export class ApplicationController {
     @GetUser() authUser: User,
     @Body() createApplicationInput: CreateApplicationInput,
   ): Promise<CoreOutput> {
-    console.log(createApplicationInput.teamId);
-    return { ok: true };
+    return this.applicationService.createApplication(
+      authUser,
+      createApplicationInput,
+    );
   }
 }
