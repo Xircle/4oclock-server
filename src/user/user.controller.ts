@@ -133,7 +133,7 @@ export class UserController {
   @Get('history/application')
   @ApiOperation({ summary: '유저가 지원한 팀 조회' })
   async getMyApplication(@GetUser() authUser: User): Promise<CoreOutput> {
-    return { ok: true };
+    return this.userService.getMyApplications(authUser);
   }
 
   @Get('point')
