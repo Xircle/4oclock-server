@@ -56,6 +56,11 @@ export class ApplicationService {
     editApplicationInput: EditApplicationInput,
   ): Promise<CoreOutput> {
     try {
+      const exists = await this.applicationRepository.findOne({
+        where: {
+          id: editApplicationInput.applicationId,
+        },
+      });
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
