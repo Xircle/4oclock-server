@@ -60,4 +60,7 @@ export class Application {
   @Column('timestamptz', { select: false })
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ default: false })
+  isCanceled: boolean;
 }
