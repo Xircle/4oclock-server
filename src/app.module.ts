@@ -21,7 +21,7 @@ import ormconfig from '../ormconfig';
 import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notification/notification.module';
 import { PartyModule } from './party/party.module';
-import { ApplicationsModule } from './applications/applications.module';
+import { ApplicationModule } from './application/application.module';
 
 @Module({
   imports: [
@@ -73,7 +73,7 @@ import { ApplicationsModule } from './applications/applications.module';
     TeamModule,
     NotificationModule,
     PartyModule,
-    ApplicationsModule,
+    ApplicationModule,
   ],
   controllers: [AppController],
 })
