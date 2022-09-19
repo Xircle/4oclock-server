@@ -180,6 +180,7 @@ export class UserService {
           status: application.status,
           teamId: application.team.id,
           appliedAt: application.createdAt,
+          isCanceled: application.isCanceled,
         });
       }
       return { ok: true, application: historyApplications };
