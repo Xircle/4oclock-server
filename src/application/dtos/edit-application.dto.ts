@@ -1,7 +1,12 @@
 import { ApplicationStatus } from './../../application/entities/application.entity';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { CreateApplicationInput } from './create-application.dto';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 export class EditApplicationInput {
   @IsNotEmpty()
   @IsString()
@@ -14,4 +19,8 @@ export class EditApplicationInput {
   @IsEnum(ApplicationStatus)
   @IsOptional()
   status?: ApplicationStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isCancelled?: boolean;
 }
