@@ -49,6 +49,9 @@ export class Applications {
   @Column('integer')
   team_id: string;
 
+  @Column('boolean', { default: false })
+  paid: boolean;
+
   @Column('timestamptz')
   @CreateDateColumn()
   createdAt: Date;
