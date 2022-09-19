@@ -48,7 +48,7 @@ export class Application {
   team?: Team;
 
   @Column('integer')
-  team_id: string;
+  team_id: number;
 
   @Column('boolean', { default: false })
   paid: boolean;
