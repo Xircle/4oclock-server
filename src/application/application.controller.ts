@@ -1,9 +1,10 @@
+import { EditApplicationInput } from './dtos/edit-application.dto';
 import { ApplicationService } from './application.service';
 import { CreateApplicationInput } from './dtos/create-application.dto';
 import { CoreOutput } from '../common/common.interface';
 import { User } from '../user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -30,5 +31,14 @@ export class ApplicationController {
       authUser,
       createApplicationInput,
     );
+  }
+
+  @Patch('edit')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '지원서 변경하기' })
+  async editApplication(
+    @Body() editApplicationInput: EditApplicationInput,
+  ): Promise<CoreOutput> {
+    return { ok: true };
   }
 }
