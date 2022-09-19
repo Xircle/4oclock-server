@@ -1,3 +1,4 @@
+import { Application as Application } from '../../application/entities/application.entity';
 import { Team } from 'team/entities/team.entity';
 import { Place } from '@place/entities/place.entity';
 import {
@@ -66,6 +67,9 @@ export class User {
   @ManyToMany((type) => Room, (room) => room.users)
   @JoinTable()
   rooms?: Room[];
+
+  @OneToMany((type) => Application, (application) => application.applicant)
+  applications?: Application[];
 
   @ManyToMany((type) => Message, (message) => message.sender, {
     nullable: true,
