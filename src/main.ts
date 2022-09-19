@@ -4,6 +4,28 @@ import { applyMiddleware } from './middleware';
 import 'env';
 import * as admin from 'firebase-admin';
 import { ServiceAccount } from 'firebase-admin';
+import * as Amplitude from '@amplitude/node';
+import { init } from '@amplitude/analytics-node';
+import { track } from '@amplitude/analytics-node';
+
+export const amplitudeClient = Amplitude.init(
+  '013561f63e98681c59bb1cabc0548e0d',
+);
+
+init('013561f63e98681c59bb1cabc0548e0d');
+
+// amplitudeClient.logEvent({
+//   event_type: 'Node.js Event',
+//   user_id: 'datamonster@gmail.com',
+//   location_lat: 37.77,
+//   location_lng: -122.39,
+//   ip: '127.0.0.1',
+//   event_properties: {
+//     keyString: 'valueString',
+//     keyInt: 11,
+//     keyBool: true,
+//   },
+// });
 
 async function bootstrap() {
   const momentConfig = require('moment');
