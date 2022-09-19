@@ -1,3 +1,4 @@
+import { ApplicationRepository } from './../application/repositories/application.repository';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { TeamRepository } from './../team/repository/team.repository';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -33,6 +34,7 @@ export class UserService {
     private readonly s3Service: S3Service,
     private readonly placeRepository: PlaceRepository,
     private readonly teamRepository: TeamRepository,
+    private readonly applicationRepository: ApplicationRepository,
     private schedulerRegistry: SchedulerRegistry,
   ) {
     this.codeMap = new Map();
@@ -148,6 +150,24 @@ export class UserService {
         ok: true,
         places: placesCreated,
       };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
+  async getMyApplications(authUser: User): Promise<CoreOutput> {
+    try {
+      const applications = await this.applicationRepository.find({
+        where: {
+          user_id: authUser.id,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+        relations: ['team'],
+      });
+      console.log(applications);
+      return { ok: true };
     } catch (error) {
       return { ok: false, error };
     }
