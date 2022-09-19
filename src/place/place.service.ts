@@ -39,6 +39,7 @@ import { GetPlaceParticipantListOutput } from './dtos/get-place-participant-list
 import { PlaceDetail } from './entities/place-detail.entity';
 import { Gender } from '@user/entities/user-profile.entity';
 import * as moment from 'moment';
+import { track } from '@amplitude/analytics-node';
 
 @Injectable()
 export class PlaceService {
@@ -93,6 +94,10 @@ export class PlaceService {
     authUser: User,
   ): Promise<GetPlacesOutput> {
     try {
+      // Track a basic event
+      track('login check', undefined, {
+        user_id: authUser.email,
+      });
       const teamId = authUser.team_id;
       const today = new Date();
       const whereOptions: GetPlacesWhereOptions =
