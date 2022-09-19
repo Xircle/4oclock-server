@@ -12,6 +12,11 @@ export class ApplicationService {
     { teamId }: CreateApplicationInput,
   ): Promise<CoreOutput> {
     try {
+      const application = this.applicationRepository.create({
+        team_id: teamId,
+        user_id: authUser.id,
+      });
+      await this.applicationRepository.save(application);
       return {
         ok: true,
       };
