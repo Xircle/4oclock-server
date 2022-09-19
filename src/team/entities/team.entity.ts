@@ -1,3 +1,4 @@
+import { Application } from '../../application/entities/application.entity';
 import { User } from '@user/entities/user.entity';
 import { Place } from '@place/entities/place.entity';
 import { number } from 'joi';
@@ -29,4 +30,7 @@ export class Team {
 
   @OneToMany((type) => User, (user) => user.team)
   users: User[];
+
+  @OneToMany((type) => Application, (application) => application.team)
+  applications?: Application[];
 }
