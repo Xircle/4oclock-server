@@ -130,6 +130,12 @@ export class UserController {
     return this.userService.getMyPlaceCreated(authUser);
   }
 
+  @Get('history/application')
+  @ApiOperation({ summary: '유저가 지원한 팀 조회' })
+  async getMyApplication(@GetUser() authUser: User): Promise<CoreOutput> {
+    return { ok: true };
+  }
+
   @Get('point')
   async getPoint(@GetUser() authUser: User): Promise<GetPointOutput> {
     return this.userService.getPoint(authUser, 1);
