@@ -61,6 +61,10 @@ export class ApplicationService {
           id: editApplicationInput.applicationId,
         },
       });
+      if (!exists) {
+      } else {
+        return { ok: false, error: '지원서가 존재하지 않아요' };
+      }
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
