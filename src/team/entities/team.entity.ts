@@ -1,7 +1,14 @@
 import { User } from '@user/entities/user.entity';
 import { Place } from '@place/entities/place.entity';
 import { number } from 'joi';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinTable,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity({ name: 'teams' })
 export class Team {
