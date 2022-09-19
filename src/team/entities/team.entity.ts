@@ -24,6 +24,9 @@ export class Team {
   @OneToMany((type) => Place, (place) => place.team)
   places: Place[];
 
+  @Column('uuid', { nullable: true })
+  leader_id: string;
+
   @OneToMany((type) => User, (user) => user.team)
   users: User[];
 }
