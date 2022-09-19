@@ -1,3 +1,7 @@
+import {
+  GetMyApplicationsOutput,
+  MyApplication,
+} from './dtos/get-my-applications.dto';
 import { ApplicationRepository } from './../application/repositories/application.repository';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { TeamRepository } from './../team/repository/team.repository';
@@ -155,7 +159,7 @@ export class UserService {
     }
   }
 
-  async getMyApplications(authUser: User): Promise<CoreOutput> {
+  async getMyApplications(authUser: User): Promise<GetMyApplicationsOutput> {
     try {
       const applications = await this.applicationRepository.find({
         where: {
@@ -167,7 +171,18 @@ export class UserService {
         relations: ['team'],
       });
       console.log(applications);
-      return { ok: true };
+
+      const historyApplications: MyApplication[] = [];
+      for (let application of applications) {
+        historyApplications.push({
+          id: application.id,
+          teamName: application.team.name,
+          status: application.status,
+          teamId: application.team.id,
+          appliedAt: application.createdAt,
+        });
+      }
+      return { ok: true, application: historyApplications };
     } catch (error) {
       return { ok: false, error };
     }
