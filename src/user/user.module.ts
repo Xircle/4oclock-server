@@ -1,3 +1,4 @@
+import { ApplicationRepository } from './../application/repositories/application.repository';
 import { TeamRepository } from './../team/repository/team.repository';
 import { PlaceRepository } from './../place/repository/place.repository';
 import { Place } from './../place/entities/place.entity';
@@ -23,6 +24,7 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
       Place,
       PlaceRepository,
       TeamRepository,
+      ApplicationRepository,
     ]),
   ],
   providers: [JwtAuthGuard, UserService, S3Service],
