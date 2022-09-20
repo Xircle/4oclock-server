@@ -1,3 +1,5 @@
+import { ApplicationData } from './../../application/dtos/edit-application.dto';
+import { TeamData } from './get-teams.dto';
 import { CoreOutput } from './../../common/common.interface';
 export class GetTeamByIdInput {
   teamId?: number;
@@ -5,4 +7,14 @@ export class GetTeamByIdInput {
   userId?: string;
 }
 
-export class GetTeamByIdOutput extends CoreOutput {}
+export class GetTeamByIdUserData {
+  id: string;
+}
+
+export class GetTeamByIdData extends TeamData {
+  applications?: ApplicationData[];
+}
+
+export class GetTeamByIdOutput extends CoreOutput {
+  data?: GetTeamByIdData;
+}
