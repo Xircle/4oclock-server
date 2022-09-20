@@ -33,6 +33,10 @@ export class TeamService {
         },
       );
 
+      if (team.leader_id === getTeamByIdInput.userId) {
+      } else {
+      }
+
       return {
         ok: true,
         data: team,
