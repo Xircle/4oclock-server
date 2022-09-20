@@ -1,3 +1,4 @@
+import { GetMyApplicationsOutput } from './dtos/get-my-applications.dto';
 import {
   Body,
   CacheInterceptor,
@@ -130,9 +131,11 @@ export class UserController {
     return this.userService.getMyPlaceCreated(authUser);
   }
 
-  @Get('history/application')
+  @Get('history/applications')
   @ApiOperation({ summary: '유저가 지원한 팀 조회' })
-  async getMyApplication(@GetUser() authUser: User): Promise<CoreOutput> {
+  async getMyApplications(
+    @GetUser() authUser: User,
+  ): Promise<GetMyApplicationsOutput> {
     return this.userService.getMyApplications(authUser);
   }
 
