@@ -29,12 +29,13 @@ export class TeamService {
         },
         {
           loadEagerRelations: true,
-          relations: ['applications', 'users'],
+          relations: ['applications'],
         },
       );
-      console.log(team);
+
       return {
         ok: true,
+        data: team,
       };
     } catch (error) {
       return {
