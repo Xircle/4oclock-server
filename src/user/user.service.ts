@@ -181,6 +181,7 @@ export class UserService {
           teamId: application.team.id,
           appliedAt: application.createdAt,
           isCanceled: application.isCanceled,
+          paid: application.paid,
         });
       }
       return { ok: true, application: historyApplications };
