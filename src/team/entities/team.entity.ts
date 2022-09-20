@@ -45,4 +45,7 @@ export class Team {
 
   @Column('varchar', { array: true, nullable: true, length: 511 })
   images?: string[];
+
+  @Column({ nullable: true })
+  category?: string;
 }
