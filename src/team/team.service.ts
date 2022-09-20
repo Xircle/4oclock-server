@@ -29,7 +29,7 @@ export class TeamService {
         },
         {
           loadEagerRelations: true,
-          relations: ['applications'],
+          relations: ['applications', 'users'],
         },
       );
 
