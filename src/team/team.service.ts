@@ -24,7 +24,9 @@ export class TeamService {
   ): Promise<GetTeamByIdOutput> {
     try {
       const team = await this.teamRepository.findOne(
-        { id: getTeamByIdInput.teamId },
+        {
+          id: getTeamByIdInput.teamId,
+        },
         {},
       );
       return {
