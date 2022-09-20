@@ -1,6 +1,6 @@
 import { CoreOutput } from './../../common/common.interface';
 export class GetTeamByIdInput {
-  teamId?: string;
+  teamId?: number;
 
   userId?: string;
 }
