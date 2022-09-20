@@ -28,3 +28,13 @@ export class EditApplicationInput {
   @IsString()
   paid?: string;
 }
+
+export class ApplicationData {
+  id: string;
+  status?: ApplicationStatus;
+  user_id?: string;
+  team_id?: number;
+  paid?: boolean;
+  createdAt?: Date;
+  isCanceled?: boolean;
+}
