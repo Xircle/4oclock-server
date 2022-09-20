@@ -62,9 +62,36 @@ export class ApplicationService {
         },
       });
       if (!exists) {
-      } else {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
+
+      await this.applicationRepository.update(
+        {
+          id: editApplicationInput.applicationId,
+        },
+        {
+          status:
+            editApplicationInput.status !== undefined &&
+            editApplicationInput.status !== null
+              ? editApplicationInput.status
+              : exists.status,
+          isCanceled:
+            editApplicationInput.isCanceled === undefined ||
+            editApplicationInput.isCanceled === null
+              ? exists.isCanceled
+              : editApplicationInput.isCanceled.toLowerCase() === 'true',
+          paid:
+            editApplicationInput.paid === undefined ||
+            editApplicationInput.paid === null
+              ? exists.paid
+              : editApplicationInput.paid.toLowerCase() === 'true',
+        },
+      );
+      console.log(
+        editApplicationInput.isCanceled !== undefined &&
+          editApplicationInput.isCanceled !== null,
+      );
+
       return { ok: true };
     } catch (error) {
       return { ok: false, error };
