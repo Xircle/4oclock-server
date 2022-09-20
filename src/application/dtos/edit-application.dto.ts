@@ -21,6 +21,10 @@ export class EditApplicationInput {
   status?: ApplicationStatus;
 
   @IsOptional()
-  @IsBoolean()
-  isCancelled?: boolean;
+  @IsString()
+  isCanceled?: string;
+
+  @IsOptional()
+  @IsString()
+  paid?: string;
 }
