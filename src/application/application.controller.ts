@@ -39,6 +39,6 @@ export class ApplicationController {
   async editApplication(
     @Body() editApplicationInput: EditApplicationInput,
   ): Promise<CoreOutput> {
-    return { ok: true };
+    return this.applicationService.editApplication(editApplicationInput);
   }
 }
