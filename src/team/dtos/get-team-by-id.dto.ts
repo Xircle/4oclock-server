@@ -11,8 +11,15 @@ export class GetTeamByIdUserData {
   id: string;
 }
 
+export class GetTeamByIdLeaderData {
+  id: string;
+  username: string;
+  profileImageUrl: string;
+}
+
 export class GetTeamByIdData extends TeamData {
   applications?: ApplicationData[];
+  leader?: GetTeamByIdLeaderData;
 }
 
 export class GetTeamByIdOutput extends CoreOutput {
