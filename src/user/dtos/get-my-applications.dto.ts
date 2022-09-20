@@ -8,6 +8,7 @@ export class MyApplication {
   teamId: number;
   teamName: string;
   isCanceled: boolean;
+  paid?: boolean;
 }
 
 export class GetMyApplicationsOutput extends CoreOutput {
