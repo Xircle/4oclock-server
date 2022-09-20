@@ -27,8 +27,12 @@ export class TeamService {
         {
           id: getTeamByIdInput.teamId,
         },
-        {},
+        {
+          loadEagerRelations: true,
+          relations: ['applications', 'users'],
+        },
       );
+      console.log(team);
       return {
         ok: true,
       };
