@@ -33,4 +33,16 @@ export class Team {
 
   @OneToMany((type) => Application, (application) => application.team)
   applications?: Application[];
+
+  @Column({ nullable: true })
+  startDate?: Date;
+
+  @Column({ nullable: true })
+  endDate?: Date;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column('varchar', { array: true, nullable: true, length: 511 })
+  images?: string[];
 }
