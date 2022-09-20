@@ -23,7 +23,6 @@ export class TeamController {
   @ApiOperation({ summary: '모든 팀 정보' })
   async all(): Promise<GetTeamsOutput> {
     return await this.teamService.getTeams();
-    // return { ok: true, teams: [] };
   }
 
   @Get('/id')
