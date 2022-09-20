@@ -1,3 +1,5 @@
+import { CoreOutput } from './../common/common.interface';
+import { GetTeamByIdInput } from './dtos/get-team-by-id.dto';
 import { Controller, UseGuards, Get } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,5 +24,11 @@ export class TeamController {
   async all(): Promise<GetTeamsOutput> {
     return await this.teamService.getTeams();
     // return { ok: true, teams: [] };
+  }
+
+  @Get('/id')
+  @ApiOperation({ summary: '특정 id의 팀을 받아온다' })
+  async getTeamById(getTeamByIdInput: GetTeamByIdInput): Promise<CoreOutput> {
+    return { ok: true };
   }
 }
