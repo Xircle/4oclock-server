@@ -1,6 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 
+export class FindManyTeamsV2Input {}
+
 @EntityRepository(Team)
 export class TeamRepository extends Repository<Team> {
   public async findManyTeams(season = 1): Promise<Team[]> {
@@ -10,5 +12,11 @@ export class TeamRepository extends Repository<Team> {
         id: 'ASC',
       },
     });
+  }
+
+  public async findManyTeamsV2(
+    findManyTeamsV2Input: FindManyTeamsV2Input,
+  ): Promise<Team[]> {
+    return [];
   }
 }
