@@ -23,8 +23,8 @@ export class Team {
   @OneToMany((type) => User, (user) => user.team)
   users: User[];
 
-  @Column({ nullable: true })
-  question?: string;
+  @Column({ default: '자기소개 부탁해요' })
+  question: string;
 
   @OneToMany((type) => Application, (application) => application.team)
   applications?: Application[];
@@ -44,9 +44,9 @@ export class Team {
   @Column({ nullable: true })
   category?: string;
 
-  @Column({ nullable: true })
+  @Column({ default: 16 })
   maxParticipant: number;
 
-  @Column({ default: false })
-  applicationClosed: boolean;
+  @Column({ default: 0 })
+  curParticipant: number;
 }
