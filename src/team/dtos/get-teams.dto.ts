@@ -9,6 +9,7 @@ export class TeamData {
   endDate?: Date;
   description?: string;
   images?: string[];
+  category?: string;
 }
 
 export class GetTeamsOutput extends CoreOutput {
