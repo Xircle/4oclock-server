@@ -1,3 +1,4 @@
+import { TeamRepository } from './../team/repository/team.repository';
 import { EditApplicationInput } from './dtos/edit-application.dto';
 import { CreateApplicationInput } from './dtos/create-application.dto';
 import { User } from '@user/entities/user.entity';
@@ -7,7 +8,10 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
 @Injectable()
 export class ApplicationService {
-  constructor(private readonly applicationRepository: ApplicationRepository) {}
+  constructor(
+    private readonly applicationRepository: ApplicationRepository,
+    private readonly teamRepository: TeamRepository,
+  ) {}
   async createApplication(
     authUser: User,
     { teamId }: CreateApplicationInput,
