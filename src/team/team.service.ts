@@ -70,12 +70,7 @@ export class TeamService {
           description: team.description,
           images: team.images,
           applications: team.applications,
-          leader: {
-            id: leader.id,
-            username: leader.profile.username,
-            profileImageUrl: leader.profile.profileImageUrl,
-            shortBio: leader.profile.shortBio,
-          },
+          leader: leaderData,
         },
       };
     } catch (error) {
