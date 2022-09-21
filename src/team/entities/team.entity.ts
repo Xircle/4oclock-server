@@ -47,6 +47,6 @@ export class Team {
   @Column({ default: 16 })
   maxParticipant: number;
 
-  @Column({ default: 0 })
-  curParticipant: number;
+  @Column({ default: false })
+  isClosed: boolean;
 }
