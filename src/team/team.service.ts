@@ -7,7 +7,6 @@ import {
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput } from './dtos/get-teams.dto';
-import { string } from 'joi';
 
 @Injectable()
 export class TeamService {
