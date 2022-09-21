@@ -43,4 +43,10 @@ export class Team {
 
   @Column({ nullable: true })
   category?: string;
+
+  @Column({ nullable: true })
+  maxParticipant: number;
+
+  @Column({ default: false })
+  applicationClosed: boolean;
 }
