@@ -23,6 +23,9 @@ export class Team {
   @OneToMany((type) => User, (user) => user.team)
   users: User[];
 
+  @Column({ nullable: true })
+  question?: string;
+
   @OneToMany((type) => Application, (application) => application.team)
   applications?: Application[];
 
