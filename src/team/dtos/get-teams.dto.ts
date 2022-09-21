@@ -5,7 +5,7 @@ export class TeamData {
   name: string;
   season?: number;
   leader_id?: string;
-  startDtate?: Date;
+  startDate?: Date;
   endDate?: Date;
   description?: string;
   images?: string[];
