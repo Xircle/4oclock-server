@@ -1,11 +1,20 @@
-import { GetTeamByIdInput, GetTeamByIdOutput } from './dtos/get-team-by-id.dto';
+import { UserRepository } from './../user/repositories/user.repository';
+import {
+  GetTeamByIdInput,
+  GetTeamByIdOutput,
+  GetTeamByIdLeaderData,
+} from './dtos/get-team-by-id.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput } from './dtos/get-teams.dto';
+import { string } from 'joi';
 
 @Injectable()
 export class TeamService {
-  constructor(private teamRepository: TeamRepository) {}
+  constructor(
+    private teamRepository: TeamRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   public async getTeams(): Promise<GetTeamsOutput> {
     try {
@@ -33,13 +42,41 @@ export class TeamService {
         },
       );
 
+      const leader = await this.userRepository.findOne(
+        { id: team.leader_id },
+        {
+          loadEagerRelations: true,
+        },
+      );
+
+      console.log(leader);
+      const leaderData: GetTeamByIdLeaderData = {
+        id: leader.id,
+        username: leader.profile.username,
+        profileImageUrl: leader.profile.profileImageUrl,
+        shortBio: leader.profile.shortBio,
+      };
       if (team.leader_id === getTeamByIdInput.userId) {
       } else {
       }
 
       return {
         ok: true,
-        data: team,
+        data: {
+          id: team.id,
+          name: team.name,
+          season: team.season,
+          startDate: team.startDate,
+          description: team.description,
+          images: team.images,
+          applications: team.applications,
+          leader: {
+            id: leader.id,
+            username: leader.profile.username,
+            profileImageUrl: leader.profile.profileImageUrl,
+            shortBio: leader.profile.shortBio,
+          },
+        },
       };
     } catch (error) {
       return {
