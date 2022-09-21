@@ -15,6 +15,7 @@ export class GetTeamByIdLeaderData {
   id: string;
   username: string;
   profileImageUrl: string;
+  shortBio: string;
 }
 
 export class GetTeamByIdData extends TeamData {
