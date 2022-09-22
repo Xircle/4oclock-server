@@ -1,3 +1,4 @@
+import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { CoreOutput } from './../common/common.interface';
 import { GetTeamByIdInput, GetTeamByIdOutput } from './dtos/get-team-by-id.dto';
 import { Controller, UseGuards, Get, Body } from '@nestjs/common';
@@ -31,5 +32,13 @@ export class TeamController {
     @Body() getTeamByIdInput: GetTeamByIdInput,
   ): Promise<GetTeamByIdOutput> {
     return await this.teamService.getTeamById(getTeamByIdInput);
+  }
+
+  @Get('/all/category')
+  @ApiOperation({ summary: '특정 카테고리의 팀을 받아온다' })
+  async getTeamsByCategory(
+    @Body() getTeamsByCategoryInput: GetTeamsByCategoryInput,
+  ): Promise<GetTeamsOutput> {
+    return { ok: true };
   }
 }
