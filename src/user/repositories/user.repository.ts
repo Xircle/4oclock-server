@@ -72,6 +72,6 @@ export class UserRepository extends Repository<User> {
       .andWhere('team.season = :season', { season: season })
       .getCount();
 
-    return myTeamCount + otherTeamCount / 2;
+    return myTeamCount + otherTeamCount;
   }
 }
