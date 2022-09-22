@@ -6,6 +6,7 @@ import { User } from '@user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
 import { ApplicationRepository } from './repositories/application.repository';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ApplicationStatus } from './entities/application.entity';
 
 @Injectable()
 export class ApplicationService {
@@ -70,6 +71,16 @@ export class ApplicationService {
       if (!exists) {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
+      if (editApplicationInput.paid.toLowerCase() === 'true') {
+        this.userRepository.update(
+          {
+            id: exists.user_id,
+          },
+          {
+            team_id: exists.team_id,
+          },
+        );
+      }
 
       await this.applicationRepository.update(
         {
@@ -92,10 +103,6 @@ export class ApplicationService {
               ? exists.paid
               : editApplicationInput.paid.toLowerCase() === 'true',
         },
-      );
-      console.log(
-        editApplicationInput.isCanceled !== undefined &&
-          editApplicationInput.isCanceled !== null,
       );
 
       return { ok: true };
