@@ -1,7 +1,15 @@
+import { Category } from './../../category/entities/category.entity';
 import { Application } from '../../application/entities/application.entity';
 import { User } from '@user/entities/user.entity';
 import { Place } from '@place/entities/place.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity({ name: 'teams' })
 export class Team {
@@ -41,8 +49,12 @@ export class Team {
   @Column('varchar', { array: true, nullable: true, length: 511 })
   images?: string[];
 
-  @Column({ nullable: true })
-  category?: string;
+  @ManyToOne((type) => Category, (category) => category.teams)
+  @JoinColumn({ name: 'category_id' })
+  category: string;
+
+  @Column({ type: 'uuid', default: '4627cd89-75e8-452c-95ec-7416c1ce3d0a' })
+  category_id: string;
 
   @Column({ default: 16 })
   maxParticipant: number;
