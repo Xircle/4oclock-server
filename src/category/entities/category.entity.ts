@@ -1,4 +1,7 @@
-import { Entity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'categories' })
-export class Category {}
+export class Category {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+}
