@@ -1,3 +1,4 @@
+import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { UserRepository } from './../user/repositories/user.repository';
 import {
   GetTeamByIdInput,
@@ -81,9 +82,19 @@ export class TeamService {
     }
   }
 
-  public async getTeamsByCategory(): Promise<GetTeamsOutput> {
+  public async getTeamsByCategory(
+    getTeamsByCategoryInput: GetTeamsByCategoryInput,
+  ): Promise<GetTeamsOutput> {
     try {
-      return { ok: true };
+      const teams = await this.teamRepository.find({
+        where: {
+          category_id: getTeamsByCategoryInput.categoryId,
+        },
+        order: {
+          startDate: 'ASC',
+        },
+      });
+      return { ok: true, teams: teams };
     } catch (error) {
       return { ok: false, error };
     }
