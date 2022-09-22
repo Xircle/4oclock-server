@@ -7,6 +7,7 @@ import {
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput } from './dtos/get-teams.dto';
+import { CannotAttachTreeChildrenEntityError } from 'typeorm';
 
 @Injectable()
 export class TeamService {
@@ -77,6 +78,14 @@ export class TeamService {
         ok: false,
         error,
       };
+    }
+  }
+
+  public async getTeamsByCategory(): Promise<GetTeamsOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 }
