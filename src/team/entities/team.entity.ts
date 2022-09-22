@@ -61,4 +61,10 @@ export class Team {
 
   @Column({ default: false })
   isClosed: boolean;
+
+  @Column({ default: 20 })
+  minAge: number;
+
+  @Column({ default: 30 })
+  maxAge: number;
 }
