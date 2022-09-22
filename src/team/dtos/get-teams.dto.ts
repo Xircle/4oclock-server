@@ -13,5 +13,5 @@ export class TeamData {
 }
 
 export class GetTeamsOutput extends CoreOutput {
-  teams: TeamData[];
+  teams?: TeamData[];
 }
