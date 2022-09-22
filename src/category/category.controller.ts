@@ -9,13 +9,13 @@ export class CategoryController {
 
   @Get('/all/brief')
   @ApiOperation({ summary: '카테고리 간략히 보기' })
-  async seeAllBrief(): Promise<CoreOutput> {
+  async seeAllCategoriesBrief(): Promise<CoreOutput> {
     return { ok: true };
   }
 
   @Get('/all/detail')
   @ApiOperation({ summary: '카테고리 자세히 보기' })
-  async seeAllDetail(): Promise<CoreOutput> {
+  async seeAllCategoriesDetail(): Promise<CoreOutput> {
     return { ok: true };
   }
 }
