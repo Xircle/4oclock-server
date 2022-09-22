@@ -22,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { NotificationModule } from './notification/notification.module';
 import { PartyModule } from './party/party.module';
 import { ApplicationModule } from './application/application.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { ApplicationModule } from './application/application.module';
     NotificationModule,
     PartyModule,
     ApplicationModule,
+    CategoryModule,
   ],
   controllers: [AppController],
 })
