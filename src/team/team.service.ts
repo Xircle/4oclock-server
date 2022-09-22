@@ -50,7 +50,6 @@ export class TeamService {
         },
       );
 
-      console.log(leader);
       const leaderData: GetTeamByIdLeaderData = {
         id: leader.id,
         username: leader.profile.username,
