@@ -6,9 +6,11 @@ import { Injectable } from '@nestjs/common';
 export class CategoryService {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
-  private async seeCategoriesBrief(): Promise<SeeAllCategoryOutput> {
+  public async seeCategoriesBrief(): Promise<SeeAllCategoryOutput> {
     try {
-      return { ok: true };
+      const categories = await this.categoryRepository.find();
+      console.log(categories);
+      return { ok: true, data: categories };
     } catch (error) {
       return { ok: false, error };
     }
