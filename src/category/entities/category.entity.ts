@@ -11,4 +11,7 @@ export class Category {
 
   @OneToMany((type) => Team, (team) => team.category)
   teams: Team;
+
+  @Column({ nullable: true })
+  image?: string;
 }
