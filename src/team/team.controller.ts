@@ -39,6 +39,6 @@ export class TeamController {
   async getTeamsByCategory(
     @Body() getTeamsByCategoryInput: GetTeamsByCategoryInput,
   ): Promise<GetTeamsOutput> {
-    return { ok: true };
+    return await this.teamService.getTeamsByCategory(getTeamsByCategoryInput);
   }
 }
