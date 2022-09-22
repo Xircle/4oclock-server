@@ -89,6 +89,7 @@ export class TeamService {
       const teams = await this.teamRepository.find({
         where: {
           category_id: getTeamsByCategoryInput.categoryId,
+          isClosed: false,
         },
         order: {
           startDate: 'ASC',
