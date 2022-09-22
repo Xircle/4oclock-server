@@ -1,3 +1,4 @@
+import { UserRepository } from '@user/repositories/user.repository';
 import { TeamRepository } from './../team/repository/team.repository';
 import { EditApplicationInput } from './dtos/edit-application.dto';
 import { CreateApplicationInput } from './dtos/create-application.dto';
@@ -11,6 +12,7 @@ export class ApplicationService {
   constructor(
     private readonly applicationRepository: ApplicationRepository,
     private readonly teamRepository: TeamRepository,
+    private readonly userRepository: UserRepository,
   ) {}
   async createApplication(
     authUser: User,
