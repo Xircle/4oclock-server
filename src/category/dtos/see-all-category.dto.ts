@@ -6,6 +6,6 @@ export class CategoryData {
   image?: string;
 }
 
-export class SeeAllCategory extends CoreOutput {
-  data: CategoryData[];
+export class SeeAllCategoryOutput extends CoreOutput {
+  data?: CategoryData[];
 }
