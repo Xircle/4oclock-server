@@ -1,3 +1,4 @@
+import { SeeAllCategoryOutput } from './dtos/see-all-category.dto';
 import { CategoryService } from './category.service';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
@@ -9,8 +10,8 @@ export class CategoryController {
 
   @Get('/all/brief')
   @ApiOperation({ summary: '카테고리 간략히 보기' })
-  async seeAllCategoriesBrief(): Promise<CoreOutput> {
-    return { ok: true };
+  async seeAllCategoriesBrief(): Promise<SeeAllCategoryOutput> {
+    return this.categoryService.seeCategoriesBrief();
   }
 
   @Get('/all/detail')
