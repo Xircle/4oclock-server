@@ -1,7 +1,8 @@
+import { GetTeamsWithFilterInput } from './dtos/get-teams-with-filter.dto';
 import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { CoreOutput } from './../common/common.interface';
 import { GetTeamByIdInput, GetTeamByIdOutput } from './dtos/get-team-by-id.dto';
-import { Controller, UseGuards, Get, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Body, Patch } from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -40,5 +41,14 @@ export class TeamController {
     @Body() getTeamsByCategoryInput: GetTeamsByCategoryInput,
   ): Promise<GetTeamsOutput> {
     return await this.teamService.getTeamsByCategory(getTeamsByCategoryInput);
+  }
+
+  @Patch('/all/filter')
+  @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
+  async getTeamsWithFilter(
+    @Body() getTeamsWithFilterInput: GetTeamsWithFilterInput,
+  ): Promise<GetTeamsOutput> {
+    console.log(getTeamsWithFilterInput);
+    return { ok: true };
   }
 }
