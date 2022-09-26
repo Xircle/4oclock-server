@@ -23,8 +23,9 @@ export class TeamRepository extends Repository<Team> {
   }
 
   public async findTeamsWithFilter(
-    getTeamsWithFilterInput: GetTeamsWithFilterInput,
-    categoryIds: string[],
+    getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    categoryIds?: string[],
+    areaIds?: string[],
   ): Promise<Team[]> {
     let teamQuery = await this.createQueryBuilder();
 
