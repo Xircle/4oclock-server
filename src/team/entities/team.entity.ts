@@ -56,6 +56,9 @@ export class Team {
   @Column({ type: 'uuid', default: '4627cd89-75e8-452c-95ec-7416c1ce3d0a' })
   category_id: string;
 
+  @Column({ type: 'uuid', nullable: true })
+  area_id: string;
+
   @Column({ default: 16 })
   maxParticipant: number;
 
