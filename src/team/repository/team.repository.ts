@@ -22,12 +22,10 @@ export class TeamRepository extends Repository<Team> {
     return [];
   }
 
-  public async findTeamsWithFilter(
-    getTeamsWithFilterInput: GetTeamsWithFilterInput,
-  ): Promise<Team[]> {
+  public async findTeamsWithFilter(categoryIds: string[]): Promise<Team[]> {
     const teams = await this.createQueryBuilder()
-      .where('category_id in (:categoryIds)', {
-        categoryIds: getTeamsWithFilterInput.categoryIds,
+      .where('category_id in (:...categoryIds)', {
+        categoryIds: categoryIds,
       })
       .getMany();
     return teams;
