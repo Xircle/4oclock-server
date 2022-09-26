@@ -23,6 +23,7 @@ import { NotificationModule } from './notification/notification.module';
 import { PartyModule } from './party/party.module';
 import { ApplicationModule } from './application/application.module';
 import { CategoryModule } from './category/category.module';
+import { AreaModule } from './area/area.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { CategoryModule } from './category/category.module';
     PartyModule,
     ApplicationModule,
     CategoryModule,
+    AreaModule,
   ],
   controllers: [AppController],
 })
