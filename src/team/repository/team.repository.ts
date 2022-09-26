@@ -27,34 +27,30 @@ export class TeamRepository extends Repository<Team> {
     categoryIds?: string[],
     areaIds?: string[],
   ): Promise<Team[]> {
-    try {
-      let teamQuery = await this.createQueryBuilder();
+    let teamQuery = await this.createQueryBuilder();
 
-      if (categoryIds?.length > 0) {
-        teamQuery.andWhere('category_id in (:...categoryIds)', {
-          categoryIds: categoryIds,
-        });
-      }
-
-      if (getTeamsWithFilterInput?.minAge) {
-        teamQuery.andWhere('min_age <= :minAge', {
-          minAge: getTeamsWithFilterInput.minAge,
-        });
-      }
-
-      if (getTeamsWithFilterInput?.maxAge) {
-        teamQuery.andWhere('max_age >= :maxAge', {
-          maxAge: getTeamsWithFilterInput.maxAge,
-        });
-      }
-
-      if (areaIds?.length > 0) {
-        teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
-      }
-
-      return teamQuery.getMany();
-    } catch (error) {
-      return [];
+    if (categoryIds?.length > 0) {
+      teamQuery.andWhere('category_id in (:...categoryIds)', {
+        categoryIds: categoryIds,
+      });
     }
+
+    if (getTeamsWithFilterInput?.minAge) {
+      teamQuery.andWhere('min_age <= :minAge', {
+        minAge: getTeamsWithFilterInput.minAge,
+      });
+    }
+
+    if (getTeamsWithFilterInput?.maxAge) {
+      teamQuery.andWhere('max_age >= :maxAge', {
+        maxAge: getTeamsWithFilterInput.maxAge,
+      });
+    }
+
+    if (areaIds?.length > 0) {
+      teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
+    }
+
+    return teamQuery.getMany();
   }
 }
