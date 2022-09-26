@@ -1,3 +1,4 @@
+import { GetTeamsWithFilterInput } from './dtos/get-teams-with-filter.dto';
 import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { UserRepository } from './../user/repositories/user.repository';
 import {
@@ -94,6 +95,19 @@ export class TeamService {
           startDate: 'ASC',
         },
       });
+      return { ok: true, teams: teams };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
+  public async getTeamsWithFilter(
+    getTeamsWithFilterInput: GetTeamsWithFilterInput,
+  ): Promise<GetTeamsOutput> {
+    try {
+      const teams = await this.teamRepository.findTeamsWithFilter(
+        getTeamsWithFilterInput,
+      );
       return { ok: true, teams: teams };
     } catch (error) {
       return { ok: false, error };
