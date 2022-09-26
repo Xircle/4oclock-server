@@ -22,12 +22,30 @@ export class TeamRepository extends Repository<Team> {
     return [];
   }
 
-  public async findTeamsWithFilter(categoryIds: string[]): Promise<Team[]> {
-    const teams = await this.createQueryBuilder()
-      .where('category_id in (:...categoryIds)', {
+  public async findTeamsWithFilter(
+    getTeamsWithFilterInput: GetTeamsWithFilterInput,
+    categoryIds: string[],
+  ): Promise<Team[]> {
+    let teamQuery = await this.createQueryBuilder();
+
+    if (categoryIds?.length > 0) {
+      teamQuery.where('category_id in (:...categoryIds)', {
         categoryIds: categoryIds,
-      })
-      .getMany();
-    return teams;
+      });
+    }
+
+    if (getTeamsWithFilterInput?.minAge) {
+      teamQuery.andWhere('min_age <= :minAge', {
+        minAge: getTeamsWithFilterInput.minAge,
+      });
+    }
+
+    if (getTeamsWithFilterInput?.maxAge) {
+      teamQuery.andWhere('max_age >= :maxAge', {
+        maxAge: getTeamsWithFilterInput.maxAge,
+      });
+    }
+
+    return teamQuery.getMany();
   }
 }
