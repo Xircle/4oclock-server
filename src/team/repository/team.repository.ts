@@ -1,3 +1,4 @@
+import { UserRepository } from './../../user/repositories/user.repository';
 import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
@@ -24,6 +25,11 @@ export class TeamRepository extends Repository<Team> {
   public async findTeamsWithFilter(
     getTeamsWithFilterInput: GetTeamsWithFilterInput,
   ): Promise<Team[]> {
-    return [];
+    const teams = await this.createQueryBuilder()
+      .where('category_id in (:categoryIds)', {
+        categoryIds: getTeamsWithFilterInput.categoryIds,
+      })
+      .getMany();
+    return teams;
   }
 }
