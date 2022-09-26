@@ -5,6 +5,7 @@ import {
   GetTeamByIdInput,
   GetTeamByIdOutput,
   GetTeamByIdLeaderData,
+  GetTeamByIdQueryParameter,
 } from './dtos/get-team-by-id.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
@@ -31,12 +32,12 @@ export class TeamService {
   }
 
   public async getTeamById(
-    getTeamByIdInput: GetTeamByIdInput,
+    getTeamByIdQueryParameter: GetTeamByIdQueryParameter = {},
   ): Promise<GetTeamByIdOutput> {
     try {
       const team = await this.teamRepository.findOne(
         {
-          id: getTeamByIdInput.teamId,
+          id: getTeamByIdQueryParameter.teamId,
         },
         {
           loadEagerRelations: true,
@@ -57,7 +58,7 @@ export class TeamService {
         profileImageUrl: leader.profile.profileImageUrl,
         shortBio: leader.profile.shortBio,
       };
-      if (team.leader_id === getTeamByIdInput.userId) {
+      if (team.leader_id === getTeamByIdQueryParameter?.userId) {
       } else {
       }
 
@@ -82,13 +83,11 @@ export class TeamService {
     }
   }
 
-  public async getTeamsByCategory(
-    getTeamsByCategoryInput: GetTeamsByCategoryInput,
-  ): Promise<GetTeamsOutput> {
+  public async getTeamsByCategory(categoryId: string): Promise<GetTeamsOutput> {
     try {
       const teams = await this.teamRepository.find({
         where: {
-          category_id: getTeamsByCategoryInput.categoryId,
+          category_id: categoryId,
           isClosed: false,
         },
         order: {
