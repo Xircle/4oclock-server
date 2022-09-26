@@ -1,4 +1,4 @@
 export class GetTeamsWithFilterInput {
-  categoryIds?: string[];
-  age?: number;
+  minAge: number;
+  maxAge: number;
 }
