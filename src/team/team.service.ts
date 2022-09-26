@@ -101,13 +101,15 @@ export class TeamService {
   }
 
   public async getTeamsWithFilter(
-    getTeamsWithFilterInput: GetTeamsWithFilterInput,
-    categoryIds: string[],
+    getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    categoryIds?: string[],
+    areaIds?: string[],
   ): Promise<GetTeamsOutput> {
     try {
       const teams = await this.teamRepository.findTeamsWithFilter(
         getTeamsWithFilterInput,
         categoryIds,
+        areaIds,
       );
       return { ok: true, teams: teams };
     } catch (error) {
