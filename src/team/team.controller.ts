@@ -1,8 +1,20 @@
 import { GetTeamsWithFilterInput } from './dtos/get-teams-with-filter.dto';
 import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { CoreOutput } from './../common/common.interface';
-import { GetTeamByIdInput, GetTeamByIdOutput } from './dtos/get-team-by-id.dto';
-import { Controller, UseGuards, Get, Body, Patch } from '@nestjs/common';
+import {
+  GetTeamByIdInput,
+  GetTeamByIdOutput,
+  GetTeamByIdQueryParameter,
+} from './dtos/get-team-by-id.dto';
+import {
+  Controller,
+  UseGuards,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Query,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -30,17 +42,17 @@ export class TeamController {
   @Get('/id')
   @ApiOperation({ summary: '특정 id의 팀을 받아온다' })
   async getTeamById(
-    @Body() getTeamByIdInput: GetTeamByIdInput,
+    @Query() getTeamByIdQueryParameter: GetTeamByIdQueryParameter,
   ): Promise<GetTeamByIdOutput> {
-    return await this.teamService.getTeamById(getTeamByIdInput);
+    return await this.teamService.getTeamById(getTeamByIdQueryParameter);
   }
 
   @Get('/all/category')
   @ApiOperation({ summary: '특정 카테고리의 팀을 받아온다' })
   async getTeamsByCategory(
-    @Body() getTeamsByCategoryInput: GetTeamsByCategoryInput,
+    @Query('categoryId') categoryId: string,
   ): Promise<GetTeamsOutput> {
-    return await this.teamService.getTeamsByCategory(getTeamsByCategoryInput);
+    return await this.teamService.getTeamsByCategory(categoryId);
   }
 
   @Patch('/all/filter')
