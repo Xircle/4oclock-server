@@ -48,7 +48,6 @@ export class TeamController {
   async getTeamsWithFilter(
     @Body() getTeamsWithFilterInput: GetTeamsWithFilterInput,
   ): Promise<GetTeamsOutput> {
-    console.log(getTeamsWithFilterInput);
-    return { ok: true };
+    return await this.teamService.getTeamsWithFilter(getTeamsWithFilterInput);
   }
 }
