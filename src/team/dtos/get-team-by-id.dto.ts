@@ -7,6 +7,12 @@ export class GetTeamByIdInput {
   userId?: string;
 }
 
+export class GetTeamByIdQueryParameter {
+  teamId?: number;
+
+  userId?: string;
+}
+
 export class GetTeamByIdUserData {
   id: string;
 }
