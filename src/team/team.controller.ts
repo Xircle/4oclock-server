@@ -60,12 +60,14 @@ export class TeamController {
   @Get('/all/filter')
   @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
   async getTeamsWithFilter(
-    @Query('categoryIds', ParseArrayPipe) categoryIds: string[],
-    @Query() getTeamsWithFilterInput: GetTeamsWithFilterInput,
+    @Query() getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    @Query('categoryIds', ParseArrayPipe) categoryIds?: string[],
+    @Query('areaIds', ParseArrayPipe) areaIds?: string[],
   ): Promise<GetTeamsOutput> {
     return await this.teamService.getTeamsWithFilter(
       getTeamsWithFilterInput,
       categoryIds,
+      areaIds,
     );
   }
 }
