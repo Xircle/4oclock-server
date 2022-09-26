@@ -14,6 +14,8 @@ import {
   Patch,
   Param,
   Query,
+  ParseArrayPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -55,11 +57,13 @@ export class TeamController {
     return await this.teamService.getTeamsByCategory(categoryId);
   }
 
-  @Patch('/all/filter')
+  @Get('/all/filter')
   @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
   async getTeamsWithFilter(
-    @Body() getTeamsWithFilterInput: GetTeamsWithFilterInput,
+    @Query('categoryIds', ParseArrayPipe) categoryIds: string[],
+    @Query() getTeamsWithFilterInput: GetTeamsWithFilterInput,
   ): Promise<GetTeamsOutput> {
-    return await this.teamService.getTeamsWithFilter(getTeamsWithFilterInput);
+    console.log(categoryIds);
+    return await this.teamService.getTeamsWithFilter(categoryIds);
   }
 }
