@@ -1,3 +1,4 @@
+import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 
@@ -16,6 +17,12 @@ export class TeamRepository extends Repository<Team> {
 
   public async findManyTeamsV2(
     findManyTeamsV2Input: FindManyTeamsV2Input,
+  ): Promise<Team[]> {
+    return [];
+  }
+
+  public async findTeamsWithFilter(
+    getTeamsWithFilterInput: GetTeamsWithFilterInput,
   ): Promise<Team[]> {
     return [];
   }
