@@ -127,7 +127,7 @@ export class MessageService {
               senderId: authUser.id,
               sentAt: new Date().toString(),
               content: sendMessageInput.content,
-              mainParam: roomId,
+              mainParam: newRoom.id,
             },
           },
         );
