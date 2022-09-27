@@ -209,6 +209,7 @@ export class SocialAuthService {
           profile: {
             id: profile.id,
             thumbnail: profile.profileImageUrl,
+            role: user.role,
           },
         };
       });
@@ -242,6 +243,7 @@ export class SocialAuthService {
             profile: {
               id: user.profile.id,
               thumbnail: user.profile.profileImageUrl,
+              role: user.role,
             },
           },
         };
