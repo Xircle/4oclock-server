@@ -175,6 +175,7 @@ export class AuthDataToFront {
   profile: {
     id: string;
     thumbnail: string;
+    role: string;
   };
 }
 
