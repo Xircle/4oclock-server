@@ -55,12 +55,6 @@ export class UserController {
     return this.userService.me(authUser);
   }
 
-  @Get('me/brief')
-  @ApiOperation({ summary: '유저 개인의 brief 정보 보기' })
-  async meBrief(@GetUser() authUser: User) {
-    return this.userService.meBrief(authUser);
-  }
-
   @Patch('me/verify/:code')
   @ApiOperation({ summary: '유저 활동코드 입력' })
   async VerifyByCode(
