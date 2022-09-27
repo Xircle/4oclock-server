@@ -55,6 +55,14 @@ export class UserService {
     });
   }
 
+  async meBrief(authUser: User): Promise<CoreOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
   async me(authUser: User): Promise<MeOutput> {
     try {
       const reservations = await this.reservationRepository.find({
