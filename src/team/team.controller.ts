@@ -49,7 +49,7 @@ export class TeamController {
   @Get('/all/filter')
   @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
   async getTeamsWithFilter(
-    @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query() getTeamsWithFilterInput?: GetTeamsWithFilterInput,
     @Query(
