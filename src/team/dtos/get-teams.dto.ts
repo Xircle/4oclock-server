@@ -1,3 +1,4 @@
+import { TeamMetaData } from './../interfaces/teams-with-meta';
 import { CoreOutput } from '@common/common.interface';
 
 export class TeamData {
@@ -14,4 +15,6 @@ export class TeamData {
 
 export class GetTeamsOutput extends CoreOutput {
   teams?: TeamData[];
+
+  meta: TeamMetaData;
 }
