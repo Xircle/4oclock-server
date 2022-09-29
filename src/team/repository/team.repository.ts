@@ -23,6 +23,8 @@ export class TeamRepository extends Repository<Team> {
   }
 
   public async findTeamsWithFilter(
+    limit: number,
+    page: number,
     getTeamsWithFilterInput?: GetTeamsWithFilterInput,
     categoryIds?: string[],
     areaIds?: string[],
