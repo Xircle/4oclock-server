@@ -16,6 +16,8 @@ import {
   Query,
   ParseArrayPipe,
   ParseUUIDPipe,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -61,6 +63,8 @@ export class TeamController {
   @Get('/all/filter')
   @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
   async getTeamsWithFilter(
+    @Query('limit', new DefaultValuePipe(8), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query() getTeamsWithFilterInput?: GetTeamsWithFilterInput,
     @Query(
       'categoryIds',
@@ -74,6 +78,8 @@ export class TeamController {
     areaIds?: string[],
   ): Promise<GetTeamsOutput> {
     return await this.teamService.getTeamsWithFilter(
+      limit,
+      page,
       getTeamsWithFilterInput,
       categoryIds,
       areaIds,
