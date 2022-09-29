@@ -27,6 +27,7 @@ import {
 import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { TeamService } from './team.service';
 import { GetTeamsOutput } from './dtos/get-teams.dto';
+import { string } from 'joi';
 
 @ApiTags('Team')
 @ApiOkResponse()
@@ -61,9 +62,18 @@ export class TeamController {
   @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
   async getTeamsWithFilter(
     @Query() getTeamsWithFilterInput?: GetTeamsWithFilterInput,
-    @Query('categoryIds', ParseArrayPipe) categoryIds?: string[],
-    @Query('areaIds', ParseArrayPipe) areaIds?: string[],
+    @Query(
+      'categoryIds',
+      new ParseArrayPipe({ items: String, separator: ',', optional: true }),
+    )
+    categoryIds?: string[],
+    @Query(
+      'areaIds',
+      new ParseArrayPipe({ items: String, separator: ',', optional: true }),
+    )
+    areaIds?: string[],
   ): Promise<GetTeamsOutput> {
+    console.log(categoryIds);
     return await this.teamService.getTeamsWithFilter(
       getTeamsWithFilterInput,
       categoryIds,
