@@ -1,3 +1,4 @@
+import { GetAllTeamTimeOutput } from './dtos/get-all-team-times.dto';
 import { GetTeamsWithFilterInput } from './dtos/get-teams-with-filter.dto';
 import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { CoreOutput } from './../common/common.interface';
@@ -47,9 +48,8 @@ export class TeamController {
   }
 
   @Get('/all-times')
-  async getAllTeamTime(): Promise<CoreOutput> {
-    await this.teamService.getAllTimes();
-    return { ok: true };
+  async getAllTeamTimes(): Promise<GetAllTeamTimeOutput> {
+    return await this.teamService.getAllTimes();
   }
 
   @Get('/all/filter')
