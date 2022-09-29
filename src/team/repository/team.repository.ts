@@ -1,3 +1,4 @@
+import { TeamMetaData } from './../interfaces/teams-with-meta';
 import { UserRepository } from './../../user/repositories/user.repository';
 import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
 import { EntityRepository, Repository } from 'typeorm';
@@ -53,6 +54,20 @@ export class TeamRepository extends Repository<Team> {
       teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
     }
 
+    teamQuery.take(limit).skip((page - 1) * limit);
+
     return teamQuery.getMany();
+  }
+  public async getTeamMetaData(
+    page: number,
+    limit: number,
+  ): Promise<TeamMetaData> {
+    let totalItems = await this.count();
+    totalItems = totalItems > 100 ? 100 : totalItems;
+    const totalPages = Math.floor(totalItems / limit) + 1;
+    return {
+      totalPages,
+      page,
+    };
   }
 }
