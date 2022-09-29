@@ -101,6 +101,8 @@ export class TeamService {
   }
 
   public async getTeamsWithFilter(
+    limit: number,
+    page: number,
     getTeamsWithFilterInput?: GetTeamsWithFilterInput,
     categoryIds?: string[],
     areaIds?: string[],
