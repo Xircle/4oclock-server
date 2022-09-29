@@ -54,6 +54,10 @@ export class TeamRepository extends Repository<Team> {
       teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
     }
 
+    teamQuery.orderBy('start_date', 'DESC');
+    teamQuery.andWhere('is_closed = :isClosed', {
+      isClosed: false,
+    });
     teamQuery.take(limit).skip((page - 1) * limit);
 
     return teamQuery.getMany();
