@@ -71,6 +71,10 @@ export class TeamService {
     }
   }
 
+  public async getAllTimes() {
+    const times = this.teamRepository.getAllTimes();
+  }
+
   public async getTeamsWithFilter(
     limit: number,
     page: number,
