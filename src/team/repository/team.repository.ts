@@ -58,7 +58,7 @@ export class TeamRepository extends Repository<Team> {
     teamQuery.andWhere('is_closed = :isClosed', {
       isClosed: false,
     });
-    teamQuery.take(limit).skip((page - 1) * limit);
+    teamQuery.take(limit).skip(page * limit);
 
     return teamQuery.getMany();
   }
@@ -68,7 +68,7 @@ export class TeamRepository extends Repository<Team> {
   ): Promise<TeamMetaData> {
     let totalItems = await this.count();
     totalItems = totalItems > 100 ? 100 : totalItems;
-    const totalPages = Math.floor(totalItems / limit) + 1;
+    const totalPages = Math.floor(totalItems / limit);
     return {
       totalPages,
       page,
