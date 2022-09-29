@@ -72,7 +72,7 @@ export class ApplicationService {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
       if (editApplicationInput.paid.toLowerCase() === 'true') {
-        this.userRepository.update(
+        await this.userRepository.update(
           {
             id: exists.user_id,
           },
