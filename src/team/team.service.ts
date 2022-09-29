@@ -19,18 +19,6 @@ export class TeamService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  public async getTeams(): Promise<GetTeamsOutput> {
-    try {
-      const teams = await this.teamRepository.findManyTeams();
-      return {
-        ok: true,
-        teams: teams,
-      };
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
-  }
-
   public async getTeamById(
     getTeamByIdQueryParameter: GetTeamByIdQueryParameter = {},
   ): Promise<GetTeamByIdOutput> {
@@ -83,23 +71,6 @@ export class TeamService {
     }
   }
 
-  public async getTeamsByCategory(categoryId: string): Promise<GetTeamsOutput> {
-    try {
-      const teams = await this.teamRepository.find({
-        where: {
-          category_id: categoryId,
-          isClosed: false,
-        },
-        order: {
-          startDate: 'ASC',
-        },
-      });
-      return { ok: true, teams: teams };
-    } catch (error) {
-      return { ok: false, error };
-    }
-  }
-
   public async getTeamsWithFilter(
     limit: number,
     page: number,
@@ -109,6 +80,8 @@ export class TeamService {
   ): Promise<GetTeamsOutput> {
     try {
       const teams = await this.teamRepository.findTeamsWithFilter(
+        limit,
+        page,
         getTeamsWithFilterInput,
         categoryIds,
         areaIds,
