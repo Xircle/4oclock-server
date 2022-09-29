@@ -38,26 +38,12 @@ import { string } from 'joi';
 export class TeamController {
   constructor(private teamService: TeamService) {}
 
-  @Get('/all')
-  @ApiOperation({ summary: '모든 팀 정보' })
-  async all(): Promise<GetTeamsOutput> {
-    return await this.teamService.getTeams();
-  }
-
   @Get('/id')
   @ApiOperation({ summary: '특정 id의 팀을 받아온다' })
   async getTeamById(
     @Query() getTeamByIdQueryParameter: GetTeamByIdQueryParameter,
   ): Promise<GetTeamByIdOutput> {
     return await this.teamService.getTeamById(getTeamByIdQueryParameter);
-  }
-
-  @Get('/all/category')
-  @ApiOperation({ summary: '특정 카테고리의 팀을 받아온다' })
-  async getTeamsByCategory(
-    @Query('categoryId') categoryId: string,
-  ): Promise<GetTeamsOutput> {
-    return await this.teamService.getTeamsByCategory(categoryId);
   }
 
   @Get('/all/filter')
