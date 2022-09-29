@@ -70,4 +70,13 @@ export class Team {
 
   @Column({ default: 30 })
   maxAge: number;
+
+  @Column({ nullable: true })
+  meetingDay: number;
+
+  @Column({ nullable: true })
+  meetingHour: number;
+
+  @Column({ nullable: true })
+  meetingMinute: number;
 }
