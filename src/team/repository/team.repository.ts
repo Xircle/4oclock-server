@@ -4,6 +4,7 @@ import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 import { distinct } from 'rxjs';
+import * as moment from 'moment';
 
 export class FindManyTeamsV2Input {}
 
@@ -22,6 +23,33 @@ export class TeamRepository extends Repository<Team> {
     findManyTeamsV2Input: FindManyTeamsV2Input,
   ): Promise<Team[]> {
     return [];
+  }
+
+  public async closeTeamsWithBL() {
+    await this.createQueryBuilder()
+      .update(Team)
+      .set({ isClosed: true })
+      .where('start_date < :date', { date: moment().toDate() })
+      .execute();
+    await this.createQueryBuilder('teams')
+      .update(Team)
+      .set({ isClosed: true })
+      .where(
+        '(select count(*) from applications a where a.team_id = teams.Id) >= teams.max_participant',
+      )
+      .execute();
+    await this.createQueryBuilder()
+      .update(Team)
+      .set({ isClosed: true })
+      .where('start_date >= :date', { date: moment().toDate() })
+      .execute();
+    await this.createQueryBuilder('teams')
+      .update(Team)
+      .set({ isClosed: true })
+      .where(
+        '(select count(*) from applications a where a.team_id = teams.Id) < teams.max_participant',
+      )
+      .execute();
   }
 
   public async findTeamsWithFilter(
@@ -82,7 +110,10 @@ export class TeamRepository extends Repository<Team> {
       .select('meeting_day', 'meetingDay')
       .addSelect('meeting_hour', 'meetingHour')
       .addSelect('meeting_minute', 'meetingMinute')
+      .where({
+        isClosed: false,
+      })
       .getRawMany();
-    console.log(times);
+    return times;
   }
 }
