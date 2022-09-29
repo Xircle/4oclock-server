@@ -15,6 +15,5 @@ export class TeamData {
 
 export class GetTeamsOutput extends CoreOutput {
   teams?: TeamData[];
-
-  meta: TeamMetaData;
+  meta?: TeamMetaData;
 }
