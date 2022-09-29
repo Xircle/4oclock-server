@@ -46,6 +46,12 @@ export class TeamController {
     return await this.teamService.getTeamById(getTeamByIdQueryParameter);
   }
 
+  @Get('/all-times')
+  async getAllTeamTime(): Promise<CoreOutput> {
+    await this.teamService.getAllTimes();
+    return { ok: true };
+  }
+
   @Get('/all/filter')
   @ApiOperation({ summary: '필터링된 팀들을 받아온다' })
   async getTeamsWithFilter(
