@@ -72,7 +72,12 @@ export class TeamService {
   }
 
   public async getAllTimes() {
-    const times = this.teamRepository.getAllTimes();
+    try {
+      const times = await this.teamRepository.getAllTimes();
+      return { ok: true, data: times };
+    } catch (error) {
+      return { ok: false, error };
+    }
   }
 
   public async getTeamsWithFilter(
@@ -83,6 +88,7 @@ export class TeamService {
     areaIds?: string[],
   ): Promise<GetTeamsOutput> {
     try {
+      await this.teamRepository.closeTeamsWithBL();
       const teams = await this.teamRepository.findTeamsWithFilter(
         limit,
         page,
