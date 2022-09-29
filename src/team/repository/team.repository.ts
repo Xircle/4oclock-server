@@ -3,6 +3,7 @@ import { UserRepository } from './../../user/repositories/user.repository';
 import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
+import { distinct } from 'rxjs';
 
 export class FindManyTeamsV2Input {}
 
@@ -73,5 +74,15 @@ export class TeamRepository extends Repository<Team> {
       totalPages,
       page,
     };
+  }
+
+  public async getAllTimes() {
+    const times = await this.createQueryBuilder('team')
+      .distinctOn(['meeting_day', 'meeting_hour', 'meeting_minute'])
+      .select('meeting_day', 'meetingDay')
+      .addSelect('meeting_hour', 'meetingHour')
+      .addSelect('meeting_minute', 'meetingMinute')
+      .getRawMany();
+    console.log(times);
   }
 }
