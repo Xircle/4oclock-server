@@ -28,7 +28,8 @@ export class PlaceRepository extends Repository<Place> {
     page: number,
     limit: number,
   ): Promise<PlaceMetaData> {
-    const totalItems = await this.count();
+    let totalItems = await this.count();
+    totalItems = totalItems > 100 ? 100 : totalItems;
     const totalPages = Math.floor(totalItems / limit) + 1;
     return {
       totalPages,
