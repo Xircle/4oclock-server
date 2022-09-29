@@ -86,7 +86,11 @@ export class TeamService {
         categoryIds,
         areaIds,
       );
-      return { ok: true, teams: teams };
+      const teamMetadata = await this.teamRepository.getTeamMetaData(
+        page,
+        limit,
+      );
+      return { ok: true, teams: teams, meta: teamMetadata };
     } catch (error) {
       return { ok: false, error };
     }
