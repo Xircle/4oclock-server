@@ -83,10 +83,12 @@ export class TeamRepository extends Repository<Team> {
       teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
     }
 
-    teamQuery.orderBy('start_date', 'DESC');
     teamQuery.andWhere('is_closed = :isClosed', {
       isClosed: false,
     });
+
+    teamQuery.orderBy('start_date', 'DESC');
+    teamQuery.addOrderBy('name', 'ASC');
     teamQuery.take(limit).skip(page * limit);
 
     return teamQuery.getMany();
@@ -97,7 +99,7 @@ export class TeamRepository extends Repository<Team> {
   ): Promise<TeamMetaData> {
     let totalItems = await this.count();
     totalItems = totalItems > 100 ? 100 : totalItems;
-    const totalPages = Math.floor(totalItems / limit);
+    const totalPages = Math.floor(totalItems / limit) + 1;
     return {
       totalPages,
       page,
