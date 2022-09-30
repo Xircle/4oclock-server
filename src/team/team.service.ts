@@ -100,8 +100,6 @@ export class TeamService {
         page,
         limit,
       );
-      console.log(teams);
-      console.log(teamMetadata);
       return { ok: true, teams: teams, meta: teamMetadata };
     } catch (error) {
       return { ok: false, error };
