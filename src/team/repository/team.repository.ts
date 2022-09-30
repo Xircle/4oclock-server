@@ -5,6 +5,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 import { distinct } from 'rxjs';
 import * as moment from 'moment';
+import { ApplicationStatus } from 'application/entities/application.entity';
 
 export class FindManyTeamsV2Input {}
 
@@ -26,30 +27,29 @@ export class TeamRepository extends Repository<Team> {
   }
 
   public async closeTeamsWithBL() {
-    await this.createQueryBuilder()
-      .update(Team)
-      .set({ isClosed: true })
-      .where('start_date < :date', { date: moment().toDate() })
-      .execute();
-    await this.createQueryBuilder('teams')
-      .update(Team)
-      .set({ isClosed: true })
-      .where(
-        '(select count(*) from applications a where a.team_id = teams.Id) >= teams.max_participant',
-      )
-      .execute();
-    await this.createQueryBuilder()
-      .update(Team)
-      .set({ isClosed: false })
-      .where('start_date >= :date', { date: moment().toDate() })
-      .execute();
-    await this.createQueryBuilder('teams')
-      .update(Team)
-      .set({ isClosed: false })
-      .where(
-        '(select count(*) from applications a where a.team_id = teams.Id) < teams.max_participant',
-      )
-      .execute();
+    const teams: Team[] = await this.find({ relations: ['applications'] });
+    console.log(teams[0]);
+    teams.map((team) => {
+      let count = 0;
+      team.applications.map((application) => {
+        if (application.status === ApplicationStatus.Approved) {
+          count++;
+        }
+      });
+      if (team.isClosed) {
+        if (
+          (team.startDate && team.startDate < moment().toDate()) ||
+          count >= team.maxParticipant
+        ) {
+        }
+      } else {
+        if (
+          (!team.startDate || team.startDate >= moment().toDate()) &&
+          count < team.maxParticipant
+        ) {
+        }
+      }
+    });
   }
 
   public async findTeamsWithFilter(
