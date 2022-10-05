@@ -64,6 +64,11 @@ export class TeamController {
     )
     categoryIds?: string[],
     @Query(
+      'times',
+      new ParseArrayPipe({ items: Number, separator: ',', optional: true }),
+    )
+    times?: number[],
+    @Query(
       'areaIds',
       new ParseArrayPipe({ items: String, separator: ',', optional: true }),
     )
@@ -76,6 +81,7 @@ export class TeamController {
       getTeamsWithFilterInput,
       categoryIds,
       areaIds,
+      times,
     );
   }
 }
