@@ -26,7 +26,6 @@ export class GetTeamByIdLeaderData {
 
 export class GetTeamByIdData extends TeamData {
   applications?: ApplicationData[];
-  leader?: GetTeamByIdLeaderData;
 }
 
 export class GetTeamByIdOutput extends CoreOutput {
