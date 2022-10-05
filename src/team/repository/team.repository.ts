@@ -1,3 +1,4 @@
+import { Category } from './../../category/entities/category.entity';
 import { UserProfile } from '@user/entities/user-profile.entity';
 import { User } from '@user/entities/user.entity';
 import { TeamMetaData } from './../interfaces/teams-with-meta';
@@ -65,7 +66,9 @@ export class TeamRepository extends Repository<Team> {
       .select('team.*')
       .addSelect('leader_profile.username', 'leader_username')
       .addSelect('leader_profile.profile_image_url', 'leader_image')
+      .addSelect('category.name', 'category_name')
       .from(UserProfile, 'leader_profile')
+      .addFrom(Category, 'category')
       .where('team.leader_id = leader_profile.fk_user_id');
     if (categoryIds?.length > 0) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
