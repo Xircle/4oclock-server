@@ -75,13 +75,17 @@ export class TeamRepository extends Repository<Team> {
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id');
 
-    teamQuery.andWhere('category_id in (:...categoryIds)', {
-      categoryIds: categoryIds,
-    });
+    if (categoryIds) {
+      teamQuery.andWhere('category_id in (:...categoryIds)', {
+        categoryIds: categoryIds,
+      });
+    }
 
-    teamQuery.andWhere(`meeting_day in (:...meetingDay)`, {
-      meetingDay: times,
-    });
+    if (times) {
+      teamQuery.andWhere(`meeting_day in (:...meetingDay)`, {
+        meetingDay: times,
+      });
+    }
 
     if (getTeamsWithFilterInput?.minAge) {
       teamQuery.andWhere('min_age <= :minAge', {
