@@ -60,7 +60,8 @@ export class TeamRepository extends Repository<Team> {
   public async findTeamsWithFilter(
     limit: number,
     page: number,
-    getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    minAge: number,
+    maxAge: number,
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
@@ -86,16 +87,15 @@ export class TeamRepository extends Repository<Team> {
         meetingDay: times,
       });
     }
-
-    if (getTeamsWithFilterInput?.minAge) {
+    if (minAge !== undefined) {
       teamQuery.andWhere('min_age <= :minAge', {
-        minAge: getTeamsWithFilterInput.minAge,
+        minAge: minAge,
       });
     }
 
-    if (getTeamsWithFilterInput?.maxAge) {
+    if (maxAge !== undefined) {
       teamQuery.andWhere('max_age >= :maxAge', {
-        maxAge: getTeamsWithFilterInput.maxAge,
+        maxAge: maxAge,
       });
     }
 
@@ -116,7 +116,8 @@ export class TeamRepository extends Repository<Team> {
   public async getTeamMetaData(
     page: number,
     limit: number,
-    getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    minAge: number,
+    maxAge: number,
     categoryIds?: string[],
     areaIds?: string[],
   ): Promise<TeamMetaData> {
