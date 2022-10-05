@@ -83,7 +83,8 @@ export class TeamService {
   public async getTeamsWithFilter(
     limit: number,
     page: number,
-    getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    minAge?: number,
+    maxAge?: number,
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
@@ -93,7 +94,8 @@ export class TeamService {
       const teams = await this.teamRepository.findTeamsWithFilter(
         limit,
         page,
-        getTeamsWithFilterInput,
+        minAge,
+        maxAge,
         categoryIds,
         areaIds,
         times,
@@ -101,7 +103,8 @@ export class TeamService {
       const teamMetadata = await this.teamRepository.getTeamMetaData(
         page,
         limit,
-        getTeamsWithFilterInput,
+        minAge,
+        maxAge,
         categoryIds,
         areaIds,
       );
