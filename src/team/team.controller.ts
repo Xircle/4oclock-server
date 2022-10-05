@@ -57,7 +57,8 @@ export class TeamController {
   async getTeamsWithFilter(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query() getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    @Query('minAge', new DefaultValuePipe(10), ParseIntPipe) minAge: number,
+    @Query('maxAge', new DefaultValuePipe(0), ParseIntPipe) maxAge: number,
     @Query(
       'categoryIds',
       new ParseArrayPipe({ items: String, separator: ',', optional: true }),
@@ -74,11 +75,11 @@ export class TeamController {
     )
     areaIds?: string[],
   ): Promise<GetTeamsOutput> {
-    console.log(categoryIds);
     return await this.teamService.getTeamsWithFilter(
       limit,
       page,
-      getTeamsWithFilterInput,
+      minAge,
+      maxAge,
       categoryIds,
       areaIds,
       times,
