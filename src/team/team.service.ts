@@ -86,6 +86,7 @@ export class TeamService {
     getTeamsWithFilterInput?: GetTeamsWithFilterInput,
     categoryIds?: string[],
     areaIds?: string[],
+    times?: number[],
   ): Promise<GetTeamsOutput> {
     try {
       await this.teamRepository.closeTeamsWithBL();
@@ -95,10 +96,14 @@ export class TeamService {
         getTeamsWithFilterInput,
         categoryIds,
         areaIds,
+        times,
       );
       const teamMetadata = await this.teamRepository.getTeamMetaData(
         page,
         limit,
+        getTeamsWithFilterInput,
+        categoryIds,
+        areaIds,
       );
 
       return { ok: true, teams: teams, meta: teamMetadata };
