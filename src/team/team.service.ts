@@ -100,6 +100,7 @@ export class TeamService {
         page,
         limit,
       );
+
       return { ok: true, teams: teams, meta: teamMetadata };
     } catch (error) {
       return { ok: false, error };
