@@ -69,8 +69,11 @@ export class TeamRepository extends Repository<Team> {
       .addSelect('category.name', 'category_name')
       .from(UserProfile, 'leader_profile')
       .addFrom(Category, 'category')
-      .where('team.leader_id = leader_profile.fk_user_id');
+      .where('team.leader_id = leader_profile.fk_user_id')
+      .andWhere('category_id = category.id');
+
     if (categoryIds?.length > 0) {
+      console.log(categoryIds);
       teamQuery.andWhere('category_id in (:...categoryIds)', {
         categoryIds: categoryIds,
       });
