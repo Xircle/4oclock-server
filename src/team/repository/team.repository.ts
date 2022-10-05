@@ -1,3 +1,4 @@
+import { WhereOptions } from './../../place/dtos/get-places.dto';
 import { Category } from './../../category/entities/category.entity';
 import { UserProfile } from '@user/entities/user-profile.entity';
 import { User } from '@user/entities/user.entity';
@@ -8,6 +9,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 import { distinct } from 'rxjs';
 import * as moment from 'moment';
+import { In } from 'typeorm';
 import { ApplicationStatus } from 'application/entities/application.entity';
 
 export class FindManyTeamsV2Input {}
@@ -61,6 +63,7 @@ export class TeamRepository extends Repository<Team> {
     getTeamsWithFilterInput?: GetTeamsWithFilterInput,
     categoryIds?: string[],
     areaIds?: string[],
+    times?: number[],
   ): Promise<Team[]> {
     let teamQuery = await this.createQueryBuilder('team')
       .select('team.*')
@@ -72,12 +75,13 @@ export class TeamRepository extends Repository<Team> {
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id');
 
-    if (categoryIds?.length > 0) {
-      console.log(categoryIds);
-      teamQuery.andWhere('category_id in (:...categoryIds)', {
-        categoryIds: categoryIds,
-      });
-    }
+    teamQuery.andWhere('category_id in (:...categoryIds)', {
+      categoryIds: categoryIds,
+    });
+
+    teamQuery.andWhere(`meeting_day in (:...meetingDay)`, {
+      meetingDay: times,
+    });
 
     if (getTeamsWithFilterInput?.minAge) {
       teamQuery.andWhere('min_age <= :minAge', {
@@ -108,8 +112,11 @@ export class TeamRepository extends Repository<Team> {
   public async getTeamMetaData(
     page: number,
     limit: number,
+    getTeamsWithFilterInput?: GetTeamsWithFilterInput,
+    categoryIds?: string[],
+    areaIds?: string[],
   ): Promise<TeamMetaData> {
-    let totalItems = await this.count();
+    let totalItems = await this.count({});
     totalItems = totalItems > 100 ? 100 : totalItems;
     const totalPages = Math.floor(totalItems / limit) + 1;
     return {
