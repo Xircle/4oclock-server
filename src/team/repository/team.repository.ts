@@ -1,3 +1,5 @@
+import { UserProfile } from '@user/entities/user-profile.entity';
+import { User } from '@user/entities/user.entity';
 import { TeamMetaData } from './../interfaces/teams-with-meta';
 import { UserRepository } from './../../user/repositories/user.repository';
 import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
@@ -28,7 +30,7 @@ export class TeamRepository extends Repository<Team> {
 
   public async closeTeamsWithBL() {
     const teams: Team[] = await this.find({ relations: ['applications'] });
-    console.log(teams[0]);
+
     teams.map((team) => {
       let count = 0;
       team.applications.map((application) => {
@@ -59,8 +61,12 @@ export class TeamRepository extends Repository<Team> {
     categoryIds?: string[],
     areaIds?: string[],
   ): Promise<Team[]> {
-    let teamQuery = await this.createQueryBuilder();
-
+    let teamQuery = await this.createQueryBuilder('team')
+      .select('team.*')
+      .addSelect('leader_profile.username', 'leader_username')
+      .addSelect('leader_profile.profile_image_url', 'leader_image')
+      .from(UserProfile, 'leader_profile')
+      .where('team.leader_id = leader_profile.fk_user_id');
     if (categoryIds?.length > 0) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
         categoryIds: categoryIds,
@@ -91,7 +97,7 @@ export class TeamRepository extends Repository<Team> {
     teamQuery.addOrderBy('name', 'ASC');
     teamQuery.take(limit).skip(page * limit);
 
-    return teamQuery.getMany();
+    return teamQuery.getRawMany();
   }
   public async getTeamMetaData(
     page: number,
