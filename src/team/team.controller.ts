@@ -69,6 +69,7 @@ export class TeamController {
     )
     areaIds?: string[],
   ): Promise<GetTeamsOutput> {
+    console.log(categoryIds);
     return await this.teamService.getTeamsWithFilter(
       limit,
       page,
