@@ -57,8 +57,8 @@ export class TeamController {
   async getTeamsWithFilter(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('minAge', new DefaultValuePipe(10), ParseIntPipe) minAge: number,
-    @Query('maxAge', new DefaultValuePipe(0), ParseIntPipe) maxAge: number,
+    @Query('minAge', new DefaultValuePipe(20), ParseIntPipe) minAge: number,
+    @Query('maxAge', new DefaultValuePipe(30), ParseIntPipe) maxAge: number,
     @Query(
       'categoryIds',
       new ParseArrayPipe({ items: String, separator: ',', optional: true }),
