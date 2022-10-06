@@ -60,8 +60,8 @@ export class TeamRepository extends Repository<Team> {
   public async findTeamsWithFilter(
     limit: number,
     page: number,
-    minAge: number,
-    maxAge: number,
+    minAge?: number,
+    maxAge?: number,
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
@@ -116,8 +116,8 @@ export class TeamRepository extends Repository<Team> {
   public async getTeamMetaData(
     page: number,
     limit: number,
-    minAge: number,
-    maxAge: number,
+    minAge?: number,
+    maxAge?: number,
     categoryIds?: string[],
     areaIds?: string[],
   ): Promise<TeamMetaData> {
