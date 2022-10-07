@@ -63,4 +63,7 @@ export class Application {
 
   @Column({ default: false })
   isCanceled: boolean;
+
+  @Column()
+  image: string;
 }
