@@ -46,6 +46,7 @@ export class ApplicationService {
         const application = this.applicationRepository.create({
           team_id: teamId,
           user_id: authUser.id,
+          image: authUser.profile.profileImageUrl,
         });
         await this.applicationRepository.save(application);
       }
