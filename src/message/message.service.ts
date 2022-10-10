@@ -8,7 +8,6 @@ import { MessageRepository } from './repository/message.repository';
 import { SendMessageInput, SendMessageOutput } from './dtos/send-message.dto';
 import { GetRoomsMessagesOutput } from './dtos/get-rooms-messages.dto';
 import { isUnreadMessageOutput } from './dtos/is-unread-message.dto';
-import * as admin from 'firebase-admin';
 
 @Injectable()
 export class MessageService {
