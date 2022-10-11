@@ -15,6 +15,7 @@ export class TeamData {
   minAge?: number;
   maxAge?: number;
   leader?: User | GetTeamByIdLeaderData;
+  price?: number;
 }
 
 export class GetTeamsOutput extends CoreOutput {
