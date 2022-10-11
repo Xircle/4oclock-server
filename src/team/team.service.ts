@@ -61,6 +61,7 @@ export class TeamService {
           images: team.images,
           applications: team.applications,
           leader: leaderData,
+          price: team.price,
         },
       };
     } catch (error) {
