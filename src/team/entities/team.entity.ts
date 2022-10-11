@@ -44,6 +44,9 @@ export class Team {
   endDate?: Date;
 
   @Column({ nullable: true })
+  price?: number;
+
+  @Column({ nullable: true })
   description?: string;
 
   @Column('varchar', { array: true, nullable: true, length: 511 })
