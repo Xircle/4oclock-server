@@ -54,7 +54,7 @@ export class Application {
   paid: boolean;
 
   @Column({ nullable: true })
-  intro?: string;
+  content?: string;
 
   @Column('timestamptz')
   @CreateDateColumn()
