@@ -53,6 +53,9 @@ export class Application {
   @Column('boolean', { default: false })
   paid: boolean;
 
+  @Column({ nullable: true })
+  intro?: string;
+
   @Column('timestamptz')
   @CreateDateColumn()
   createdAt: Date;
