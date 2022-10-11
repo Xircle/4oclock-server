@@ -1,36 +1,24 @@
 import { GetAllTeamTimeOutput } from './dtos/get-all-team-times.dto';
-import { GetTeamsWithFilterInput } from './dtos/get-teams-with-filter.dto';
-import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
-import { CoreOutput } from './../common/common.interface';
 import {
-  GetTeamByIdInput,
   GetTeamByIdOutput,
   GetTeamByIdQueryParameter,
 } from './dtos/get-team-by-id.dto';
 import {
   Controller,
-  UseGuards,
   Get,
-  Body,
-  Patch,
-  Param,
   Query,
   ParseArrayPipe,
-  ParseUUIDPipe,
   DefaultValuePipe,
   ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
-  ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { TeamService } from './team.service';
-import { GetTeamsOutput } from './dtos/get-teams.dto';
-import { string } from 'joi';
+import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
 
 @ApiTags('Team')
 @ApiOkResponse()
@@ -84,5 +72,10 @@ export class TeamController {
       areaIds,
       times,
     );
+  }
+  @Get('/all')
+  @ApiOperation({ summary: '모든' })
+  async getTeams(): Promise<GetTeamsNotPagination> {
+    return await this.teamService.getAllTeams();
   }
 }
