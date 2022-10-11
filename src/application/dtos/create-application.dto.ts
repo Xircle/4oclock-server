@@ -15,4 +15,8 @@ export class CreateApplicationInput {
 
   @IsNotEmpty()
   teamId: number;
+
+  @IsString()
+  @IsOptional()
+  content?: string;
 }
