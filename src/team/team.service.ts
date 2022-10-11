@@ -9,7 +9,7 @@ import {
 } from './dtos/get-team-by-id.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
-import { GetTeamsOutput } from './dtos/get-teams.dto';
+import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
 import { CannotAttachTreeChildrenEntityError } from 'typeorm';
 
 @Injectable()
@@ -62,6 +62,9 @@ export class TeamService {
           applications: team.applications,
           leader: leaderData,
           price: team.price,
+          meetingDay: team.meetingDay,
+          meetingHour: team.meetingHour,
+          maxParticipant: team.maxParticipant,
         },
       };
     } catch (error) {
@@ -76,6 +79,18 @@ export class TeamService {
     try {
       const times = await this.teamRepository.getAllTimes();
       return { ok: true, data: times };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
+
+  public async getAllTeams(): Promise<GetTeamsNotPagination> {
+    try {
+      const teams = await this.teamRepository.find();
+      return {
+        ok: true,
+        teams,
+      };
     } catch (error) {
       return { ok: false, error };
     }
