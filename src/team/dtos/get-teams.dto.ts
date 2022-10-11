@@ -16,9 +16,16 @@ export class TeamData {
   maxAge?: number;
   leader?: User | GetTeamByIdLeaderData;
   price?: number;
+  meetingHour?: number;
+  meetingDay?: number;
+  maxParticipant?: number;
 }
 
 export class GetTeamsOutput extends CoreOutput {
   teams?: TeamData[];
   meta?: TeamMetaData;
+}
+
+export class GetTeamsNotPagination extends CoreOutput {
+  teams?: TeamData[];
 }
