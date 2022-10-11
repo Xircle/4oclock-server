@@ -54,9 +54,8 @@ export class ApplicationService {
       return {
         ok: true,
       };
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
+    } catch (error) {
+      return { ok: false, error };
     }
   }
 
