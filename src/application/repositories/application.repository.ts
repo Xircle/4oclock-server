@@ -16,7 +16,7 @@ export class ApplicationRepository extends Repository<Application> {
       where: {
         user_id: userId,
         status: status,
-        isCanceled: false,
+        isCanceled: isCanceled,
       },
       order: {
         createdAt: 'DESC',
