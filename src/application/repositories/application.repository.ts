@@ -74,6 +74,7 @@ export class ApplicationRepository extends Repository<Application> {
         appliedAt: approved.createdAt,
         isCanceled: approved.isCanceled,
         paid: approved.paid,
+        teamImage: approved.team.images[0],
       });
     }
 
@@ -86,6 +87,7 @@ export class ApplicationRepository extends Repository<Application> {
         appliedAt: disapproved.createdAt,
         isCanceled: disapproved.isCanceled,
         paid: disapproved.paid,
+        teamImage: disapproved.team.images[0],
       });
     }
 
@@ -98,6 +100,7 @@ export class ApplicationRepository extends Repository<Application> {
         appliedAt: pending.createdAt,
         isCanceled: pending.isCanceled,
         paid: pending.paid,
+        teamImage: pending.team.images[0],
       });
     }
 
@@ -110,6 +113,7 @@ export class ApplicationRepository extends Repository<Application> {
         appliedAt: enrolled.createdAt,
         isCanceled: enrolled.isCanceled,
         paid: enrolled.paid,
+        teamImage: enrolled.team.images[0],
       });
     }
 
