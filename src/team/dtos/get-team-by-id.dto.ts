@@ -3,13 +3,16 @@ import { TeamData } from './get-teams.dto';
 import { CoreOutput } from './../../common/common.interface';
 export class GetTeamByIdInput {
   teamId?: number;
-
   userId?: string;
+}
+
+export class MinMaxAge {
+  minAge: number;
+  maxAge: number;
 }
 
 export class GetTeamByIdQueryParameter {
   teamId?: number;
-
   userId?: string;
 }
 
