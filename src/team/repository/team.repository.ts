@@ -1,15 +1,9 @@
-import { WhereOptions } from './../../place/dtos/get-places.dto';
 import { Category } from './../../category/entities/category.entity';
 import { UserProfile } from '@user/entities/user-profile.entity';
-import { User } from '@user/entities/user.entity';
 import { TeamMetaData } from './../interfaces/teams-with-meta';
-import { UserRepository } from './../../user/repositories/user.repository';
-import { GetTeamsWithFilterInput } from './../dtos/get-teams-with-filter.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
-import { distinct } from 'rxjs';
 import * as moment from 'moment';
-import { In } from 'typeorm';
 import { ApplicationStatus } from 'application/entities/application.entity';
 
 export class FindManyTeamsV2Input {}
@@ -43,15 +37,17 @@ export class TeamRepository extends Repository<Team> {
       });
       if (team.isClosed) {
         if (
-          (team.startDate && team.startDate < moment().toDate()) ||
-          count >= team.maxParticipant
-        ) {
-        }
-      } else {
-        if (
           (!team.startDate || team.startDate >= moment().toDate()) &&
           count < team.maxParticipant
         ) {
+          this.update({ id: team.id }, { isClosed: false });
+        }
+      } else {
+        if (
+          (team.startDate && team.startDate < moment().toDate()) ||
+          count >= team.maxParticipant
+        ) {
+          this.update({ id: team.id }, { isClosed: true });
         }
       }
     });
@@ -75,6 +71,7 @@ export class TeamRepository extends Repository<Team> {
       .addFrom(Category, 'category')
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id');
+    //.andWhere('season = 2');
 
     if (categoryIds) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
@@ -128,6 +125,10 @@ export class TeamRepository extends Repository<Team> {
       totalPages,
       page,
     };
+  }
+
+  public async getMyTeamsLeader(userId: string) {
+    //await this.
   }
 
   public async getAllTimes() {
