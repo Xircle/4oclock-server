@@ -161,30 +161,9 @@ export class UserService {
 
   async getMyApplications(authUser: User): Promise<GetMyApplicationsOutput> {
     try {
-      const applications = await this.applicationRepository.find({
-        where: {
-          user_id: authUser.id,
-        },
-        order: {
-          createdAt: 'DESC',
-        },
-        relations: ['team'],
-      });
-      console.log(applications);
-
-      const historyApplications: MyApplication[] = [];
-      for (let application of applications) {
-        historyApplications.push({
-          id: application.id,
-          teamName: application.team.name,
-          status: application.status,
-          teamId: application.team.id,
-          appliedAt: application.createdAt,
-          isCanceled: application.isCanceled,
-          paid: application.paid,
-        });
-      }
-      return { ok: true, application: historyApplications };
+      const applications =
+        await this.applicationRepository.findApplicationsByStatus(authUser.id);
+      return { ok: true, applications };
     } catch (error) {
       return { ok: false, error };
     }
