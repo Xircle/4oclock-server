@@ -3,15 +3,7 @@ import {
   MyApplicationsByStatus,
 } from './../../user/dtos/get-my-applications.dto';
 import { Application, ApplicationStatus } from '../entities/application.entity';
-import {
-  DeepPartial,
-  EntityManager,
-  EntityRepository,
-  FindConditions,
-  FindManyOptions,
-  Repository,
-} from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
