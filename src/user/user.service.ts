@@ -367,6 +367,8 @@ export class UserService {
     return { ok: true };
   }
 
+  async getMyTeamsLeader(authUser: User) {}
+
   async verifyUserByCode(authUser: User, code: string): Promise<CoreOutput> {
     try {
       const correctCrewCode = '친구';
