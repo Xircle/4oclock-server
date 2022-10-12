@@ -1,8 +1,6 @@
-import { BadRequestException } from '@nestjs/common';
 import { ApplicationStatus } from '../entities/application.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
 
 export class CreateApplicationInput {
   @ApiProperty({
