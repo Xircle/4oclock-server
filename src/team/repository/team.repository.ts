@@ -1,7 +1,8 @@
+import { MinMaxAge } from './../dtos/get-team-by-id.dto';
 import { Category } from './../../category/entities/category.entity';
 import { UserProfile } from '@user/entities/user-profile.entity';
 import { TeamMetaData } from './../interfaces/teams-with-meta';
-import { EntityRepository, Repository } from 'typeorm';
+import { Brackets, EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 import * as moment from 'moment';
 import { ApplicationStatus } from 'application/entities/application.entity';
@@ -56,8 +57,7 @@ export class TeamRepository extends Repository<Team> {
   public async findTeamsWithFilter(
     limit: number,
     page: number,
-    minAge?: number,
-    maxAge?: number,
+    ages?: MinMaxAge[],
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
@@ -84,16 +84,24 @@ export class TeamRepository extends Repository<Team> {
         meetingDay: times,
       });
     }
-    if (minAge !== undefined) {
-      teamQuery.andWhere('min_age <= :minAge', {
-        minAge: minAge,
-      });
-    }
-
-    if (maxAge !== undefined) {
-      teamQuery.andWhere('max_age >= :maxAge', {
-        maxAge: maxAge,
-      });
+    if (ages?.length > 0) {
+      teamQuery.andWhere(
+        new Brackets((qb) => {
+          ages.forEach((item, idx) => {
+            qb.orWhere(
+              new Brackets((qb2) => {
+                qb2
+                  .andWhere('min_age >= :minAge' + idx, {
+                    ['minAge' + idx]: item.minAge,
+                  })
+                  .andWhere('max_age <= :maxAge' + idx, {
+                    ['maxAge' + idx]: item.maxAge,
+                  });
+              }),
+            );
+          });
+        }),
+      );
     }
 
     if (areaIds?.length > 0) {
@@ -113,8 +121,7 @@ export class TeamRepository extends Repository<Team> {
   public async getTeamMetaData(
     page: number,
     limit: number,
-    minAge?: number,
-    maxAge?: number,
+    ages?: MinMaxAge[],
     categoryIds?: string[],
     areaIds?: string[],
   ): Promise<TeamMetaData> {
