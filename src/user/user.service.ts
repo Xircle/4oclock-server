@@ -367,7 +367,18 @@ export class UserService {
     return { ok: true };
   }
 
-  async getMyTeamsLeader(authUser: User) {}
+  async getMyTeamsLeader(authUser: User) {
+    try {
+      const teams = this.teamRepository.find({ leader_id: authUser.id });
+
+      return {
+        ok: true,
+        teams: teams,
+      };
+    } catch (error) {
+      return { ok: false, error };
+    }
+  }
 
   async verifyUserByCode(authUser: User, code: string): Promise<CoreOutput> {
     try {
