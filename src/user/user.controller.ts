@@ -38,6 +38,7 @@ import { JwtAuthGuard } from '@auth/guard/jwt-auth.guard';
 import { GetUser } from '@auth/decorators/get-user.decorator';
 import { CoreOutput } from '@common/common.interface';
 import { GetPointOutput } from './dtos/get-point.dto';
+import { Roles } from '@auth/roles.decorator';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')
@@ -137,6 +138,13 @@ export class UserController {
     @GetUser() authUser: User,
   ): Promise<GetMyApplicationsOutput> {
     return this.userService.getMyApplications(authUser);
+  }
+
+  @Get('leader/myteams')
+  @Roles(['Owner'])
+  @ApiOperation({ summary: '유저가 담당하는 팀들 조회' })
+  async getMyTeamsLeader(@GetUser() authUser: User) {
+    return this.userService.getMyTeamsLeader(authUser);
   }
 
   @Get('point')
