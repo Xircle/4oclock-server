@@ -9,6 +9,7 @@ export class MyApplication {
   teamName: string;
   isCanceled: boolean;
   paid?: boolean;
+  teamImage: string;
 }
 
 export class MyApplicationsByStatus {
