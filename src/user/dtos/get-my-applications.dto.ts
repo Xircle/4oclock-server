@@ -11,6 +11,13 @@ export class MyApplication {
   paid?: boolean;
 }
 
+export class MyApplicationsByStatus {
+  approveds?: MyApplication[];
+  pendings?: MyApplication[];
+  disapproveds?: MyApplication[];
+  enrolleds?: MyApplication[];
+}
+
 export class GetMyApplicationsOutput extends CoreOutput {
-  application?: MyApplication[];
+  applications?: MyApplicationsByStatus;
 }
