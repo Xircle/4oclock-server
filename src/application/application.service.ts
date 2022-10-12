@@ -5,8 +5,7 @@ import { CreateApplicationInput } from './dtos/create-application.dto';
 import { User } from '@user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
 import { ApplicationRepository } from './repositories/application.repository';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ApplicationStatus } from './entities/application.entity';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ApplicationService {
@@ -71,7 +70,7 @@ export class ApplicationService {
       if (!exists) {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
-      if (editApplicationInput.paid.toLowerCase() === 'true') {
+      if (editApplicationInput.paid?.toLowerCase() === 'true') {
         await this.userRepository.update(
           {
             id: exists.user_id,
@@ -96,12 +95,12 @@ export class ApplicationService {
             editApplicationInput.isCanceled === undefined ||
             editApplicationInput.isCanceled === null
               ? exists.isCanceled
-              : editApplicationInput.isCanceled.toLowerCase() === 'true',
+              : editApplicationInput.isCanceled?.toLowerCase() === 'true',
           paid:
             editApplicationInput.paid === undefined ||
             editApplicationInput.paid === null
               ? exists.paid
-              : editApplicationInput.paid.toLowerCase() === 'true',
+              : editApplicationInput.paid?.toLowerCase() === 'true',
         },
       );
 
