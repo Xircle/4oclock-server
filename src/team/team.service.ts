@@ -6,6 +6,7 @@ import {
   GetTeamByIdOutput,
   GetTeamByIdLeaderData,
   GetTeamByIdQueryParameter,
+  MinMaxAge,
 } from './dtos/get-team-by-id.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
@@ -99,8 +100,7 @@ export class TeamService {
   public async getTeamsWithFilter(
     limit: number,
     page: number,
-    minAge?: number,
-    maxAge?: number,
+    ages?: MinMaxAge[],
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
@@ -110,8 +110,7 @@ export class TeamService {
       const teams = await this.teamRepository.findTeamsWithFilter(
         limit,
         page,
-        minAge,
-        maxAge,
+        ages,
         categoryIds,
         areaIds,
         times,
@@ -119,8 +118,7 @@ export class TeamService {
       const teamMetadata = await this.teamRepository.getTeamMetaData(
         page,
         limit,
-        minAge,
-        maxAge,
+        ages,
         categoryIds,
         areaIds,
       );
