@@ -371,7 +371,7 @@ export class UserService {
         where: {
           leader_id: authUser.id,
         },
-        relations: ['applications'],
+        relations: ['users'],
       });
       let teams: MyTeamsLeader[] = [];
 
@@ -380,7 +380,7 @@ export class UserService {
           teamId: team.id,
           teamImage: team.images[0],
           name: team.name,
-          count: team.applications.length,
+          count: team.users.length,
           total: team.maxParticipant,
         });
       }
