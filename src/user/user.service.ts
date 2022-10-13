@@ -29,7 +29,7 @@ import { CronJob } from 'cron';
 import * as moment from 'moment';
 import { GetPointOutput } from './dtos/get-point.dto';
 import {
-  GetMyTeamsLeader,
+  GetMyTeamsLeaderOutput,
   MyTeamsLeader,
 } from './dtos/get-my-teams-leader.dto';
 
@@ -371,10 +371,13 @@ export class UserService {
     return { ok: true };
   }
 
-  async getMyTeamsLeader(authUser: User): Promise<GetMyTeamsLeader> {
+  async getMyTeamsLeader(authUser: User): Promise<GetMyTeamsLeaderOutput> {
     try {
       const teamsFromRepository = await this.teamRepository.find({
-        leader_id: authUser.id,
+        where: {
+          leader_id: authUser.id,
+        },
+        relations: ['applications'],
       });
       let teams: MyTeamsLeader[] = [];
 
@@ -383,6 +386,8 @@ export class UserService {
           teamId: team.id,
           teamImage: team.images[0],
           name: team.name,
+          count: team.applications.length,
+          total: team.maxParticipant,
         });
       }
       return {
