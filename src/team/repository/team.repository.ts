@@ -1,3 +1,5 @@
+import { CreateTeamInput } from './../dtos/create-team.dto';
+import { User } from './../../user/entities/user.entity';
 import { MinMaxAge } from './../dtos/get-team-by-id.dto';
 import { Category } from './../../category/entities/category.entity';
 import { UserProfile } from '@user/entities/user-profile.entity';
@@ -151,4 +153,10 @@ export class TeamRepository extends Repository<Team> {
       .getRawMany();
     return times;
   }
+
+  public async createTeam(
+    authUser: User,
+    createTeamInput: CreateTeamInput,
+    imageUrls: string[],
+  ) {}
 }
