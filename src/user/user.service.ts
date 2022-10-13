@@ -1,15 +1,11 @@
-import {
-  GetMyApplicationsOutput,
-  MyApplication,
-} from './dtos/get-my-applications.dto';
+import { GetMyApplicationsOutput } from './dtos/get-my-applications.dto';
 import { ApplicationRepository } from './../application/repositories/application.repository';
-import { Reservation } from '@reservation/entities/reservation.entity';
 import { TeamRepository } from './../team/repository/team.repository';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { PlaceRepository } from './../place/repository/place.repository';
 import * as _ from 'lodash';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { getManager, MoreThan, Repository } from 'typeorm';
+import { getManager, MoreThan } from 'typeorm';
 import { UserProfile } from './entities/user-profile.entity';
 import { EditProfileInput, EditPlaceQueryParam } from './dtos/edit-profile.dto';
 import { SeeUserByIdOutput } from './dtos/see-user-by-id.dto';
@@ -25,8 +21,6 @@ import { MeOutput } from './dtos/me.dto';
 import { S3Service } from '@aws/s3/s3.service';
 import { CoreOutput } from '@common/common.interface';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
-import { CronJob } from 'cron';
-import * as moment from 'moment';
 import { GetPointOutput } from './dtos/get-point.dto';
 import {
   GetMyTeamsLeaderOutput,
