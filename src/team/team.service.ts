@@ -1,3 +1,4 @@
+import { CoreOutput } from './../common/common.interface';
 import { UserRepository } from './../user/repositories/user.repository';
 import {
   GetTeamByIdOutput,
@@ -90,6 +91,17 @@ export class TeamService {
       };
     } catch (error) {
       return { ok: false, error };
+    }
+  }
+
+  public async createTeam(): Promise<CoreOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
     }
   }
 
