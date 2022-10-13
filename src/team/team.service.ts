@@ -105,13 +105,13 @@ export class TeamService {
   ): Promise<CoreOutput> {
     try {
       const { images } = files;
-
       const imageS3Urls: string[] = [];
-      if (images)
+      if (images) {
         for (const image of images) {
           const s3_url = await this.s3Service.uploadToS3(image, authUser.id);
           imageS3Urls.push(s3_url);
         }
+      }
 
       await this.teamRepository.createTeam(
         authUser,
