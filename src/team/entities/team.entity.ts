@@ -38,7 +38,7 @@ export class Team {
   applications?: Application[];
 
   @Column({ nullable: true })
-  startDate?: Date;
+  startDate: Date;
 
   @Column({ nullable: true })
   endDate?: Date;
@@ -48,6 +48,9 @@ export class Team {
 
   @Column({ nullable: true })
   description?: string;
+
+  @Column({ nullable: true })
+  area_info?: string;
 
   @Column('varchar', { array: true, nullable: true, length: 511 })
   images?: string[];
