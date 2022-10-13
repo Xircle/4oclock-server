@@ -6,6 +6,8 @@ import { User } from '@user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
 import { ApplicationRepository } from './repositories/application.repository';
 import { Injectable } from '@nestjs/common';
+import { ApplicationStatus } from './entities/application.entity';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class ApplicationService {
@@ -70,7 +72,7 @@ export class ApplicationService {
       if (!exists) {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
-      if (editApplicationInput.paid?.toLowerCase() === 'true') {
+      if (editApplicationInput.status === ApplicationStatus.Approved) {
         await this.userRepository.update(
           {
             id: exists.user_id,
@@ -103,6 +105,24 @@ export class ApplicationService {
               : editApplicationInput.paid?.toLowerCase() === 'true',
         },
       );
+      if (editApplicationInput.status === ApplicationStatus.Approved) {
+        await this.userRepository.update(
+          {
+            id: exists.user_id,
+          },
+          {
+            team_id: exists.team_id,
+          },
+        );
+        // approved 시 다 켄슬하기
+        await this.applicationRepository.update(
+          {
+            user_id: exists.user_id,
+            team_id: Not(exists.team_id),
+          },
+          { isCanceled: true },
+        );
+      }
 
       return { ok: true };
     } catch (error) {
