@@ -1,3 +1,4 @@
+import { Gender } from './../../user/entities/user-profile.entity';
 import { Team } from 'team/entities/team.entity';
 import { User } from '../../user/entities/user.entity';
 import {
@@ -39,6 +40,9 @@ export class Application {
 
   @Column('uuid')
   user_id: string;
+
+  @Column({ type: 'enum', enum: Gender })
+  gender: Gender;
 
   @ManyToOne((type) => Team, {
     onDelete: 'CASCADE',
