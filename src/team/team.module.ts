@@ -1,3 +1,4 @@
+import { UserProfileRepository } from './../user/repositories/user-profile.repository';
 import { AuthModule } from './../auth/auth.module';
 import { S3Service } from './../aws/s3/s3.service';
 import { UserRepository } from './../user/repositories/user.repository';
@@ -10,7 +11,12 @@ import { Team } from './entities/team.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TeamRepository, Team, UserRepository]),
+    TypeOrmModule.forFeature([
+      TeamRepository,
+      Team,
+      UserRepository,
+      UserProfileRepository,
+    ]),
     AuthModule,
   ],
 
