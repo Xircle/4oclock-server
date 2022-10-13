@@ -1,17 +1,13 @@
-import { GetTeamsWithFilterInput } from './dtos/get-teams-with-filter.dto';
-import { GetTeamsByCategoryInput } from './dtos/get-teams-by-category.dto';
 import { UserRepository } from './../user/repositories/user.repository';
 import {
-  GetTeamByIdInput,
   GetTeamByIdOutput,
   GetTeamByIdLeaderData,
   GetTeamByIdQueryParameter,
   MinMaxAge,
 } from './dtos/get-team-by-id.dto';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
-import { CannotAttachTreeChildrenEntityError } from 'typeorm';
 
 @Injectable()
 export class TeamService {
