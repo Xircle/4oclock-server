@@ -5,6 +5,7 @@ export class ApplicantProfiles {
   username: string;
   gender: Gender;
   age: number;
+  applicationId: string;
 }
 
 export class GetTeamApplicationsOutput extends CoreOutput {
