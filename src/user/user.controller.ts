@@ -39,6 +39,7 @@ import { GetUser } from '@auth/decorators/get-user.decorator';
 import { CoreOutput } from '@common/common.interface';
 import { GetPointOutput } from './dtos/get-point.dto';
 import { Roles } from '@auth/roles.decorator';
+import { GetMyTeamsLeader } from './dtos/get-my-teams-leader.dto';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')
@@ -143,7 +144,7 @@ export class UserController {
   @Get('leader/myteams')
   @Roles(['Owner'])
   @ApiOperation({ summary: '유저가 담당하는 팀들 조회' })
-  async getMyTeamsLeader(@GetUser() authUser: User) {
+  async getMyTeamsLeader(@GetUser() authUser: User): Promise<GetMyTeamsLeader> {
     return this.userService.getMyTeamsLeader(authUser);
   }
 
