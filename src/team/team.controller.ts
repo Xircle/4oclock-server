@@ -1,3 +1,6 @@
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
+import { User } from './../user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
 import { GetAllTeamTimeOutput } from './dtos/get-all-team-times.dto';
 import {
@@ -13,15 +16,20 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   Patch,
+  Body,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiOperation,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { TeamService } from './team.service';
 import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
+import { GetUser } from '@auth/decorators/get-user.decorator';
 
 @ApiTags('Team')
 @ApiOkResponse()
@@ -86,7 +94,20 @@ export class TeamController {
 
   @Patch('/create')
   @ApiOperation({ summary: '팀 생성' })
-  async createTeam(): Promise<CoreOutput> {
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      {
+        name: 'images',
+        maxCount: 16,
+      },
+    ]),
+  )
+  async createTeam(
+    @GetUser() authUser: User,
+    @Body() createPlaceInput: CreateTeamInput,
+    @UploadedFiles() files: TeamPhotoInput,
+  ): Promise<CoreOutput> {
     return this.teamService.createTeam();
   }
 }
