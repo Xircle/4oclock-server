@@ -19,6 +19,7 @@ import {
   Body,
   UploadedFiles,
   UseInterceptors,
+  Post,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -92,7 +93,7 @@ export class TeamController {
     return await this.teamService.getAllTeams();
   }
 
-  @Patch('/create')
+  @Post('/create')
   @ApiOperation({ summary: '팀 생성' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
@@ -105,9 +106,11 @@ export class TeamController {
   )
   async createTeam(
     @GetUser() authUser: User,
-    @Body() createPlaceInput: CreateTeamInput,
+    @Body() createTeamInput: CreateTeamInput,
     @UploadedFiles() files: TeamPhotoInput,
   ): Promise<CoreOutput> {
-    return this.teamService.createTeam();
+    console.log(createTeamInput + '------');
+    console.log(files);
+    return this.teamService.createTeam(authUser, createTeamInput, files);
   }
 }
