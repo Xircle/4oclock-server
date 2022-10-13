@@ -112,8 +112,6 @@ export class TeamController {
     @Body() createTeamInput: CreateTeamInput,
     @UploadedFiles() files: TeamPhotoInput,
   ): Promise<CoreOutput> {
-    console.log(createTeamInput + '------');
-    console.log(files);
     return this.teamService.createTeam(authUser, createTeamInput, files);
   }
 }
