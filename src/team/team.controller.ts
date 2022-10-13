@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
 import { User } from './../user/entities/user.entity';
@@ -20,6 +21,7 @@ import {
   UploadedFiles,
   UseInterceptors,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -104,6 +106,7 @@ export class TeamController {
       },
     ]),
   )
+  @UseGuards(JwtAuthGuard)
   async createTeam(
     @GetUser() authUser: User,
     @Body() createTeamInput: CreateTeamInput,
