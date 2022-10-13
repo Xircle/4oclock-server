@@ -4,8 +4,10 @@ export class MyTeamsLeader {
   teamId: number;
   teamImage?: string;
   name: string;
+  total: number;
+  count: number;
 }
 
-export class GetMyTeamsLeader extends CoreOutput {
+export class GetMyTeamsLeaderOutput extends CoreOutput {
   teams?: MyTeamsLeader[];
 }
