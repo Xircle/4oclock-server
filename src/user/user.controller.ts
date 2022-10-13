@@ -1,7 +1,6 @@
 import { GetMyApplicationsOutput } from './dtos/get-my-applications.dto';
 import {
   Body,
-  CacheInterceptor,
   ClassSerializerInterceptor,
   Controller,
   Delete,
