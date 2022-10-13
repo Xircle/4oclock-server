@@ -28,6 +28,7 @@ export class CreateTeamInput {
   @IsString()
   @IsOptional()
   leaderPhoneNumber?: string;
+
   @IsString()
   @IsOptional()
   areaInfo?: string;
@@ -50,6 +51,8 @@ export class CreateTeamInput {
   @IsNumber()
   @IsOptional()
   maxAge?: number;
+
+  category_id: string;
 
   @IsNumber()
   @IsOptional()
