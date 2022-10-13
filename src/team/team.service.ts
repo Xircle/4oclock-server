@@ -1,3 +1,4 @@
+import { GetTeamApplicationsOutput } from './dtos/get-team-applications';
 import { UserProfileRepository } from './../user/repositories/user-profile.repository';
 import { UserProfile } from './../user/entities/user-profile.entity';
 import { S3Service } from './../aws/s3/s3.service';
@@ -132,6 +133,22 @@ export class TeamService {
         imageS3Urls,
       );
       return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
+    }
+  }
+
+  public async getTeamApplicationsForLeader(
+    authUser: User,
+    teamId: number,
+  ): Promise<GetTeamApplicationsOutput> {
+    try {
+      return {
+        ok: true,
+      };
     } catch (error) {
       return {
         ok: false,
