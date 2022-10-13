@@ -1,3 +1,6 @@
+import { S3Service } from './../aws/s3/s3.service';
+import { User } from './../user/entities/user.entity';
+import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
 import { CoreOutput } from './../common/common.interface';
 import { UserRepository } from './../user/repositories/user.repository';
 import {
@@ -15,6 +18,7 @@ export class TeamService {
   constructor(
     private teamRepository: TeamRepository,
     private readonly userRepository: UserRepository,
+    private s3Service: S3Service,
   ) {}
 
   public async getTeamById(
@@ -95,11 +99,25 @@ export class TeamService {
   }
 
   public async createTeam(
-    authUser,
-    createTeamInput,
-    files,
+    authUser: User,
+    createTeamInput: CreateTeamInput,
+    files: TeamPhotoInput,
   ): Promise<CoreOutput> {
     try {
+      const { images } = files;
+
+      const imageS3Urls: string[] = [];
+      if (images)
+        for (const image of images) {
+          const s3_url = await this.s3Service.uploadToS3(image, authUser.id);
+          imageS3Urls.push(s3_url);
+        }
+
+      await this.teamRepository.createTeam(
+        authUser,
+        createTeamInput,
+        imageS3Urls,
+      );
       return { ok: true };
     } catch (error) {
       return {
