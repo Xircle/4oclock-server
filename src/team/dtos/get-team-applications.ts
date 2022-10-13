@@ -8,7 +8,7 @@ export class ApplicantProfiles {
   applicationId: string;
 }
 
-export class GetTeamApplicationsOutput extends CoreOutput {
+export class GetTeamApplications {
   maxParticipant: number;
   curCount: number;
   maleApproveCount: number;
@@ -17,4 +17,8 @@ export class GetTeamApplicationsOutput extends CoreOutput {
   femaleApplyCount: number;
   pendingApplicantProfiles: ApplicantProfiles[];
   approvedApplicantProfiles: ApplicantProfiles[];
+}
+
+export class GetTeamApplicationsOutput extends CoreOutput {
+  data?: GetTeamApplications;
 }
