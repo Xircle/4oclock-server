@@ -1,3 +1,4 @@
+import { GetTeamApplicationsOutput } from './dtos/get-team-applications';
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
@@ -93,6 +94,19 @@ export class TeamController {
   @ApiOperation({ summary: '모든' })
   async getTeams(): Promise<GetTeamsNotPagination> {
     return await this.teamService.getAllTeams();
+  }
+
+  @Get('/crew-applications')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '리더 승인 페이지' })
+  async getTeamApplicationsForLeader(
+    @GetUser() authUser: User,
+    @Query('teamId', ParseIntPipe) teamId: number,
+  ): Promise<GetTeamApplicationsOutput> {
+    return await this.teamService.getTeamApplicationsForLeader(
+      authUser,
+      teamId,
+    );
   }
 
   @Post('/create')
