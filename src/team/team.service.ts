@@ -145,6 +145,7 @@ export class TeamService {
     authUser: User,
     teamId: number,
   ): Promise<GetTeamApplicationsOutput> {
+    await this.teamRepository.getTeamApplicationsForLeader(authUser, teamId);
     try {
       return {
         ok: true,
