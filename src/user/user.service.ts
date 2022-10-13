@@ -380,7 +380,7 @@ export class UserService {
           teamId: team.id,
           teamImage: team.images[0],
           name: team.name,
-          count: team.users.length,
+          count: team.users?.length,
           total: team.maxParticipant,
         });
       }
