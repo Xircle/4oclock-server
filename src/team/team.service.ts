@@ -94,7 +94,11 @@ export class TeamService {
     }
   }
 
-  public async createTeam(): Promise<CoreOutput> {
+  public async createTeam(
+    authUser,
+    createTeamInput,
+    files,
+  ): Promise<CoreOutput> {
     try {
       return { ok: true };
     } catch (error) {
