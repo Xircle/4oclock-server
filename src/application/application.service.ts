@@ -48,6 +48,7 @@ export class ApplicationService {
           team_id: teamId,
           user_id: authUser.id,
           image: authUser.profile.profileImageUrl,
+          gender: authUser.profile.gender,
         });
         await this.applicationRepository.save(application);
       }
@@ -68,19 +69,23 @@ export class ApplicationService {
         where: {
           id: editApplicationInput.applicationId,
         },
+        relations: ['team'],
       });
       if (!exists) {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
-      if (editApplicationInput.status === ApplicationStatus.Approved) {
-        await this.userRepository.update(
-          {
-            id: exists.user_id,
-          },
-          {
+      if (editApplicationInput.status !== ApplicationStatus.Disapproved) {
+        const genderCount = await this.applicationRepository.findAndCount({
+          where: {
             team_id: exists.team_id,
+            status: ApplicationStatus.Approved,
+            gender: exists.gender,
           },
-        );
+        });
+        console.log(genderCount[1]);
+        if (genderCount[1] > exists.team.maxParticipant / 2) {
+          return { ok: false, error: '특정 성비가 절반을 넘을 수 없습니다' };
+        }
       }
 
       await this.applicationRepository.update(
