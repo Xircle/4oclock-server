@@ -154,6 +154,8 @@ export class TeamRepository extends Repository<Team> {
     return times;
   }
 
+  public async getTeamApplicationsForLeader() {}
+
   public async createTeam(
     leaderId: string,
     createTeamInput: CreateTeamInput,
