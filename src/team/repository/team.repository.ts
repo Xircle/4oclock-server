@@ -71,7 +71,8 @@ export class TeamRepository extends Repository<Team> {
       .addFrom(Category, 'category')
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id');
-    //.andWhere('season = 2');
+
+    // .andWhere('team.season = 2');
 
     if (categoryIds) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
@@ -108,7 +109,7 @@ export class TeamRepository extends Repository<Team> {
       teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
     }
 
-    teamQuery.andWhere('is_closed = :isClosed', {
+    teamQuery.andWhere('team.is_closed = :isClosed', {
       isClosed: false,
     });
 
