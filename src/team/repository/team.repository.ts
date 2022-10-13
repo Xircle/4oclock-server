@@ -154,7 +154,21 @@ export class TeamRepository extends Repository<Team> {
     return times;
   }
 
-  public async getTeamApplicationsForLeader() {}
+  // authUser로 리더 판명은 나중에
+  public async getTeamApplicationsForLeader(authUser: User, teamId: number) {
+    // const team = await this.findOne({
+    //   where: { id: teamId },
+    //   join: {
+    //     alias: 'team',
+    //     leftJoinAndSelect: {
+    //       users: 'team.users',
+    //       applications: 'team.applications',
+    //       usersProfile: 'team.users.profile',
+    //     },
+    //   },
+    // });
+    //쿼리문 3개 날리는게 낳을듯
+  }
 
   public async createTeam(
     leaderId: string,
