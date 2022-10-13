@@ -28,7 +28,10 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
 import { CronJob } from 'cron';
 import * as moment from 'moment';
 import { GetPointOutput } from './dtos/get-point.dto';
-import { GetMyTeamsLeader } from './dtos/get-my-teams-leader.dto';
+import {
+  GetMyTeamsLeader,
+  MyTeamsLeader,
+} from './dtos/get-my-teams-leader.dto';
 
 @Injectable()
 export class UserService {
@@ -370,8 +373,18 @@ export class UserService {
 
   async getMyTeamsLeader(authUser: User): Promise<GetMyTeamsLeader> {
     try {
-      const teams = this.teamRepository.find({ leader_id: authUser.id });
+      const teamsFromRepository = await this.teamRepository.find({
+        leader_id: authUser.id,
+      });
+      let teams: MyTeamsLeader[] = [];
 
+      for (const team of teamsFromRepository) {
+        teams.push({
+          teamId: team.id,
+          teamImage: team.images[0],
+          name: team.name,
+        });
+      }
       return {
         ok: true,
         teams: teams,
