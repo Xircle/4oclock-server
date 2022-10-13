@@ -28,6 +28,7 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
 import { CronJob } from 'cron';
 import * as moment from 'moment';
 import { GetPointOutput } from './dtos/get-point.dto';
+import { GetMyTeamsLeader } from './dtos/get-my-teams-leader.dto';
 
 @Injectable()
 export class UserService {
@@ -367,7 +368,7 @@ export class UserService {
     return { ok: true };
   }
 
-  async getMyTeamsLeader(authUser: User) {
+  async getMyTeamsLeader(authUser: User): Promise<GetMyTeamsLeader> {
     try {
       const teams = this.teamRepository.find({ leader_id: authUser.id });
 
