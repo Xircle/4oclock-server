@@ -1,3 +1,5 @@
+import { UserProfileRepository } from './../user/repositories/user-profile.repository';
+import { UserProfile } from './../user/entities/user-profile.entity';
 import { S3Service } from './../aws/s3/s3.service';
 import { User } from './../user/entities/user.entity';
 import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
@@ -19,6 +21,7 @@ export class TeamService {
     private teamRepository: TeamRepository,
     private readonly userRepository: UserRepository,
     private s3Service: S3Service,
+    private readonly userProfileRepository: UserProfileRepository,
   ) {}
 
   public async getTeamById(
@@ -104,6 +107,16 @@ export class TeamService {
     files: TeamPhotoInput,
   ): Promise<CoreOutput> {
     try {
+      let leaderId = authUser.id;
+      if (createTeamInput.leaderId) {
+        const leader = await this.userRepository.findOne({ id: leaderId });
+        leaderId = leader.id;
+      } else if (createTeamInput.leaderPhoneNumber) {
+        const leader = await this.userProfileRepository.findOne({
+          phoneNumber: createTeamInput.leaderPhoneNumber,
+        });
+        leaderId = leader.fk_user_id;
+      }
       const { images } = files;
       const imageS3Urls: string[] = [];
       if (images) {
@@ -114,7 +127,7 @@ export class TeamService {
       }
 
       await this.teamRepository.createTeam(
-        authUser,
+        leaderId,
         createTeamInput,
         imageS3Urls,
       );
