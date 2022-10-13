@@ -1,3 +1,4 @@
+import { CoreOutput } from './../common/common.interface';
 import { GetAllTeamTimeOutput } from './dtos/get-all-team-times.dto';
 import {
   GetTeamByIdOutput,
@@ -85,5 +86,7 @@ export class TeamController {
 
   @Patch('/create')
   @ApiOperation({ summary: '팀 생성' })
-  async createTeam() {}
+  async createTeam(): Promise<CoreOutput> {
+    return this.teamService.createTeam();
+  }
 }
