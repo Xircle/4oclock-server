@@ -1,7 +1,7 @@
 import { CoreOutput } from '@common/common.interface';
 
 export class MyTeamsLeader {
-  teamId: string;
+  teamId: number;
   teamImage?: string;
   name: string;
 }
