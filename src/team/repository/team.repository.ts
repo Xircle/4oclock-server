@@ -155,8 +155,40 @@ export class TeamRepository extends Repository<Team> {
   }
 
   public async createTeam(
-    authUser: User,
+    leaderId: string,
     createTeamInput: CreateTeamInput,
     imageUrls: string[],
-  ) {}
+  ) {
+    const {
+      name,
+      season,
+      areaInfo,
+      question,
+      description,
+      maxParticipant,
+      minAge,
+      maxAge,
+      meetingDay,
+      meetingHour,
+      meetingMinute,
+      category_id,
+    } = createTeamInput;
+    const newTeam = this.create({
+      name,
+      season,
+      area_info: areaInfo,
+      question,
+      description,
+      maxParticipant,
+      minAge,
+      maxAge,
+      meetingDay,
+      meetingHour,
+      meetingMinute,
+      category_id,
+      leader_id: leaderId,
+      images: imageUrls,
+    });
+    await this.save(newTeam);
+  }
 }
