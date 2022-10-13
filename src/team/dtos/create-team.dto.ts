@@ -28,6 +28,9 @@ export class CreateTeamInput {
   @IsString()
   @IsOptional()
   leaderPhoneNumber?: string;
+  @IsString()
+  @IsOptional()
+  areaInfo?: string;
 
   @IsString()
   @IsOptional()
