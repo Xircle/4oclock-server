@@ -11,6 +11,7 @@ import {
   ParseArrayPipe,
   DefaultValuePipe,
   ParseIntPipe,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -81,4 +82,8 @@ export class TeamController {
   async getTeams(): Promise<GetTeamsNotPagination> {
     return await this.teamService.getAllTeams();
   }
+
+  @Patch('/create')
+  @ApiOperation({ summary: '팀 생성' })
+  async createTeam() {}
 }
