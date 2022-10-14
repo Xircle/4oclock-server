@@ -1,3 +1,4 @@
+import { ApplicationRepository } from './../application/repositories/application.repository';
 import {
   ApplicantProfiles,
   GetTeamApplications,
@@ -27,6 +28,7 @@ export class TeamService {
     private readonly userRepository: UserRepository,
     private s3Service: S3Service,
     private readonly userProfileRepository: UserProfileRepository,
+    private readonly applicationRepository: ApplicationRepository,
   ) {}
 
   public async getTeamById(
@@ -154,6 +156,11 @@ export class TeamService {
         approvedApplicantProfiles: ApplicantProfiles;
 
       const team = await this.teamRepository.findByTeamId(teamId);
+
+      const applications = await this.applicationRepository.find({
+        team_id: teamId,
+        isCanceled: false,
+      });
 
       return {
         ok: true,
