@@ -1,3 +1,5 @@
+import { Application } from './../../application/entities/application.entity';
+import { Gender } from '@user/entities/user-profile.entity';
 import { Place } from '@place/entities/place.entity';
 import { Reservation } from '@reservation/entities/reservation.entity';
 import { Team } from 'team/entities/team.entity';
@@ -22,6 +24,13 @@ export class UserRepository extends Repository<User> {
           })
           .getOne()
       : queryBuilder.getOne();
+  }
+
+  public async findUsersByTeamId(teamId: number) {
+    const queryBuilder = this.createQueryBuilder('User')
+      .where(`User.team_id = :teamId1`, { teamId1: teamId })
+      .leftJoinAndSelect('User.profile', 'User_profile');
+    return queryBuilder.getMany();
   }
 
   public async getRoomsOrderByRecentMessage(authUser: User): Promise<User> {
