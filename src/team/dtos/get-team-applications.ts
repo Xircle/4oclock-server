@@ -6,6 +6,7 @@ export class ApplicantProfiles {
   gender: Gender;
   age: number;
   applicationId?: string;
+  phoneNumber?: string;
 }
 
 export class CountData {
