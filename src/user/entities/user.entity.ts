@@ -15,7 +15,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { IsEnum, IsString, Length } from 'class-validator';
+import { IsEnum, Length } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Room } from '@room/entities/room.entity';
 import { Reservation } from '@reservation/entities/reservation.entity';
