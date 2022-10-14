@@ -158,7 +158,7 @@ export class TeamRepository extends Repository<Team> {
   public async findByTeamId(teamId: number) {
     const team = await this.createQueryBuilder('team')
       .where('team.id = :teamId', { teamId: teamId })
-      .getMany();
+      .getOne();
 
     return team;
   }
