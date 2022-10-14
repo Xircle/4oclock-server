@@ -8,6 +8,7 @@ import { ApplicationRepository } from './repositories/application.repository';
 import { Injectable } from '@nestjs/common';
 import { ApplicationStatus } from './entities/application.entity';
 import { Not } from 'typeorm';
+import { GetApplicationByLeaderOutput } from './dtos/get-application-by-leader.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -61,6 +62,20 @@ export class ApplicationService {
       };
     } catch (error) {
       return { ok: false, error };
+    }
+  }
+
+  async getApplicationByLeader(
+    authUser: User,
+    applicationId: string,
+  ): Promise<GetApplicationByLeaderOutput> {
+    try {
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
     }
   }
 
