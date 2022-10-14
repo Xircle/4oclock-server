@@ -1,6 +1,10 @@
+import { Gender } from '@user/entities/user-profile.entity';
+import { ApplicationStatus } from 'application/entities/application.entity';
+import { Team } from 'team/entities/team.entity';
 import { ApplicationRepository } from './../application/repositories/application.repository';
 import {
   ApplicantProfiles,
+  CountData as teamCountData,
   GetTeamApplications,
   GetTeamApplicationsOutput,
 } from './dtos/get-team-applications';
@@ -20,6 +24,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class TeamService {
@@ -152,18 +157,68 @@ export class TeamService {
     teamId: number,
   ): Promise<GetTeamApplicationsOutput> {
     try {
-      let pendingApplicantProfiles: ApplicantProfiles,
-        approvedApplicantProfiles: ApplicantProfiles;
+      let pendingApplicantProfiles: ApplicantProfiles[],
+        approvedApplicantProfiles: ApplicantProfiles[];
+      let pendingApplicantIds = [];
+      let maleApproveCount = 0;
+      let femaleApproveCount = 0;
+      let maleApplyCount = 0;
+      let femaleApplyCount = 0;
 
-      const team = await this.teamRepository.findByTeamId(teamId);
+      const team: Team = await this.teamRepository.findByTeamId(teamId);
 
       const applications = await this.applicationRepository.find({
-        team_id: teamId,
-        isCanceled: false,
+        where: {
+          team_id: teamId,
+          isCanceled: false,
+        },
+        join: {
+          alias: 'team',
+          leftJoinAndSelect: {
+            applicant: 'team.applicant',
+            profile: 'applicant.profile',
+          },
+        },
       });
+      // console.log(applications[0].applicant.profile);
+      // 캔슬된거 아님 지원으로 친다
+      for (const application of applications) {
+        if (application.applicant.profile.gender === Gender.Male) {
+          maleApplyCount++;
+        } else if (application.applicant.profile.gender === Gender.Female) {
+          femaleApplyCount++;
+        }
+
+        if (application.status === ApplicationStatus.Pending) {
+          pendingApplicantIds.push(application.user_id);
+        }
+      }
+      const approveds = await this.userRepository.findUsersByTeamId(teamId);
+
+      for (const approved of approveds) {
+        if (approved.profile.gender === Gender.Male) {
+          maleApproveCount++;
+        } else if (approved.profile.gender === Gender.Female) {
+          femaleApproveCount++;
+        }
+      }
+
+      let countData: teamCountData = {
+        maxParticipant: team.maxParticipant,
+        curCount: femaleApproveCount + maleApproveCount,
+        maleApproveCount: maleApproveCount,
+        femaleApproveCount: femaleApproveCount,
+        maleApplyCount: maleApplyCount,
+        femaleApplyCount: femaleApplyCount,
+      };
 
       return {
         ok: true,
+        data: {
+          ...countData,
+          pendingApplicantProfiles: [],
+          approvedApplicantProfiles: [],
+        },
       };
     } catch (error) {
       return {
