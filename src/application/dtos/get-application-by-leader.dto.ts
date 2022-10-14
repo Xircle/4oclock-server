@@ -6,7 +6,7 @@ export class GetApplicationByLeaderData {
   username: string;
   mbti?: string;
   shortBio?: string;
-  personality?: string;
+  job?: string;
   phoneNumber?: string;
   content?: string;
   status: ApplicationStatus;
