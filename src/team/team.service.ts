@@ -209,6 +209,7 @@ export class TeamService {
         } else if (approved.profile.gender === Gender.Female) {
           femaleApproveCount++;
         }
+
         approvedApplicantProfiles.push({
           username: approved.profile.username,
           gender: approved.profile.gender,
