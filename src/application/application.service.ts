@@ -70,7 +70,34 @@ export class ApplicationService {
     applicationId: string,
   ): Promise<GetApplicationByLeaderOutput> {
     try {
-      return { ok: true };
+      const application = await this.applicationRepository.findOne({
+        where: {
+          id: applicationId,
+        },
+        join: {
+          alias: 'application',
+          leftJoinAndSelect: {
+            applicant: 'application.applicant',
+            profile: 'applicant.profile',
+          },
+        },
+      });
+
+      return {
+        ok: true,
+        data: {
+          applicationId: applicationId,
+          username: application.applicant.profile.username,
+          mbti: application.applicant.profile.MBTI,
+          shortBio: application.applicant.profile.shortBio,
+          personality: application.applicant.profile.personality,
+          phoneNumber:
+            application.status === ApplicationStatus.Approved
+              ? application.applicant.profile.phoneNumber
+              : '',
+          content: application.content,
+        },
+      };
     } catch (error) {
       return {
         ok: false,
