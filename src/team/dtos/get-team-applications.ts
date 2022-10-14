@@ -7,6 +7,7 @@ export class ApplicantProfiles {
   age: number;
   applicationId?: string;
   phoneNumber?: string;
+  profileImg: string;
 }
 
 export class CountData {
