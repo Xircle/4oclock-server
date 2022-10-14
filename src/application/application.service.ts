@@ -21,6 +21,9 @@ export class ApplicationService {
     { teamId }: CreateApplicationInput,
   ): Promise<CoreOutput> {
     try {
+      if (!authUser.profile.isYkClub) {
+        return { ok: false, error: '현기수에 등록되어있지 않습니다' };
+      }
       const exists = await this.applicationRepository.findOne({
         where: {
           team_id: teamId,
@@ -74,7 +77,10 @@ export class ApplicationService {
       if (!exists) {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
-      if (editApplicationInput.status !== ApplicationStatus.Disapproved) {
+      if (
+        editApplicationInput.status === ApplicationStatus.Approved ||
+        editApplicationInput.status === ApplicationStatus.Enrolled
+      ) {
         const genderCount = await this.applicationRepository.findAndCount({
           where: {
             team_id: exists.team_id,
@@ -85,6 +91,16 @@ export class ApplicationService {
         console.log(genderCount[1]);
         if (genderCount[1] > exists.team.maxParticipant / 2) {
           return { ok: false, error: '특정 성비가 절반을 넘을 수 없습니다' };
+        }
+
+        const count = await this.applicationRepository.findAndCount({
+          where: {
+            team_id: exists.team_id,
+            status: ApplicationStatus.Approved,
+          },
+        });
+        if (count[1] >= exists.team.maxParticipant) {
+          return { ok: false, error: '인원이 꽉 찼습니다' };
         }
       }
 
