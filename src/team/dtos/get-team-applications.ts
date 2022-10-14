@@ -5,16 +5,19 @@ export class ApplicantProfiles {
   username: string;
   gender: Gender;
   age: number;
-  applicationId: string;
+  applicationId?: string;
 }
 
-export class GetTeamApplications {
+export class CountData {
   maxParticipant: number;
   curCount: number;
   maleApproveCount: number;
   femaleApproveCount: number;
   maleApplyCount: number;
   femaleApplyCount: number;
+}
+
+export class GetTeamApplications extends CountData {
   pendingApplicantProfiles: ApplicantProfiles[];
   approvedApplicantProfiles: ApplicantProfiles[];
 }
