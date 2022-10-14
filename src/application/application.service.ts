@@ -90,7 +90,7 @@ export class ApplicationService {
           username: application.applicant.profile.username,
           mbti: application.applicant.profile.MBTI,
           shortBio: application.applicant.profile.shortBio,
-          personality: application.applicant.profile.personality,
+          job: application.applicant.profile.job,
           phoneNumber:
             application.status === ApplicationStatus.Approved
               ? application.applicant.profile.phoneNumber
