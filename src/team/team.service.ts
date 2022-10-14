@@ -194,6 +194,7 @@ export class TeamService {
             gender: application.applicant.profile.gender,
             age: application.applicant.profile.age,
             applicationId: application.id,
+            profileImg: application.applicant.profile.profileImageUrl,
           });
         }
       }
@@ -210,6 +211,7 @@ export class TeamService {
           gender: approved.profile.gender,
           age: approved.profile.age,
           phoneNumber: approved.profile.phoneNumber,
+          profileImg: approved.profile.profileImageUrl,
         });
       }
 
