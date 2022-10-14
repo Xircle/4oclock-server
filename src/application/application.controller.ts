@@ -1,10 +1,20 @@
+import { GetApplicationByLeaderOutput } from './dtos/get-application-by-leader.dto';
 import { EditApplicationInput } from './dtos/edit-application.dto';
 import { ApplicationService } from './application.service';
 import { CreateApplicationInput } from './dtos/create-application.dto';
 import { CoreOutput } from '../common/common.interface';
 import { User } from '../user/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
-import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -30,6 +40,19 @@ export class ApplicationController {
     return this.applicationService.createApplication(
       authUser,
       createApplicationInput,
+    );
+  }
+
+  @Get('/leader')
+  @ApiOperation({ summary: '특정 유저 조회 ' })
+  @UseGuards(JwtAuthGuard)
+  async getApplicationByLeader(
+    @GetUser() authUser: User,
+    @Query('applicationId', ParseUUIDPipe) applicationId: string,
+  ): Promise<GetApplicationByLeaderOutput> {
+    return this.applicationService.getApplicationByLeader(
+      authUser,
+      applicationId,
     );
   }
 
