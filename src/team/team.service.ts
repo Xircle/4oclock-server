@@ -178,6 +178,9 @@ export class TeamService {
             profile: 'applicant.profile',
           },
         },
+        order: {
+          createdAt: 'DESC',
+        },
       });
       // console.log(applications[0].applicant.profile);
       // 캔슬된거 아님 지원으로 친다
