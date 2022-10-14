@@ -1,3 +1,4 @@
+import { ApplicationRepository } from './../application/repositories/application.repository';
 import { UserProfileRepository } from './../user/repositories/user-profile.repository';
 import { AuthModule } from './../auth/auth.module';
 import { S3Service } from './../aws/s3/s3.service';
@@ -16,6 +17,7 @@ import { Team } from './entities/team.entity';
       Team,
       UserRepository,
       UserProfileRepository,
+      ApplicationRepository,
     ]),
     AuthModule,
   ],
