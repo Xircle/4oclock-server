@@ -88,7 +88,7 @@ export class ApplicationService {
             },
           },
         });
-      } else if (substitue) {
+      } else if (substitue && substitue.teamId && substitue.userId) {
         application = await this.applicationRepository.findOne({
           where: {
             user_id: substitue.userId,
