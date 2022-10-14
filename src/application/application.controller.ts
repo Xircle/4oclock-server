@@ -1,4 +1,7 @@
-import { GetApplicationByLeaderOutput } from './dtos/get-application-by-leader.dto';
+import {
+  GetApplicationByLeaderOutput,
+  GetApplicationByLeaderInput,
+} from './dtos/get-application-by-leader.dto';
 import { EditApplicationInput } from './dtos/edit-application.dto';
 import { ApplicationService } from './application.service';
 import { CreateApplicationInput } from './dtos/create-application.dto';
@@ -9,6 +12,7 @@ import {
   Body,
   Controller,
   Get,
+  ParseIntPipe,
   ParseUUIDPipe,
   Patch,
   Post,
@@ -48,11 +52,22 @@ export class ApplicationController {
   @UseGuards(JwtAuthGuard)
   async getApplicationByLeader(
     @GetUser() authUser: User,
-    @Query('applicationId', ParseUUIDPipe) applicationId: string,
+    @Query('applicationId')
+    applicationId?: string,
+    @Query('teamId')
+    teamId?: number,
+    @Query('userId') userId?: string,
   ): Promise<GetApplicationByLeaderOutput> {
+    const getApplicationByLeaderInput: GetApplicationByLeaderInput = {
+      applicationId: applicationId,
+      substitue: {
+        userId,
+        teamId,
+      },
+    };
     return this.applicationService.getApplicationByLeader(
       authUser,
-      applicationId,
+      getApplicationByLeaderInput,
     );
   }
 
