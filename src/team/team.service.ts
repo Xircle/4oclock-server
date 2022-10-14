@@ -157,9 +157,8 @@ export class TeamService {
     teamId: number,
   ): Promise<GetTeamApplicationsOutput> {
     try {
-      let pendingApplicantProfiles: ApplicantProfiles[],
-        approvedApplicantProfiles: ApplicantProfiles[];
-      let pendingApplicantIds = [];
+      const pendingApplicantProfiles: ApplicantProfiles[] = [];
+      const approvedApplicantProfiles: ApplicantProfiles[] = [];
       let maleApproveCount = 0;
       let femaleApproveCount = 0;
       let maleApplyCount = 0;
@@ -190,7 +189,12 @@ export class TeamService {
         }
 
         if (application.status === ApplicationStatus.Pending) {
-          pendingApplicantIds.push(application.user_id);
+          pendingApplicantProfiles.push({
+            username: application.applicant.profile.username,
+            gender: application.applicant.profile.gender,
+            age: application.applicant.profile.age,
+            applicationId: application.id,
+          });
         }
       }
       const approveds = await this.userRepository.findUsersByTeamId(teamId);
@@ -201,6 +205,12 @@ export class TeamService {
         } else if (approved.profile.gender === Gender.Female) {
           femaleApproveCount++;
         }
+        approvedApplicantProfiles.push({
+          username: approved.profile.username,
+          gender: approved.profile.gender,
+          age: approved.profile.age,
+          phoneNumber: approved.profile.phoneNumber,
+        });
       }
 
       let countData: teamCountData = {
@@ -216,8 +226,8 @@ export class TeamService {
         ok: true,
         data: {
           ...countData,
-          pendingApplicantProfiles: [],
-          approvedApplicantProfiles: [],
+          pendingApplicantProfiles: pendingApplicantProfiles,
+          approvedApplicantProfiles: approvedApplicantProfiles,
         },
       };
     } catch (error) {
