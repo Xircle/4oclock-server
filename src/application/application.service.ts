@@ -96,6 +96,11 @@ export class ApplicationService {
               ? application.applicant.profile.phoneNumber
               : '',
           content: application.content,
+          status: application.status,
+          profileImage: application.applicant.profile.profileImageUrl,
+          age: application.applicant.profile.age,
+          gender: application.applicant.profile.gender,
+          university: application.applicant.profile.university,
         },
       };
     } catch (error) {
