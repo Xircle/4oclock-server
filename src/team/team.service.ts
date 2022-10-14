@@ -1,4 +1,8 @@
-import { GetTeamApplicationsOutput } from './dtos/get-team-applications';
+import {
+  ApplicantProfiles,
+  GetTeamApplications,
+  GetTeamApplicationsOutput,
+} from './dtos/get-team-applications';
 import { UserProfileRepository } from './../user/repositories/user-profile.repository';
 import { UserProfile } from './../user/entities/user-profile.entity';
 import { S3Service } from './../aws/s3/s3.service';
@@ -145,8 +149,12 @@ export class TeamService {
     authUser: User,
     teamId: number,
   ): Promise<GetTeamApplicationsOutput> {
-    await this.teamRepository.getTeamApplicationsForLeader(authUser, teamId);
     try {
+      let pendingApplicantProfiles: ApplicantProfiles,
+        approvedApplicantProfiles: ApplicantProfiles;
+
+      const team = await this.teamRepository.findByTeamId(teamId);
+
       return {
         ok: true,
       };
