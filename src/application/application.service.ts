@@ -8,7 +8,10 @@ import { ApplicationRepository } from './repositories/application.repository';
 import { Injectable } from '@nestjs/common';
 import { ApplicationStatus } from './entities/application.entity';
 import { Not } from 'typeorm';
-import { GetApplicationByLeaderOutput } from './dtos/get-application-by-leader.dto';
+import {
+  GetApplicationByLeaderInput,
+  GetApplicationByLeaderOutput,
+} from './dtos/get-application-by-leader.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -67,26 +70,55 @@ export class ApplicationService {
 
   async getApplicationByLeader(
     authUser: User,
-    applicationId: string,
+    getApplicationByLeaderInput: GetApplicationByLeaderInput,
   ): Promise<GetApplicationByLeaderOutput> {
     try {
-      const application = await this.applicationRepository.findOne({
-        where: {
-          id: applicationId,
-        },
-        join: {
-          alias: 'application',
-          leftJoinAndSelect: {
-            applicant: 'application.applicant',
-            profile: 'applicant.profile',
+      const { applicationId, substitue } = getApplicationByLeaderInput;
+      let application;
+      if (applicationId) {
+        application = await this.applicationRepository.findOne({
+          where: {
+            id: applicationId,
           },
-        },
-      });
+          join: {
+            alias: 'application',
+            leftJoinAndSelect: {
+              applicant: 'application.applicant',
+              profile: 'applicant.profile',
+            },
+          },
+        });
+      } else if (substitue) {
+        application = await this.applicationRepository.findOne({
+          where: {
+            user_id: substitue.userId,
+            team_id: substitue.teamId,
+          },
+          join: {
+            alias: 'application',
+            leftJoinAndSelect: {
+              applicant: 'application.applicant',
+              profile: 'applicant.profile',
+            },
+          },
+        });
+      } else {
+        return {
+          ok: false,
+          error: 'applicationId and userId missing',
+        };
+      }
+
+      if (!application) {
+        return {
+          ok: false,
+          error: '유저를 찾을 수 없습니다',
+        };
+      }
 
       return {
         ok: true,
         data: {
-          applicationId: applicationId,
           username: application.applicant.profile.username,
           mbti: application.applicant.profile.MBTI,
           shortBio: application.applicant.profile.shortBio,
