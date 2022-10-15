@@ -124,7 +124,8 @@ export class ApplicationService {
           shortBio: application.applicant.profile.shortBio,
           job: application.applicant.profile.job,
           phoneNumber:
-            application.status === ApplicationStatus.Approved
+            application.status === ApplicationStatus.Approved ||
+            (substitue && substitue?.teamId && substitue?.userId)
               ? application.applicant.profile.phoneNumber
               : '',
           content: application.content,
