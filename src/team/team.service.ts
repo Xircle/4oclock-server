@@ -82,6 +82,7 @@ export class TeamService {
           meetingDay: team.meetingDay,
           meetingHour: team.meetingHour,
           maxParticipant: team.maxParticipant,
+          areaInfo: team.area_info,
         },
       };
     } catch (error) {
