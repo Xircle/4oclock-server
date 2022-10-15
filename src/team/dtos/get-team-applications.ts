@@ -8,6 +8,7 @@ export class ApplicantProfiles {
   applicationId?: string;
   phoneNumber?: string;
   profileImg: string;
+  userId?: string;
 }
 
 export class CountData {
