@@ -19,6 +19,7 @@ export class TeamData {
   meetingHour?: number;
   meetingDay?: number;
   maxParticipant?: number;
+  areaInfo?: string;
 }
 
 export class GetTeamsOutput extends CoreOutput {
