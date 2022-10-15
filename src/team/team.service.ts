@@ -216,6 +216,7 @@ export class TeamService {
           age: approved.profile.age,
           phoneNumber: approved.profile.phoneNumber,
           profileImg: approved.profile.profileImageUrl,
+          userId: approved.id,
         });
       }
 
