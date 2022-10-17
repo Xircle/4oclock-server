@@ -69,6 +69,7 @@ export class TeamRepository extends Repository<Team> {
   ): Promise<TeamData[]> {
     let teamQuery = await this.createQueryBuilder('team')
       .select('team.*')
+      .addSelect('team.max_participant', 'maxParticipant')
       .addSelect('leader_profile.username', 'leader_username')
       .addSelect('count(application)', 'applyCount')
       .addSelect(
