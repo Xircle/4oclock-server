@@ -86,7 +86,7 @@ export class TeamRepository extends Repository<Team> {
       .andWhere(
         new Brackets((qb) => {
           qb.orWhere('application.team_id = team.id').orWhere(
-            'team.is_closed = false',
+            'team.id is not null',
           );
         }),
       );
@@ -146,7 +146,7 @@ export class TeamRepository extends Repository<Team> {
     teamQuery.groupBy('team.id');
     teamQuery.addGroupBy('leader_profile.id');
     teamQuery.addGroupBy('category.id');
-    teamQuery.orderBy('team.is_closed', 'DESC');
+    teamQuery.orderBy('team.is_closed', 'ASC');
     teamQuery.addOrderBy('team.start_date', 'DESC');
     teamQuery.addOrderBy('team.name', 'ASC');
     teamQuery.take(limit).skip(page * limit);
