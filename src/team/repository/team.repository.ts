@@ -1,6 +1,5 @@
-import { FilterTeam } from './../dtos/get-teams-with-filter.dto';
+import { TeamData } from './../dtos/get-teams.dto';
 import { CreateTeamInput } from './../dtos/create-team.dto';
-import { User } from './../../user/entities/user.entity';
 import { MinMaxAge } from './../dtos/get-team-by-id.dto';
 import { Category } from './../../category/entities/category.entity';
 import { UserProfile } from '@user/entities/user-profile.entity';
@@ -67,7 +66,7 @@ export class TeamRepository extends Repository<Team> {
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
-  ): Promise<FilterTeam[]> {
+  ): Promise<TeamData[]> {
     let teamQuery = await this.createQueryBuilder('team')
       .select('team.*')
       .addSelect('leader_profile.username', 'leader_username')
