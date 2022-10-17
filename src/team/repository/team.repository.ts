@@ -83,7 +83,30 @@ export class TeamRepository extends Repository<Team> {
       .addFrom(Application, 'application')
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id')
-      .andWhere('application.team_id = team.id');
+      .andWhere(
+        new Brackets((qb) => {
+          qb.orWhere('application.team_id = team.id').orWhere(
+            'team.is_closed = false',
+          );
+        }),
+      );
+    teamQuery.andWhere(
+      new Brackets((qb) => {
+        ages.forEach((item, idx) => {
+          qb.orWhere(
+            new Brackets((qb2) => {
+              qb2
+                .andWhere('min_age >= :minAge' + idx, {
+                  ['minAge' + idx]: item.minAge,
+                })
+                .andWhere('max_age <= :maxAge' + idx, {
+                  ['maxAge' + idx]: item.maxAge,
+                });
+            }),
+          );
+        });
+      }),
+    );
 
     if (categoryIds) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
@@ -119,15 +142,13 @@ export class TeamRepository extends Repository<Team> {
     if (areaIds?.length > 0) {
       teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
     }
-
-    teamQuery.andWhere('team.is_closed = :isClosed', {
-      isClosed: false,
-    });
+    teamQuery.distinct();
     teamQuery.groupBy('team.id');
     teamQuery.addGroupBy('leader_profile.id');
     teamQuery.addGroupBy('category.id');
-    teamQuery.orderBy('start_date', 'DESC');
-    teamQuery.addOrderBy('name', 'ASC');
+    teamQuery.orderBy('team.is_closed', 'DESC');
+    teamQuery.addOrderBy('team.start_date', 'DESC');
+    teamQuery.addOrderBy('team.name', 'ASC');
     teamQuery.take(limit).skip(page * limit);
 
     return teamQuery.getRawMany();
