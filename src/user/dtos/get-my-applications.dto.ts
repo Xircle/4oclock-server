@@ -19,7 +19,7 @@ export class MyApplicationsByStatus {
   enrolleds?: MyApplication[];
 }
 
-export class LeaderData {
+export class GMALeaderData {
   leaderId: string;
   leaderName: string;
   leaderPhoneNumber: string;
@@ -28,5 +28,5 @@ export class LeaderData {
 
 export class GetMyApplicationsOutput extends CoreOutput {
   applications?: MyApplicationsByStatus;
-  leaderData?: LeaderData;
+  leaderData?: GMALeaderData;
 }
