@@ -1,4 +1,7 @@
-import { GetMyApplicationsOutput } from './dtos/get-my-applications.dto';
+import {
+  GetMyApplicationsOutput,
+  GMALeaderData,
+} from './dtos/get-my-applications.dto';
 import { ApplicationRepository } from './../application/repositories/application.repository';
 import { TeamRepository } from './../team/repository/team.repository';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -161,7 +164,27 @@ export class UserService {
     try {
       const applications =
         await this.applicationRepository.findApplicationsByStatus(authUser.id);
-      return { ok: true, applications };
+      let leaderData: GMALeaderData | undefined;
+      if (applications?.approveds?.length > 0) {
+        const team = await this.teamRepository.findOne({
+          id: applications?.approveds?.[0].teamId,
+        });
+        if (team?.leader_id) {
+          const leader = await this.userRepository.findOne({
+            where: {
+              id: team.leader_id,
+            },
+            relations: ['profile'],
+          });
+          leaderData = {
+            leaderId: leader.id,
+            leaderName: leader.profile.username,
+            leaderPhoneNumber: leader.profile.phoneNumber,
+            leaderProfileUrl: leader.profile.profileImageUrl,
+          };
+        }
+      }
+      return { ok: true, applications, leaderData };
     } catch (error) {
       return { ok: false, error };
     }
