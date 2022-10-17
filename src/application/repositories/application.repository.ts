@@ -19,7 +19,7 @@ export class ApplicationRepository extends Repository<Application> {
         isCanceled: isCanceled,
       },
       order: {
-        createdAt: 'DESC',
+        updatedAt: 'DESC',
       },
       relations: ['team'],
     });
