@@ -20,6 +20,8 @@ export class TeamData {
   meetingDay?: number;
   maxParticipant?: number;
   areaInfo?: string;
+  approveCount?: number;
+  applyCount?: number;
 }
 
 export class GetTeamsOutput extends CoreOutput {
