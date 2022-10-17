@@ -272,6 +272,7 @@ export class TeamService {
         areaIds,
       );
 
+      console.log(teams);
       return { ok: true, teams: teams, meta: teamMetadata };
     } catch (error) {
       return { ok: false, error };
