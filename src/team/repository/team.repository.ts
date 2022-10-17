@@ -1,3 +1,4 @@
+import { FilterTeam } from './../dtos/get-teams-with-filter.dto';
 import { CreateTeamInput } from './../dtos/create-team.dto';
 import { User } from './../../user/entities/user.entity';
 import { MinMaxAge } from './../dtos/get-team-by-id.dto';
@@ -66,11 +67,15 @@ export class TeamRepository extends Repository<Team> {
     categoryIds?: string[],
     areaIds?: string[],
     times?: number[],
-  ): Promise<Team[]> {
+  ): Promise<FilterTeam[]> {
     let teamQuery = await this.createQueryBuilder('team')
       .select('team.*')
       .addSelect('leader_profile.username', 'leader_username')
-      .addSelect('count(application)', 'count')
+      .addSelect('count(application)', 'applyCount')
+      .addSelect(
+        "count(case when application.status = 'Approved' then 1 else null end)",
+        'approveCount',
+      )
       .addSelect('leader_profile.profile_image_url', 'leader_image')
       .addSelect('category.name', 'category_name')
       .from(UserProfile, 'leader_profile')
