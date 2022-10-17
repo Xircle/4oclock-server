@@ -7,7 +7,10 @@ import { TeamMetaData } from './../interfaces/teams-with-meta';
 import { Brackets, EntityRepository, Repository } from 'typeorm';
 import { Team } from '../entities/team.entity';
 import * as moment from 'moment';
-import { ApplicationStatus } from 'application/entities/application.entity';
+import {
+  Application,
+  ApplicationStatus,
+} from 'application/entities/application.entity';
 
 export class FindManyTeamsV2Input {}
 
@@ -67,14 +70,15 @@ export class TeamRepository extends Repository<Team> {
     let teamQuery = await this.createQueryBuilder('team')
       .select('team.*')
       .addSelect('leader_profile.username', 'leader_username')
+      .addSelect('count(application)', 'count')
       .addSelect('leader_profile.profile_image_url', 'leader_image')
       .addSelect('category.name', 'category_name')
       .from(UserProfile, 'leader_profile')
       .addFrom(Category, 'category')
+      .addFrom(Application, 'application')
       .where('team.leader_id = leader_profile.fk_user_id')
-      .andWhere('category_id = category.id');
-
-    // .andWhere('team.season = 2');
+      .andWhere('category_id = category.id')
+      .andWhere('application.team_id = team.id');
 
     if (categoryIds) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
@@ -114,7 +118,9 @@ export class TeamRepository extends Repository<Team> {
     teamQuery.andWhere('team.is_closed = :isClosed', {
       isClosed: false,
     });
-
+    teamQuery.groupBy('team.id');
+    teamQuery.addGroupBy('leader_profile.id');
+    teamQuery.addGroupBy('category.id');
     teamQuery.orderBy('start_date', 'DESC');
     teamQuery.addOrderBy('name', 'ASC');
     teamQuery.take(limit).skip(page * limit);
