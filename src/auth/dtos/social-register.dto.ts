@@ -155,8 +155,8 @@ export class SocialRegisterInput {
   @ApiProperty({
     description: '마케팅 동의 여부',
   })
-  @IsNotEmpty()
-  isMarketingAgree: boolean;
+  @IsOptional()
+  isMarketingAgree?: boolean;
 
   @ApiProperty({
     description: '연고이팅 팀',
