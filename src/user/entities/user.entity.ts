@@ -94,7 +94,7 @@ export class User {
   team?: Team;
 
   @Column('integer', { nullable: true })
-  team_id: number;
+  team_id?: number;
 
   @Expose()
   async checkPassword?(password: string): Promise<boolean> {
