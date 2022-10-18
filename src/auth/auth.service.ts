@@ -1,4 +1,3 @@
-import { RegisteredPhoneNumber } from './../user/entities/registered-phone-number.entity';
 import { getManager, Repository } from 'typeorm';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -110,7 +109,6 @@ export class SocialAuthService {
     private readonly userRepository: UserRepository,
     private readonly s3Service: S3Service,
     private readonly jwtService: JwtService,
-    private readonly registeredPhoneNumber: RegisteredPhoneNumber,
   ) {}
 
   async socialRegister(
