@@ -1,4 +1,3 @@
-import { RegisteredPhoneNumberRepository } from './../user/repositories/registed-phone-number.repository';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,12 +11,7 @@ import { UserRepository } from '@user/repositories/user.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      UserRepository,
-      SocialAccount,
-      UserProfile,
-      RegisteredPhoneNumberRepository,
-    ]),
+    TypeOrmModule.forFeature([UserRepository, SocialAccount, UserProfile]),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET_KEY'),
