@@ -1,3 +1,4 @@
+import { RegisteredPhoneNumberRepository } from './repositories/registered-phone-number.repository';
 import { ApplicationRepository } from './../application/repositories/application.repository';
 import { TeamRepository } from './../team/repository/team.repository';
 import { PlaceRepository } from './../place/repository/place.repository';
@@ -12,6 +13,7 @@ import { UserRepository } from './repositories/user.repository';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { ReservationRepository } from '@reservation/repository/reservation.repository';
+import { UserProfileRepository } from './repositories/user-profile.repository';
 
 @Global()
 @Module({
@@ -25,6 +27,8 @@ import { ReservationRepository } from '@reservation/repository/reservation.repos
       PlaceRepository,
       TeamRepository,
       ApplicationRepository,
+      RegisteredPhoneNumberRepository,
+      UserProfileRepository,
     ]),
   ],
   providers: [JwtAuthGuard, UserService, S3Service],
