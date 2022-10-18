@@ -1,3 +1,5 @@
+import { UserProfileRepository } from './repositories/user-profile.repository';
+import { RegisteredPhoneNumberRepository } from './repositories/registered-phone-number.repository';
 import {
   GetMyApplicationsOutput,
   GMALeaderData,
@@ -41,6 +43,8 @@ export class UserService {
     private readonly teamRepository: TeamRepository,
     private readonly applicationRepository: ApplicationRepository,
     private schedulerRegistry: SchedulerRegistry,
+    private registeredPhoneNumberRepository: RegisteredPhoneNumberRepository,
+    private readonly userProfileRepository: UserProfileRepository,
   ) {
     this.codeMap = new Map();
     this.codeMap.set('친구', { role: UserRole.Client });
@@ -58,6 +62,25 @@ export class UserService {
 
   async me(authUser: User): Promise<MeOutput> {
     try {
+      if (authUser.profile.phoneNumber) {
+        const verifyResult =
+          await this.registeredPhoneNumberRepository.verifyByPhoneNumber(
+            authUser.profile.phoneNumber,
+          );
+
+        if (verifyResult.ok) {
+          if (verifyResult.role) {
+            await this.userRepository.update(
+              { id: authUser.id },
+              { role: verifyResult.role },
+            );
+          }
+          await this.userProfileRepository.update(
+            { fk_user_id: authUser.id },
+            { isYkClub: true },
+          );
+        }
+      }
       const reservations = await this.reservationRepository.find({
         where: {
           user_id: authUser.id,
