@@ -271,8 +271,6 @@ export class TeamService {
         categoryIds,
         areaIds,
       );
-      console.log(teams.length);
-      console.log(teamMetadata);
 
       return { ok: true, teams: teams, meta: teamMetadata };
     } catch (error) {
