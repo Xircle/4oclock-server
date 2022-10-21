@@ -22,12 +22,19 @@ export class ApplicationService {
   ) {}
   async createApplication(
     authUser: User,
-    { teamId }: CreateApplicationInput,
+    { teamId, content }: CreateApplicationInput,
   ): Promise<CoreOutput> {
     try {
       if (!authUser.profile.isYkClub) {
         return { ok: false, error: '현기수에 등록되어있지 않습니다' };
       }
+      if (authUser.team_id) {
+        const pastTeam = await this.teamRepository.findOne({ id: teamId });
+        if (pastTeam.isClosed === false) {
+          return { ok: false, error: '현재 다른 팀에 소속되어있습니다' };
+        }
+      }
+
       const exists = await this.applicationRepository.findOne({
         where: {
           team_id: teamId,
@@ -47,6 +54,7 @@ export class ApplicationService {
             team_id: teamId,
           },
           {
+            content,
             isCanceled: false,
           },
         );
@@ -74,6 +82,7 @@ export class ApplicationService {
           user_id: authUser.id,
           image: authUser.profile.profileImageUrl,
           gender: authUser.profile.gender,
+          content,
         });
         await this.applicationRepository.save(application);
       }
