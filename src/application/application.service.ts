@@ -51,6 +51,24 @@ export class ApplicationService {
           },
         );
       } else {
+        const team = await this.teamRepository.findOne({ id: teamId });
+        if (!team) {
+          return {
+            ok: false,
+            error: '팀이 존재하지 않습니다',
+          };
+        }
+
+        if (
+          team.minAge > authUser.profile.age ||
+          team.maxAge < authUser.profile.age
+        ) {
+          return {
+            ok: false,
+            error: '나이대가 맞지 않습니다',
+          };
+        }
+
         const application = this.applicationRepository.create({
           team_id: teamId,
           user_id: authUser.id,
