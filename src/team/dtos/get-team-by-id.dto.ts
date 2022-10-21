@@ -27,7 +27,11 @@ export class GetTeamByIdLeaderData {
   shortBio: string;
 }
 
-export class GetTeamByIdData extends TeamData {
+export class DetailTeamData extends TeamData {
+  maleCount?: number;
+  femaleCount?: number;
+}
+export class GetTeamByIdData extends DetailTeamData {
   applications?: ApplicationData[];
 }
 
