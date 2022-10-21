@@ -24,7 +24,6 @@ import {
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
-import { Not } from 'typeorm';
 
 @Injectable()
 export class TeamService {
@@ -63,8 +62,17 @@ export class TeamService {
         profileImageUrl: leader.profile.profileImageUrl,
         shortBio: leader.profile.shortBio,
       };
-      if (team.leader_id === getTeamByIdQueryParameter?.userId) {
-      } else {
+      let maleCount = 0;
+      let femaleCount = 0;
+
+      if (team?.users?.length > 0) {
+        for (const user of team?.users) {
+          if (user.profile.gender === Gender.Male) {
+            maleCount++;
+          } else {
+            femaleCount++;
+          }
+        }
       }
 
       return {
@@ -83,6 +91,8 @@ export class TeamService {
           meetingHour: team.meetingHour,
           maxParticipant: team.maxParticipant,
           areaInfo: team.area_info,
+          maleCount,
+          femaleCount,
         },
       };
     } catch (error) {
