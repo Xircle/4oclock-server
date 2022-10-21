@@ -30,6 +30,7 @@ import {
   ApiUnauthorizedResponse,
   ApiOperation,
   ApiConsumes,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { TeamService } from './team.service';
 import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
@@ -120,6 +121,7 @@ export class TeamController {
       },
     ]),
   )
+  @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
   async createTeam(
     @GetUser() authUser: User,
