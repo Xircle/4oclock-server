@@ -184,6 +184,10 @@ export class ApplicationService {
       if (!exists) {
         return { ok: false, error: '지원서가 존재하지 않아요' };
       }
+
+      if (exists.isCanceled) {
+        return { ok: false, error: '취소된 지원서입니다' };
+      }
       if (
         editApplicationInput.status === ApplicationStatus.Approved ||
         editApplicationInput.status === ApplicationStatus.Enrolled
