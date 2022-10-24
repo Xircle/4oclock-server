@@ -195,7 +195,6 @@ export class ApplicationService {
             gender: exists.gender,
           },
         });
-        console.log(genderCount[1]);
         if (genderCount[1] > exists.team.maxParticipant / 2) {
           return { ok: false, error: '특정 성비가 절반을 넘을 수 없습니다' };
         }
