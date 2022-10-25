@@ -71,9 +71,12 @@ export class TeamRepository extends Repository<Team> {
       .select('team.*')
       .addSelect('team.max_participant', 'maxParticipant')
       .addSelect('leader_profile.username', 'leader_username')
-      .addSelect('count(application)', 'applyCount')
       .addSelect(
-        "count(case when application.status = 'Approved' then 1 else null end)",
+        'count(case when application.team_id = team.id then 1 else null end)',
+        'applyCount',
+      )
+      .addSelect(
+        "count(case when application.team_id = team.id and application.status = 'Approved' then 1 else null end)",
         'approveCount',
       )
       .addSelect('leader_profile.profile_image_url', 'leader_image')
@@ -90,23 +93,6 @@ export class TeamRepository extends Repository<Team> {
           );
         }),
       );
-    teamQuery.andWhere(
-      new Brackets((qb) => {
-        ages.forEach((item, idx) => {
-          qb.orWhere(
-            new Brackets((qb2) => {
-              qb2
-                .andWhere('min_age >= :minAge' + idx, {
-                  ['minAge' + idx]: item.minAge,
-                })
-                .andWhere('max_age <= :maxAge' + idx, {
-                  ['maxAge' + idx]: item.maxAge,
-                });
-            }),
-          );
-        });
-      }),
-    );
 
     if (categoryIds) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
@@ -126,12 +112,38 @@ export class TeamRepository extends Repository<Team> {
             qb.orWhere(
               new Brackets((qb2) => {
                 qb2
-                  .andWhere('min_age >= :minAge' + idx, {
-                    ['minAge' + idx]: item.minAge,
-                  })
-                  .andWhere('max_age <= :maxAge' + idx, {
-                    ['maxAge' + idx]: item.maxAge,
-                  });
+                  .andWhere(
+                    '(male_min_age IS NULL or male_min_age = :maleMinAge' +
+                      idx +
+                      ')',
+                    {
+                      ['maleMinAge' + idx]: item.maleMinAge,
+                    },
+                  )
+                  .andWhere(
+                    '(male_max_age IS NULL or male_max_age = :maleMaxAge' +
+                      idx +
+                      ')',
+                    {
+                      ['maleMaxAge' + idx]: item.maleMaxAge,
+                    },
+                  )
+                  .andWhere(
+                    '(female_min_age IS NULL or female_min_age = :femaleMinAge' +
+                      idx +
+                      ')',
+                    {
+                      ['femaleMinAge' + idx]: item.femaleMinAge,
+                    },
+                  )
+                  .andWhere(
+                    '(female_max_age IS NULL or female_max_age = :femaleMaxAge' +
+                      idx +
+                      ')',
+                    {
+                      ['femaleMaxAge' + idx]: item.femaleMaxAge,
+                    },
+                  );
               }),
             );
           });
@@ -207,8 +219,10 @@ export class TeamRepository extends Repository<Team> {
       question,
       description,
       maxParticipant,
-      minAge,
-      maxAge,
+      maleMinAge,
+      maleMaxAge,
+      femaleMinAge,
+      femaleMaxAge,
       meetingDay,
       meetingHour,
       meetingMinute,
@@ -221,8 +235,10 @@ export class TeamRepository extends Repository<Team> {
       question,
       description,
       maxParticipant,
-      minAge,
-      maxAge,
+      maleMinAge,
+      maleMaxAge,
+      femaleMinAge,
+      femaleMaxAge,
       meetingDay,
       meetingHour,
       meetingMinute,
