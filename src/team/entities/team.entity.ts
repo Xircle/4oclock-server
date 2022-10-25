@@ -71,11 +71,17 @@ export class Team {
   @Column({ default: false })
   isClosed: boolean;
 
-  @Column({ default: 20 })
-  minAge: number;
+  @Column({ default: 20, nullable: true })
+  maleMinAge?: number;
 
-  @Column({ default: 30 })
-  maxAge: number;
+  @Column({ default: 30, nullable: true })
+  maleMaxAge?: number;
+
+  @Column({ default: 20, nullable: true })
+  femaleMinAge?: number;
+
+  @Column({ default: 30, nullable: true })
+  femaleMaxAge?: number;
 
   @Column({ nullable: true })
   meetingDay: number;
