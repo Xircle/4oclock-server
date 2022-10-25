@@ -93,6 +93,10 @@ export class TeamService {
           areaInfo: team.area_info,
           maleCount,
           femaleCount,
+          maleMaxAge: team.maleMaxAge,
+          maleMinAge: team.maleMinAge,
+          femaleMaxAge: team.femaleMaxAge,
+          femaleMinAge: team.femaleMinAge,
         },
       };
     } catch (error) {
