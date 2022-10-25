@@ -77,6 +77,8 @@ export class UserController {
     return this.userService.patchTeam(authUser, teamId);
   }
 
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
   @Put('')
   @ApiOperation({ summary: '유저 정보 수정 ' })
   @UseInterceptors(FileInterceptor('profileImageFile'))
