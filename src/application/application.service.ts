@@ -12,6 +12,7 @@ import {
   GetApplicationByLeaderInput,
   GetApplicationByLeaderOutput,
 } from './dtos/get-application-by-leader.dto';
+import { Gender } from '@user/entities/user-profile.entity';
 
 @Injectable()
 export class ApplicationService {
@@ -66,15 +67,26 @@ export class ApplicationService {
             error: '팀이 존재하지 않습니다',
           };
         }
-
-        if (
-          team.minAge > authUser.profile.age ||
-          team.maxAge < authUser.profile.age
-        ) {
-          return {
-            ok: false,
-            error: '나이대가 맞지 않습니다',
-          };
+        if (authUser.profile.gender === Gender.Male) {
+          if (
+            (team.maleMinAge && team.maleMinAge > authUser.profile.age) ||
+            (team.maleMaxAge && team.maleMaxAge < authUser.profile.age)
+          ) {
+            return {
+              ok: false,
+              error: '나이대가 맞지 않습니다',
+            };
+          }
+        } else {
+          if (
+            (team.femaleMinAge && team.femaleMinAge > authUser.profile.age) ||
+            (team.femaleMaxAge && team.femaleMaxAge < authUser.profile.age)
+          ) {
+            return {
+              ok: false,
+              error: '나이대가 맞지 않습니다',
+            };
+          }
         }
 
         const application = this.applicationRepository.create({
