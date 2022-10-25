@@ -114,7 +114,7 @@ export class TeamService {
 
   public async getAllTeams(): Promise<GetTeamsNotPagination> {
     try {
-      const teams = await this.teamRepository.find();
+      const teams = await this.teamRepository.find({ season: 5 });
       return {
         ok: true,
         teams,
