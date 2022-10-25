@@ -46,11 +46,19 @@ export class CreateTeamInput {
 
   @IsNumber()
   @IsOptional()
-  minAge?: number;
+  maleMinAge?: number;
 
   @IsNumber()
   @IsOptional()
-  maxAge?: number;
+  maleMaxAge?: number;
+
+  @IsNumber()
+  @IsOptional()
+  femaleMinAge?: number;
+
+  @IsNumber()
+  @IsOptional()
+  femaleMaxAge?: number;
 
   category_id: string;
 
