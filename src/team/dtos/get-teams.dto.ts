@@ -12,8 +12,10 @@ export class TeamData {
   description?: string;
   images?: string[];
   category?: string;
-  minAge?: number;
-  maxAge?: number;
+  maleMinAge?: number;
+  maleMaxAge?: number;
+  femaleMinAge?: number;
+  femaleMaxAge?: number;
   leader?: User | GetTeamByIdLeaderData;
   price?: number;
   meetingHour?: number;
