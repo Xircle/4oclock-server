@@ -7,8 +7,10 @@ export class GetTeamByIdInput {
 }
 
 export class MinMaxAge {
-  minAge: number;
-  maxAge: number;
+  maleMinAge?: number;
+  maleMaxAge?: number;
+  femaleMinAge?: number;
+  femaleMaxAge?: number;
 }
 
 export class GetTeamByIdQueryParameter {
