@@ -91,4 +91,7 @@ export class Team {
 
   @Column({ nullable: true })
   meetingMinute: number;
+
+  @Column({ nullable: true })
+  leaderIntro?: string;
 }
