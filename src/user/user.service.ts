@@ -94,7 +94,10 @@ export class UserService {
           createdAt: MoreThan('2022-03-30'),
         },
       });
-      const team = await this.teamRepository.findOne(authUser.team_id);
+      let team;
+      if (authUser.team_id) {
+        team = await this.teamRepository.findOne(authUser.team_id);
+      }
       return {
         ok: true,
         data: {
@@ -103,7 +106,7 @@ export class UserService {
           ...authUser.profile,
           team_id: authUser.team_id,
           this_season_reservation_count: thisSeasonReservations.length,
-          team: team?.name,
+          team: authUser.team_id && team ? team?.name : '',
         },
       };
     } catch (err) {
