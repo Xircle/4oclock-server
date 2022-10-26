@@ -378,7 +378,7 @@ export class UserService {
                 code && this.codeMap.get(code)?.role
                   ? this.codeMap.get(code).role
                   : authUser.role,
-              team_id: editProfileInput.teamId,
+              //team_id: editProfileInput.teamId,
             },
           );
         }
