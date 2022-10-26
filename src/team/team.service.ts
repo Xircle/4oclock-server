@@ -74,7 +74,6 @@ export class TeamService {
           }
         }
       }
-
       return {
         ok: true,
         data: {
@@ -97,6 +96,7 @@ export class TeamService {
           maleMinAge: team.maleMinAge,
           femaleMaxAge: team.femaleMaxAge,
           femaleMinAge: team.femaleMinAge,
+          leaderIntro: team.leaderIntro,
         },
       };
     } catch (error) {
