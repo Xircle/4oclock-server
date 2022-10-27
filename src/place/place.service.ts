@@ -164,9 +164,6 @@ export class PlaceService {
         otherTeamSeperatorId = closeNotMyTeamPlaceDESC[0].id;
       }
 
-      console.log('myTeamSeperatorId ' + myTeamSeperatorId);
-      console.log('otherTeamSeperatorId ' + otherTeamSeperatorId);
-
       openMyPlaceASC.push(
         ...closedMyPlaceThisWeekDESC,
         ...openNotMyTeamPlaceASC,
