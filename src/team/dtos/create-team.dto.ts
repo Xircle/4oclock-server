@@ -74,6 +74,8 @@ export class CreateTeamInput {
   @IsOptional()
   meetingMinute?: number;
 
+  leaderIntro?: string;
+
   @ApiProperty({
     description: 'images',
     type: 'array',
