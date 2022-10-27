@@ -9,7 +9,6 @@ export class CategoryService {
   public async seeCategoriesBrief(): Promise<SeeAllCategoryOutput> {
     try {
       const categories = await this.categoryRepository.find();
-      console.log(categories);
       return { ok: true, data: categories };
     } catch (error) {
       return { ok: false, error };
