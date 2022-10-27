@@ -227,6 +227,7 @@ export class TeamRepository extends Repository<Team> {
       meetingHour,
       meetingMinute,
       category_id,
+      leaderIntro,
     } = createTeamInput;
     const newTeam = this.create({
       name,
@@ -245,6 +246,7 @@ export class TeamRepository extends Repository<Team> {
       category_id,
       leader_id: leaderId,
       images: imageUrls,
+      leaderIntro,
     });
     await this.save(newTeam);
   }
