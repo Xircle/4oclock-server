@@ -71,12 +71,9 @@ export class TeamRepository extends Repository<Team> {
       .select('team.*')
       .addSelect('team.max_participant', 'maxParticipant')
       .addSelect('leader_profile.username', 'leader_username')
+      .addSelect('count(application.*)', 'applyCount')
       .addSelect(
-        'count(case when application.team_id = team.id then 1 else null end)',
-        'applyCount',
-      )
-      .addSelect(
-        "count(case when application.team_id = team.id and application.status = 'Approved' then 1 else null end)",
+        "count(case when application.status = 'Approved' then 1 else null end)",
         'approveCount',
       )
       .addSelect('leader_profile.profile_image_url', 'leader_image')
@@ -86,26 +83,20 @@ export class TeamRepository extends Repository<Team> {
       .addFrom(Application, 'application')
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id')
-      .andWhere(
-        new Brackets((qb) => {
-          qb.orWhere('application.team_id = team.id').orWhere(
-            'team.id is not null',
-          );
-        }),
-      );
+      .andWhere('application.team_id = team.id');
 
-    if (categoryIds) {
+    if (categoryIds && categoryIds.length > 0 && categoryIds.length < 4) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
         categoryIds: categoryIds,
       });
     }
 
-    if (times) {
+    if (times && times.length > 0 && times.length < 7) {
       teamQuery.andWhere(`meeting_day in (:...meetingDay)`, {
         meetingDay: times,
       });
     }
-    if (ages?.length > 0) {
+    if (ages?.length > 0 && ages.length < 3) {
       teamQuery.andWhere(
         new Brackets((qb) => {
           ages.forEach((item, idx) => {
@@ -158,9 +149,10 @@ export class TeamRepository extends Repository<Team> {
     teamQuery.groupBy('team.id');
     teamQuery.addGroupBy('leader_profile.id');
     teamQuery.addGroupBy('category.id');
-    teamQuery.orderBy('team.is_closed', 'ASC');
-    teamQuery.addOrderBy('team.start_date', 'DESC');
-    teamQuery.addOrderBy('team.name', 'ASC');
+    teamQuery.orderBy(
+      "count(case when application.status = 'Approved' then 1 else null end)",
+      'ASC',
+    );
     teamQuery.take(limit).skip(page * limit);
 
     return teamQuery.getRawMany();
