@@ -1,5 +1,4 @@
-import { Team } from './../../team/entities/team.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'areas' })
 export class Area {
