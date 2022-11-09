@@ -91,7 +91,7 @@ export class UserService {
         where: {
           user_id: authUser.id,
           isCanceled: false,
-          createdAt: MoreThan('2022-03-30'),
+          createdAt: MoreThan('2022-11-01'),
         },
       });
       let team;
