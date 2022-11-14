@@ -85,18 +85,18 @@ export class TeamRepository extends Repository<Team> {
       .andWhere('category_id = category.id')
       .andWhere('application.team_id = team.id');
 
-    if (categoryIds && categoryIds.length > 0 && categoryIds.length < 4) {
+    if (categoryIds && categoryIds.length > 0) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
         categoryIds: categoryIds,
       });
     }
 
-    if (times && times.length > 0 && times.length < 7) {
+    if (times && times.length > 0) {
       teamQuery.andWhere(`meeting_day in (:...meetingDay)`, {
         meetingDay: times,
       });
     }
-    if (ages?.length > 0 && ages.length < 3) {
+    if (ages?.length > 0) {
       teamQuery.andWhere(
         new Brackets((qb) => {
           ages.forEach((item, idx) => {
