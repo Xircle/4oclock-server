@@ -79,6 +79,13 @@ export class UserController {
 
   @ApiBearerAuth('jwt')
   @UseGuards(JwtAuthGuard)
+  @Get('me/brief_team_and_role')
+  async getBriefTeamAndRole(@GetUser() authUser: User): Promise<CoreOutput> {
+    return { ok: true };
+  }
+
+  @ApiBearerAuth('jwt')
+  @UseGuards(JwtAuthGuard)
   @Put('')
   @ApiOperation({ summary: '유저 정보 수정 ' })
   @UseInterceptors(FileInterceptor('profileImageFile'))
