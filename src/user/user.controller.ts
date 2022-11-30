@@ -178,7 +178,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('point')
   async getPoint(@GetUser() authUser: User): Promise<GetPointOutput> {
-    return this.userService.getPoint(authUser, 1);
+    return this.userService.getPoint(authUser, 5);
   }
 
   @ApiBearerAuth('jwt')
