@@ -24,6 +24,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './repository/team.repository';
 import { GetTeamsOutput, GetTeamsNotPagination } from './dtos/get-teams.dto';
+import { season } from 'libs/sharedData';
 
 @Injectable()
 export class TeamService {
@@ -118,7 +119,7 @@ export class TeamService {
 
   public async getAllTeams(): Promise<GetTeamsNotPagination> {
     try {
-      const teams = await this.teamRepository.find({ season: 5 });
+      const teams = await this.teamRepository.find({ season: season });
       return {
         ok: true,
         teams,
