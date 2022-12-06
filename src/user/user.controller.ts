@@ -39,6 +39,7 @@ import { CoreOutput } from '@common/common.interface';
 import { GetPointOutput } from './dtos/get-point.dto';
 import { Roles } from '@auth/roles.decorator';
 import { GetMyTeamsLeaderOutput } from './dtos/get-my-teams-leader.dto';
+import { season } from 'libs/sharedData';
 
 @ApiTags('User')
 @ApiOkResponse()
@@ -178,7 +179,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('point')
   async getPoint(@GetUser() authUser: User): Promise<GetPointOutput> {
-    return this.userService.getPoint(authUser, 5);
+    return this.userService.getPoint(authUser, season);
   }
 
   @ApiBearerAuth('jwt')
