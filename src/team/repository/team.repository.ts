@@ -11,6 +11,7 @@ import {
   Application,
   ApplicationStatus,
 } from 'application/entities/application.entity';
+import { season } from 'libs/sharedData';
 
 export class FindManyTeamsV2Input {}
 
@@ -83,7 +84,8 @@ export class TeamRepository extends Repository<Team> {
       .addFrom(Application, 'application')
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id')
-      .andWhere('application.team_id = team.id');
+      .andWhere('application.team_id = team.id')
+      .andWhere('team.season = :season', { season: season });
 
     if (categoryIds && categoryIds.length > 0) {
       teamQuery.andWhere('category_id in (:...categoryIds)', {
@@ -185,6 +187,7 @@ export class TeamRepository extends Repository<Team> {
       .addSelect('meeting_minute', 'meetingMinute')
       .where({
         isClosed: false,
+        season: season,
       })
       .getRawMany();
     return times;
