@@ -72,19 +72,20 @@ export class TeamRepository extends Repository<Team> {
       .select('team.*')
       .addSelect('team.max_participant', 'maxParticipant')
       .addSelect('leader_profile.username', 'leader_username')
-      .addSelect('count(application.*)', 'applyCount')
       .addSelect(
-        "count(case when application.status = 'Approved' then 1 else null end)",
+        '(select count(*) from applications ap where ap.team_id = team.id)',
+        'applyCount',
+      )
+      .addSelect(
+        "(select count(*) from applications ap where ap.team_id = team.id and ap.status = 'Approved')",
         'approveCount',
       )
       .addSelect('leader_profile.profile_image_url', 'leader_image')
       .addSelect('category.name', 'category_name')
       .from(UserProfile, 'leader_profile')
       .addFrom(Category, 'category')
-      .addFrom(Application, 'application')
       .where('team.leader_id = leader_profile.fk_user_id')
       .andWhere('category_id = category.id')
-      .andWhere('application.team_id = team.id')
       .andWhere('team.season = :season', { season: season });
 
     if (categoryIds && categoryIds.length > 0) {
@@ -152,7 +153,7 @@ export class TeamRepository extends Repository<Team> {
     teamQuery.addGroupBy('leader_profile.id');
     teamQuery.addGroupBy('category.id');
     teamQuery.orderBy(
-      "count(case when application.status = 'Approved' then 1 else null end)",
+      "(select count(*) from applications ap where ap.team_id = team.id and ap.status = 'Approved')",
       'ASC',
     );
     teamQuery.take(limit).skip(page * limit);
@@ -166,7 +167,9 @@ export class TeamRepository extends Repository<Team> {
     categoryIds?: string[],
     areaIds?: string[],
   ): Promise<TeamMetaData> {
-    let totalItems = await this.count({});
+    let totalItems = await this.count({
+      season: season,
+    });
     totalItems = totalItems > 100 ? 100 : totalItems;
     const totalPages = Math.floor(totalItems / limit) + 1;
     return {
