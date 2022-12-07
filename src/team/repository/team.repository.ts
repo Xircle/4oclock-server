@@ -178,10 +178,6 @@ export class TeamRepository extends Repository<Team> {
     };
   }
 
-  public async getMyTeamsLeader(userId: string) {
-    //await this.
-  }
-
   public async getAllTimes() {
     const times = await this.createQueryBuilder('team')
       .distinctOn(['meeting_day', 'meeting_hour', 'meeting_minute'])
