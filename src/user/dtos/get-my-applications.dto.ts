@@ -10,6 +10,7 @@ export class MyApplication {
   isCanceled: boolean;
   paid?: boolean;
   teamImage: string;
+  isCancelRequested?: boolean;
 }
 
 export class MyApplicationsByStatus {
