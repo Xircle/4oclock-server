@@ -23,6 +23,7 @@ export class CountData {
 export class GetTeamApplications extends CountData {
   pendingApplicantProfiles: ApplicantProfiles[];
   approvedApplicantProfiles: ApplicantProfiles[];
+  cancelRequestedApplicantProfiles: ApplicantProfiles[];
 }
 
 export class GetTeamApplicationsOutput extends CoreOutput {
