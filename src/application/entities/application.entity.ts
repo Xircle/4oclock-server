@@ -73,6 +73,9 @@ export class Application {
   @Column()
   image: string;
 
-  @Column({ default: false })
+  @Column('boolean', { default: false })
   isCancelRequested: boolean;
+
+  @Column({ nullable: true })
+  cancelReason?: string;
 }
