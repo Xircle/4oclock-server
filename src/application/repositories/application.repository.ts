@@ -39,6 +39,7 @@ export class ApplicationRepository extends Repository<Application> {
         isCanceled: application.isCanceled,
         paid: application.paid,
         teamImage: application.team.images[0],
+        isCancelRequested: application.isCancelRequested,
       });
     }
 
