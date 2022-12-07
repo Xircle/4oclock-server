@@ -72,4 +72,7 @@ export class Application {
 
   @Column()
   image: string;
+
+  @Column({ default: false })
+  isCancelRequested: boolean;
 }
