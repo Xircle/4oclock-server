@@ -27,6 +27,14 @@ export class EditApplicationInput {
   @IsOptional()
   @IsString()
   paid?: string;
+
+  @IsOptional()
+  @IsString()
+  isCancelRequested?: string;
+
+  @IsOptional()
+  @IsString()
+  cancelReason?: string;
 }
 
 export class ApplicationData {
