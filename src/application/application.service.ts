@@ -246,6 +246,14 @@ export class ApplicationService {
             editApplicationInput.paid === null
               ? exists.paid
               : editApplicationInput.paid?.toLowerCase() === 'true',
+          isCancelRequested:
+            editApplicationInput.isCancelRequested === undefined ||
+            editApplicationInput.isCancelRequested === null
+              ? exists.isCancelRequested
+              : editApplicationInput.isCancelRequested?.toLowerCase() ===
+                'true',
+          cancelReason:
+            editApplicationInput.cancelReason ?? exists.cancelReason,
         },
       );
       if (editApplicationInput.status === ApplicationStatus.Approved) {
