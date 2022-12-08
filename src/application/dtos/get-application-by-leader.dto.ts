@@ -13,7 +13,7 @@ export class GetApplicationByLeaderData {
   age: number;
   gender: Gender;
   university: string;
-  isCancelRequested?: string;
+  isCancelRequested?: boolean;
   cancelReason?: string;
 }
 
