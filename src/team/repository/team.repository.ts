@@ -107,7 +107,7 @@ export class TeamRepository extends Repository<Team> {
               new Brackets((qb2) => {
                 qb2
                   .andWhere(
-                    '(male_min_age IS NULL or male_min_age = :maleMinAge' +
+                    '(male_min_age IS NULL or male_min_age >= :maleMinAge' +
                       idx +
                       ')',
                     {
@@ -115,7 +115,7 @@ export class TeamRepository extends Repository<Team> {
                     },
                   )
                   .andWhere(
-                    '(male_max_age IS NULL or male_max_age = :maleMaxAge' +
+                    '(male_max_age IS NULL or male_max_age <= :maleMaxAge' +
                       idx +
                       ')',
                     {
@@ -123,7 +123,7 @@ export class TeamRepository extends Repository<Team> {
                     },
                   )
                   .andWhere(
-                    '(female_min_age IS NULL or female_min_age = :femaleMinAge' +
+                    '(female_min_age IS NULL or female_min_age >= :femaleMinAge' +
                       idx +
                       ')',
                     {
@@ -131,7 +131,7 @@ export class TeamRepository extends Repository<Team> {
                     },
                   )
                   .andWhere(
-                    '(female_max_age IS NULL or female_max_age = :femaleMaxAge' +
+                    '(female_max_age IS NULL or female_max_age <= :femaleMaxAge' +
                       idx +
                       ')',
                     {
