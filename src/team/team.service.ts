@@ -227,6 +227,7 @@ export class TeamService {
             age: application.applicant.profile.age,
             applicationId: application.id,
             profileImg: application.applicant.profile.profileImageUrl,
+            phoneNumber: application.applicant.profile.phoneNumber,
           });
         }
       }
