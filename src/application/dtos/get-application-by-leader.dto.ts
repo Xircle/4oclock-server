@@ -13,6 +13,8 @@ export class GetApplicationByLeaderData {
   age: number;
   gender: Gender;
   university: string;
+  isCancelRequested?: string;
+  cancelReason?: string;
 }
 
 export class GetApplicationSubstitueInput {
