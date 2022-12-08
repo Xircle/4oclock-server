@@ -8,7 +8,11 @@ export class CategoryService {
 
   public async seeCategoriesBrief(): Promise<SeeAllCategoryOutput> {
     try {
-      const categories = await this.categoryRepository.find();
+      const categories = await this.categoryRepository.find({
+        where: {
+          isClosed: false,
+        },
+      });
       return { ok: true, data: categories };
     } catch (error) {
       return { ok: false, error };
