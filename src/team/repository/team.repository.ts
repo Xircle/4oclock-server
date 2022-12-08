@@ -145,9 +145,9 @@ export class TeamRepository extends Repository<Team> {
       );
     }
 
-    if (areaIds?.length > 0) {
-      teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
-    }
+    // if (areaIds?.length > 0) {
+    //   teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
+    // }
     teamQuery.distinct();
     teamQuery.groupBy('team.id');
     teamQuery.addGroupBy('leader_profile.id');
@@ -222,6 +222,7 @@ export class TeamRepository extends Repository<Team> {
       meetingMinute,
       category_id,
       leaderIntro,
+      areaIds,
     } = createTeamInput;
     const newTeam = this.create({
       name,
@@ -241,6 +242,7 @@ export class TeamRepository extends Repository<Team> {
       leader_id: leaderId,
       images: imageUrls,
       leaderIntro,
+      area_ids: areaIds,
     });
     await this.save(newTeam);
   }
