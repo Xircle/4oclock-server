@@ -173,6 +173,8 @@ export class ApplicationService {
           age: application.applicant.profile.age,
           gender: application.applicant.profile.gender,
           university: application.applicant.profile.university,
+          isCancelRequested: application.isCancelRequested,
+          cancelReason: application.cancelReason,
         },
       };
     } catch (error) {
