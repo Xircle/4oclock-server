@@ -62,9 +62,6 @@ export class Team {
   @Column({ type: 'uuid' })
   category_id: string;
 
-  @Column({ type: 'uuid', nullable: true })
-  area_id: string;
-
   @Column({ default: 16 })
   maxParticipant: number;
 
@@ -94,4 +91,8 @@ export class Team {
 
   @Column({ nullable: true })
   leaderIntro?: string;
+
+  // error 가능성 높음
+  @Column('varchar', { default: [], nullable: true, array: true })
+  area_ids: string[];
 }
