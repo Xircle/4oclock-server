@@ -25,6 +25,8 @@ export class TeamData {
   approveCount?: number;
   applyCount?: number;
   leaderIntro?: string;
+  area_ids?: string[];
+  area_names?: string[];
 }
 
 export class GetTeamsOutput extends CoreOutput {
