@@ -1,3 +1,4 @@
+import { AreaRepository } from './../area/repositories/area.repository';
 import { Gender } from '@user/entities/user-profile.entity';
 import { ApplicationStatus } from 'application/entities/application.entity';
 import { Team } from 'team/entities/team.entity';
@@ -5,11 +6,9 @@ import { ApplicationRepository } from './../application/repositories/application
 import {
   ApplicantProfiles,
   CountData as teamCountData,
-  GetTeamApplications,
   GetTeamApplicationsOutput,
 } from './dtos/get-team-applications';
 import { UserProfileRepository } from './../user/repositories/user-profile.repository';
-import { UserProfile } from './../user/entities/user-profile.entity';
 import { S3Service } from './../aws/s3/s3.service';
 import { User } from './../user/entities/user.entity';
 import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
@@ -34,6 +33,7 @@ export class TeamService {
     private s3Service: S3Service,
     private readonly userProfileRepository: UserProfileRepository,
     private readonly applicationRepository: ApplicationRepository,
+    private readonly areaRepository: AreaRepository,
   ) {}
 
   public async getTeamById(
@@ -49,6 +49,13 @@ export class TeamService {
           relations: ['applications', 'users'],
         },
       );
+
+      const areas = await this.areaRepository.findByIds(team.area_ids);
+
+      let areaNames: string[] = [];
+      for (let area of areas) {
+        areaNames.push(area.name);
+      }
 
       const leader = await this.userRepository.findOne(
         { id: team.leader_id },
@@ -98,6 +105,8 @@ export class TeamService {
           femaleMaxAge: team.femaleMaxAge,
           femaleMinAge: team.femaleMinAge,
           leaderIntro: team.leaderIntro,
+          area_ids: team.area_ids,
+          area_names: areaNames,
         },
       };
     } catch (error) {
