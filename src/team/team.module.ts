@@ -1,3 +1,4 @@
+import { AreaRepository } from './../area/repositories/area.repository';
 import { ApplicationRepository } from './../application/repositories/application.repository';
 import { UserProfileRepository } from './../user/repositories/user-profile.repository';
 import { AuthModule } from './../auth/auth.module';
@@ -18,6 +19,7 @@ import { Team } from './entities/team.entity';
       UserRepository,
       UserProfileRepository,
       ApplicationRepository,
+      AreaRepository,
     ]),
     AuthModule,
   ],
