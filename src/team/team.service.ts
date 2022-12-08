@@ -175,6 +175,7 @@ export class TeamService {
     try {
       const pendingApplicantProfiles: ApplicantProfiles[] = [];
       const approvedApplicantProfiles: ApplicantProfiles[] = [];
+      const cancelRequestedApplicantProfiles: ApplicantProfiles[] = [];
       let maleApproveCount = 0;
       let femaleApproveCount = 0;
       let maleApplyCount = 0;
@@ -209,6 +210,18 @@ export class TeamService {
 
         if (application.status === ApplicationStatus.Pending) {
           pendingApplicantProfiles.push({
+            username: application.applicant.profile.username,
+            gender: application.applicant.profile.gender,
+            age: application.applicant.profile.age,
+            applicationId: application.id,
+            profileImg: application.applicant.profile.profileImageUrl,
+          });
+        } else if (
+          application.isCancelRequested === true &&
+          (application.status === ApplicationStatus.Approved ||
+            application.status === ApplicationStatus.Enrolled)
+        ) {
+          cancelRequestedApplicantProfiles.push({
             username: application.applicant.profile.username,
             gender: application.applicant.profile.gender,
             age: application.applicant.profile.age,
@@ -251,6 +264,7 @@ export class TeamService {
           ...countData,
           pendingApplicantProfiles: pendingApplicantProfiles,
           approvedApplicantProfiles: approvedApplicantProfiles,
+          cancelRequestedApplicantProfiles: cancelRequestedApplicantProfiles,
         },
       };
     } catch (error) {
@@ -286,6 +300,7 @@ export class TeamService {
         categoryIds,
         areaIds,
       );
+
       return { ok: true, teams: teams, meta: teamMetadata };
     } catch (error) {
       return { ok: false, error };
