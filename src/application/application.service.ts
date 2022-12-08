@@ -42,10 +42,18 @@ export class ApplicationService {
           user_id: authUser.id,
         },
       });
+
+      if (exists && exists.status === ApplicationStatus.Disapproved) {
+        return {
+          ok: false,
+          error: '참여 거절된 클럽입니다',
+        };
+      }
+
       if (exists && !exists.isCanceled) {
         return {
           ok: false,
-          error: '이미 신청하셨거나, 취소승인된 모임입니다',
+          error: '이미 신청하셨습니다.',
         };
       }
       if (exists) {
@@ -231,7 +239,7 @@ export class ApplicationService {
       if (
         exists.status === ApplicationStatus.Approved &&
         editApplicationInput.status !== ApplicationStatus.Approved &&
-        !editApplicationInput.isCancelRequested
+        exists.isCancelRequested
       ) {
         const applicant = await this.userRepository.findOne({
           where: {
