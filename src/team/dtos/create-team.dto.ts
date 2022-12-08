@@ -76,6 +76,10 @@ export class CreateTeamInput {
 
   leaderIntro?: string;
 
+  @IsArray()
+  @IsOptional()
+  areaIds?: string[];
+
   @ApiProperty({
     description: 'images',
     type: 'array',
