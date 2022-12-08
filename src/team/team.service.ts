@@ -135,6 +135,7 @@ export class TeamService {
     files: TeamPhotoInput,
   ): Promise<CoreOutput> {
     try {
+      console.log(createTeamInput);
       let leaderId = authUser.id;
       if (createTeamInput.leaderId) {
         const leader = await this.userRepository.findOne({ id: leaderId });
