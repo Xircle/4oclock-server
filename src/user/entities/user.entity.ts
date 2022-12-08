@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -91,6 +92,7 @@ export class User {
   updatedAt?: Date;
 
   @ManyToOne((type) => Team, (team) => team.users)
+  @JoinColumn({ name: 'team_id' })
   team?: Team;
 
   @Column('integer', { nullable: true })
