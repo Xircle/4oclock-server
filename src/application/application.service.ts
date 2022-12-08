@@ -45,7 +45,7 @@ export class ApplicationService {
       if (exists && !exists.isCanceled) {
         return {
           ok: false,
-          error: '이미 신청하셨습니다.',
+          error: '이미 신청하셨거나, 취소승인된 모임입니다',
         };
       }
       if (exists) {
