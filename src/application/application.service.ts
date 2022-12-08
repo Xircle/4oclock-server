@@ -228,7 +228,8 @@ export class ApplicationService {
 
       if (
         exists.status === ApplicationStatus.Approved &&
-        editApplicationInput.status !== ApplicationStatus.Approved
+        editApplicationInput.status !== ApplicationStatus.Approved &&
+        !editApplicationInput.isCancelRequested
       ) {
         const applicant = await this.userRepository.findOne({
           where: {
