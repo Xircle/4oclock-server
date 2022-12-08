@@ -7,4 +7,7 @@ export class Area {
 
   @Column({ unique: true })
   name: string;
+
+  @Column({ default: false })
+  is_closed: boolean;
 }
