@@ -226,6 +226,25 @@ export class ApplicationService {
         }
       }
 
+      if (
+        exists.status === ApplicationStatus.Approved &&
+        editApplicationInput.status !== ApplicationStatus.Approved
+      ) {
+        const applicant = await this.userRepository.findOne({
+          where: {
+            id: exists.user_id,
+          },
+        });
+        if (applicant.team_id === exists.team_id) {
+          await this.userRepository.update(
+            {
+              id: exists.user_id,
+            },
+            { team_id: null },
+          );
+        }
+      }
+
       await this.applicationRepository.update(
         {
           id: editApplicationInput.applicationId,
