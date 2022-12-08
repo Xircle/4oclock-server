@@ -65,7 +65,6 @@ export class TeamRepository extends Repository<Team> {
     page: number,
     ages?: MinMaxAge[],
     categoryIds?: string[],
-    areaIds?: string[],
     times?: number[],
   ): Promise<TeamData[]> {
     let teamQuery = await this.createQueryBuilder('team')
@@ -145,9 +144,6 @@ export class TeamRepository extends Repository<Team> {
       );
     }
 
-    // if (areaIds?.length > 0) {
-    //   teamQuery.andWhere('area_id in (:...areaIds)', { areaIds: areaIds });
-    // }
     teamQuery.distinct();
     teamQuery.groupBy('team.id');
     teamQuery.addGroupBy('leader_profile.id');
