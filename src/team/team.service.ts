@@ -293,7 +293,6 @@ export class TeamService {
         page,
         ages,
         categoryIds,
-        areaIds,
         times,
       );
       const teamMetadata = await this.teamRepository.getTeamMetaData(
