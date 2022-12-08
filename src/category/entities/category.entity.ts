@@ -14,4 +14,7 @@ export class Category {
 
   @Column({ nullable: true })
   image?: string;
+
+  @Column({ default: false })
+  isClosed: boolean;
 }
