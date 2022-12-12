@@ -107,6 +107,10 @@ export class TeamService {
           leaderIntro: team.leaderIntro,
           area_ids: team.area_ids,
           area_names: areaNames,
+
+          activity_titles: team.activity_titles,
+          activity_details: team.activity_details,
+          mission: team.mission,
         },
       };
     } catch (error) {
