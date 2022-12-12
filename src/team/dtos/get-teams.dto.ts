@@ -27,6 +27,9 @@ export class TeamData {
   leaderIntro?: string;
   area_ids?: string[];
   area_names?: string[];
+  activity_titles?: string[];
+  activity_details?: string[];
+  mission?: string;
 }
 
 export class GetTeamsOutput extends CoreOutput {
