@@ -80,6 +80,18 @@ export class CreateTeamInput {
   @IsOptional()
   areaIds?: string[];
 
+  @IsArray()
+  @IsOptional()
+  activity_titles?: string[];
+
+  @IsArray()
+  @IsOptional()
+  activity_details?: string[];
+
+  @IsString()
+  @IsOptional()
+  mission?: string;
+
   @ApiProperty({
     description: 'images',
     type: 'array',
