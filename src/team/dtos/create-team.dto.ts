@@ -1,17 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
-  IsBoolean,
-  IsDate,
-  IsEnum,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
-  MaxLength,
 } from 'class-validator';
-import { isNumber } from 'lodash';
 export class CreateTeamInput {
   @IsString()
   name: string;
