@@ -95,4 +95,13 @@ export class Team {
   // error 가능성 높음
   @Column('varchar', { default: [], nullable: true, array: true })
   area_ids: string[];
+
+  @Column('varchar', { array: true, default: [], nullable: true })
+  activity_titles?: string[];
+
+  @Column('varchar', { default: [], array: true, nullable: true })
+  activity_details?: string[];
+
+  @Column('varchar', { nullable: true })
+  mission?: string;
 }
