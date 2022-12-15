@@ -11,7 +11,11 @@ import {
 import { UserProfileRepository } from './../user/repositories/user-profile.repository';
 import { S3Service } from './../aws/s3/s3.service';
 import { User } from './../user/entities/user.entity';
-import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
+import {
+  CreateTeamInput,
+  TeamPhotoInput,
+  CreateTeamOutput,
+} from './dtos/create-team.dto';
 import { CoreOutput } from './../common/common.interface';
 import { UserRepository } from './../user/repositories/user.repository';
 import {
@@ -146,9 +150,8 @@ export class TeamService {
     authUser: User,
     createTeamInput: CreateTeamInput,
     files: TeamPhotoInput,
-  ): Promise<CoreOutput> {
+  ): Promise<CreateTeamOutput> {
     try {
-      console.log(createTeamInput);
       let leaderId = authUser.id;
       if (createTeamInput.leaderId) {
         const leader = await this.userRepository.findOne({ id: leaderId });
@@ -168,12 +171,12 @@ export class TeamService {
         }
       }
 
-      await this.teamRepository.createTeam(
+      const newTeamId = await this.teamRepository.createTeam(
         leaderId,
         createTeamInput,
         imageS3Urls,
       );
-      return { ok: true };
+      return { ok: true, teamId: newTeamId };
     } catch (error) {
       return {
         ok: false,
