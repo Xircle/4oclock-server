@@ -11,7 +11,6 @@ export class TeamData {
   endDate?: Date;
   description?: string;
   images?: string[];
-  category?: string;
   maleMinAge?: number;
   maleMaxAge?: number;
   femaleMinAge?: number;
@@ -30,6 +29,8 @@ export class TeamData {
   activity_titles?: string[];
   activity_details?: string[];
   mission?: string;
+  oneLineInfo?: string;
+  category_name?: string;
 }
 
 export class GetTeamsOutput extends CoreOutput {
