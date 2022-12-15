@@ -240,7 +240,7 @@ export class TeamRepository extends Repository<Team> {
       leader_id: leaderId,
       images: imageUrls,
       leaderIntro,
-      area_ids: areaIds,
+      area_ids: areaIds ?? [],
       mission,
       activity_titles,
       activity_details,
