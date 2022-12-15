@@ -34,6 +34,9 @@ export class CreateTeamInput {
   @IsString()
   description: string;
 
+  @IsString()
+  oneLineInfo: string;
+
   @IsNumber()
   @IsOptional()
   maxParticipant?: number;
