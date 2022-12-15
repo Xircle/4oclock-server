@@ -1,3 +1,4 @@
+import { CoreOutput } from '@common/common.interface';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
@@ -67,10 +68,6 @@ export class CreateTeamInput {
   @IsOptional()
   meetingHour?: number;
 
-  @IsNumber()
-  @IsOptional()
-  meetingMinute?: number;
-
   leaderIntro?: string;
 
   @IsArray()
@@ -107,4 +104,8 @@ export class CreateTeamInput {
 
 export class TeamPhotoInput {
   images: Express.Multer.File[];
+}
+
+export class CreateTeamOutput extends CoreOutput {
+  teamId?: number;
 }
