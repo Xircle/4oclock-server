@@ -19,6 +19,9 @@ export class Team {
   @Column({ default: '미정' })
   name: string;
 
+  @Column({ default: '' })
+  oneLineInfo: string;
+
   @Column({ nullable: true })
   season?: number;
 
@@ -57,7 +60,7 @@ export class Team {
 
   @ManyToOne((type) => Category, (category) => category.teams)
   @JoinColumn({ name: 'category_id' })
-  category: string;
+  category: Category;
 
   @Column({ type: 'uuid' })
   category_id: string;
@@ -85,9 +88,6 @@ export class Team {
 
   @Column({ nullable: true })
   meetingHour: number;
-
-  @Column({ nullable: true })
-  meetingMinute: number;
 
   @Column({ nullable: true })
   leaderIntro?: string;
