@@ -109,9 +109,9 @@ export class TeamService {
           femaleMaxAge: team.femaleMaxAge,
           femaleMinAge: team.femaleMinAge,
           leaderIntro: team.leaderIntro,
-          area_ids: team.area_ids,
-          area_names: areaNames,
-
+          area_ids: team.area_ids ?? [],
+          area_names: areaNames ?? [],
+          oneLineInfo: team.oneLineInfo,
           activity_titles: team.activity_titles,
           activity_details: team.activity_details,
           mission: team.mission,
