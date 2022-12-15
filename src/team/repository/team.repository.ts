@@ -12,6 +12,7 @@ import {
   ApplicationStatus,
 } from 'application/entities/application.entity';
 import { season } from 'libs/sharedData';
+import { maxLength } from 'class-validator';
 
 export class FindManyTeamsV2Input {}
 
@@ -104,39 +105,46 @@ export class TeamRepository extends Repository<Team> {
           ages.forEach((item, idx) => {
             qb.orWhere(
               new Brackets((qb2) => {
-                qb2
-                  .andWhere(
-                    '(male_min_age IS NULL or male_min_age >= :maleMinAge' +
+                if (item.maleMinAge) {
+                  qb2.andWhere(
+                    '(male_min_age IS NULL or male_min_age <= :maleMinAge' +
                       idx +
                       ')',
                     {
                       ['maleMinAge' + idx]: item.maleMinAge,
                     },
-                  )
-                  .andWhere(
-                    '(male_max_age IS NULL or male_max_age <= :maleMaxAge' +
+                  );
+                }
+                if (item.maleMaxAge) {
+                  qb2.andWhere(
+                    '(male_max_age IS NULL or male_max_age >= :maleMaxAge' +
                       idx +
                       ')',
                     {
                       ['maleMaxAge' + idx]: item.maleMaxAge,
                     },
-                  )
-                  .andWhere(
-                    '(female_min_age IS NULL or female_min_age >= :femaleMinAge' +
+                  );
+                }
+                if (item.femaleMinAge) {
+                  qb2.andWhere(
+                    '(female_min_age IS NULL or female_min_age <= :femaleMinAge' +
                       idx +
                       ')',
                     {
                       ['femaleMinAge' + idx]: item.femaleMinAge,
                     },
-                  )
-                  .andWhere(
-                    '(female_max_age IS NULL or female_max_age <= :femaleMaxAge' +
+                  );
+                }
+                if (item.femaleMaxAge) {
+                  qb2.andWhere(
+                    '(female_max_age IS NULL or female_max_age >= :femaleMaxAge' +
                       idx +
                       ')',
                     {
                       ['femaleMaxAge' + idx]: item.femaleMaxAge,
                     },
                   );
+                }
               }),
             );
           });
