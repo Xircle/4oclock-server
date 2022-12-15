@@ -246,6 +246,7 @@ export class TeamRepository extends Repository<Team> {
       activity_details,
       oneLineInfo,
     });
-    await this.save(newTeam);
+    const teamSaved = await this.save(newTeam);
+    return teamSaved.id;
   }
 }
