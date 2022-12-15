@@ -1,7 +1,11 @@
 import { GetTeamApplicationsOutput } from './dtos/get-team-applications';
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { CreateTeamInput, TeamPhotoInput } from './dtos/create-team.dto';
+import {
+  CreateTeamInput,
+  CreateTeamOutput,
+  TeamPhotoInput,
+} from './dtos/create-team.dto';
 import { User } from './../user/entities/user.entity';
 import { CoreOutput } from './../common/common.interface';
 import { GetAllTeamTimeOutput } from './dtos/get-all-team-times.dto';
@@ -127,7 +131,7 @@ export class TeamController {
     @GetUser() authUser: User,
     @Body() createTeamInput: CreateTeamInput,
     @UploadedFiles() files: TeamPhotoInput,
-  ): Promise<CoreOutput> {
+  ): Promise<CreateTeamOutput> {
     return this.teamService.createTeam(authUser, createTeamInput, files);
   }
 }
